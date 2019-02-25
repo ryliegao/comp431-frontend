@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';
 import { MainComponent } from './main/main.component';
 import { ProfileComponent } from './profile/profile.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { AuthGuard } from './_guards';
 
-export const routes: Routes = [
-  { path: 'auth', component: AuthComponent },
-  { path: 'main', component: MainComponent },
-  { path: 'profile', component: ProfileComponent }
+export const routes: Routes = [ //
+  { path: '', component: MainComponent, canActivate: [AuthGuard] },
+  { path: 'auth/login', component: LoginComponent },
+  { path: 'auth/register', component: RegisterComponent },
+  { path: 'profile', component: ProfileComponent },
+
+  // otherwise redirect to home
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
