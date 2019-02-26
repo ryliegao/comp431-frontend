@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
+  wrong = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,7 +35,35 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
-    this.router.navigate(['/main']);
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (this.loginForm.value.username === user.username &&
+          this.loginForm.value.password === user.password) {
+          this.wrong = false;
+          this.loading = true;
+          const newUser = new User(
+            user.username,
+            user.displayname,
+            user.email,
+            user.phone,
+            user.birthday,
+            user.zipcode,
+            user.password,
+            true
+          );
+          localStorage.setItem('currentUser', JSON.stringify(newUser));
+          this.router.navigate(['/main']);
+        } else {
+          this.wrong = true;
+        }
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+      this.wrong = false;
+      this.loading = true;
+      this.router.navigate(['/main']);
+    }
   }
 }

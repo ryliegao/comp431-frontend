@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import {User} from '../_models/user';
 
 @Component({
   selector: 'app-header',
@@ -12,10 +13,21 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
 })
 
 export class HeaderComponent implements OnInit {
+  name: string;
 
   constructor(private location: Location) { }
 
   ngOnInit() {
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        this.name = user.displayname === null ? user.username : user.displayname;
+      } else {
+        this.name = 'Default Name';
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+    }
   }
 
   hasMain(): boolean {
@@ -39,4 +51,24 @@ export class HeaderComponent implements OnInit {
     return this.location.path().indexOf('/auth/login') > -1;
   }
 
+  logOut() {
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        const newUser = new User(
+          user.username,
+          user.displayname,
+          user.email,
+          user.phone,
+          user.birthday,
+          user.zipcode,
+          user.password,
+          false
+        );
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+    }
+  }
 }

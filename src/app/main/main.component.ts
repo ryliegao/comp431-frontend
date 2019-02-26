@@ -22,7 +22,6 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     // this.loadAllUsers();
-    console.log('Initializing!!');
   }
 
   // deleteUser(id: number) {

@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['../auth.component.css', './register.component.css']
 })
 
+@Injectable()
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
@@ -71,11 +73,10 @@ export class RegisterComponent implements OnInit {
           this.registerForm.value.phone,
           this.registerForm.value.birthday,
           this.registerForm.value.zipcode,
-          this.registerForm.value.password1
+          this.registerForm.value.password1,
+          false
         );
         localStorage.setItem('currentUser', JSON.stringify(user));
-
-        // user = JSON.parse(localStorage.getItem('currentUser'));
       } catch (e) {
         console.log('This browser does not support local storage.');
       }

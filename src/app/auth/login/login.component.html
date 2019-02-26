@@ -11,5 +11,9 @@
       <input type="submit" class="submit" value="Log In">
     </div>
 
+    <div *ngIf="submitted && wrong" class="invalid-feedback">
+      Username and password do not match!
+    </div>
+
   </form>
 </div>
