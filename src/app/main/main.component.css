@@ -1,18 +1,21 @@
 .main-page {
-  margin: 50px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
 }
 
 .dashboard {
-  float: right;
-  margin: 0 50px 0 0;
+  margin-left: 22em;
 }
 
 .following {
   position: fixed;
-  float: left;
   height: 500px !important;
   width: auto;
   overflow-y: scroll;
+  margin-right: 0;
 }
 
 .grid-container {
@@ -127,29 +130,36 @@ p {
   -webkit-line-clamp: 5;
 }
 
-@media (max-width: 1200px) {
-  .grid-container {
+@media (max-width: 1300px) {
+  .post-grid {
     width: 500px;
     flex-wrap: wrap;
+    line-height: 1.2em;
   }
+
   .card {
     height: 500px !important;
     clear: both;
   }
+
   .img-holder-odd {
-    position: fixed;
+    position: absolute;
+    margin-left: 0;
     clear: both;
     overflow: visible;
-    left: 0;
   }
+
   .img-holder-even {
     clear: both;
     overflow: visible;
   }
+
   .text-holder-odd {
+    width: 500px !important;
     clear: both;
     padding-top: 300px;
   }
+
   .text-holder-even {
     position: absolute;
     clear: both;
@@ -157,6 +167,15 @@ p {
     width: 440px !important;
     bottom: 52px;
   }
+
+  .action-bar-odd {
+    width: 500px !important;
+  }
+
+  .action-bar-even {
+    width: 500px !important;
+  }
+
   p {
     -webkit-line-clamp: 3;
   }

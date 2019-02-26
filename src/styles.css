@@ -14,12 +14,6 @@ body {
   height: auto;
 }
 
-@media (max-width: 1200px) {
-  body {
-    line-height: 1.2em;
-  }
-}
-
 form {
   position: relative;
   width: 500px;
