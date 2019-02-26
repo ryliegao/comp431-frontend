@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit {
       try {
         const user = new User(
           this.registerForm.value.username,
-          this.registerForm.value.displayname,
+          this.registerForm.value.display,
           this.registerForm.value.email,
           this.registerForm.value.phone,
           this.registerForm.value.birthday,

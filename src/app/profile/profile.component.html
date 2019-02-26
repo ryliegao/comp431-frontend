@@ -1,31 +1,86 @@
 <div class="content edit-profile">
+
   <div class="left-pane">
     <div class="form-header">Edit Your Profile</div>
+    <div class="upload-image btn">
+      <span>Upload Your Profile Picture</span>
+      <input class="upload-image-input input-button" type="file">
+    </div>
     <div class="form-grp">
       <label>Display Name</label>
-      <input id="display-name" class="profile-input" type="text" title="display"/>
+      <input class="profile-input"
+             placeholder="Current display name: {{ display }}"
+             [(ngModel)]="dn"
+             type="text"/>
     </div>
     <div class="form-grp">
       <label>Email Address</label>
-      <input id="email-address" class="profile-input" type="text" title="email"/>
+      <input class="profile-input"
+             placeholder="Current email address: {{ email }}"
+             [(ngModel)]="ea"
+             type="text"/>
     </div>
     <div class="form-grp">
       <label>Phone Number</label>
-      <input id="phone-number" class="profile-input" type="text" title="phone"/>
+      <input class="profile-input"
+             placeholder="Current phone number: {{ phone }}"
+             [(ngModel)]="ph"
+             type="text"/>
     </div>
     <div class="form-grp">
       <label>Zip Code</label>
-      <input id="zipcode" class="profile-input" type="text" title="zip"/>
+      <input class="profile-input"
+             placeholder="Current zip code: {{ zipcode }}"
+             [(ngModel)]="zc"
+             type="text"/>
     </div>
     <div class="form-grp">
       <label>Password</label>
-      <input id="password" class="profile-input" title="pswd_1" type="password"/>
+      <input class="profile-input" [(ngModel)]="pw1" type="password"/>
     </div>
     <div class="form-grp">
       <label>Confirm Password</label>
-      <input id="confirm-password" class="profile-input" title="pswd_2" type="password"/>
+      <input class="profile-input" [(ngModel)]="pw2" type="password"/>
     </div>
-    <button id="submit-change" class="buttons submit submit-button">Submit Changes</button>
+    <button id="submit-change" class="buttons submit submit-button" (click)="onSubmit()">Submit Changes</button>
   </div>
-  <div class="right-pane"></div>
+
+  <div class="right-pane">
+    <div class="profile-msg" *ngIf="pwError">
+      > ERROR: The passwords you entered do not match.
+    </div>
+    <div class="profile-msg" *ngIf="pwSuccess">
+      > You have successfully updated your password.
+    </div>
+    <br>
+    <div class="profile-msg" *ngIf="dnSuccess">
+      > You have successfully updated your display name.
+    </div>
+    <br>
+    <div class="profile-msg" *ngIf="eaError">
+      > Please enter a valid email address.
+    </div>
+    <div class="profile-msg" *ngIf="eaSuccess">
+      > You have successfully updated your email address.
+    </div>
+    <br>
+    <div class="profile-msg" *ngIf="phError">
+      > Please enter a valid phone number matching the format: 000-000-0000
+    </div>
+    <div class="profile-msg" *ngIf="phSuccess">
+      > You have successfully updated your phone number.
+    </div>
+    <br>
+    <div class="profile-msg" *ngIf="zcError">
+      > Please enter a valid five-digit zip code.
+    </div>
+    <div class="profile-msg" *ngIf="zcSuccess">
+      > You have successfully updated your zip code.
+    </div>
+    <br>
+    <div class="profile-msg" *ngIf="submitted && !(pwError || pwSuccess || dnSuccess || eaError || eaSuccess ||
+    phError || phSuccess || zcError || zcSuccess)">
+      > Nothing have changed. Please try again.
+    </div>
+  </div>
 </div>
