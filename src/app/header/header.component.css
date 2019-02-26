@@ -10,25 +10,25 @@
   opacity: 0.9;
 }
 
-.profile-div {
+.left-part {
   position: fixed;
   right: 75px;
   top: 15px;
 }
 
-.multi-div {
+.right-div {
   position: fixed;
   right: 15px;
   top: 15px;
 }
 
-.profile-icon {
+.left-icon {
   height: 50px;
   width: auto;
   -webkit-filter: invert(100%);
 }
 
-.multi-icon {
+.right-icon {
   height: 50px;
   width: auto;
   -webkit-filter: invert(100%);
@@ -37,7 +37,15 @@
 .link-text {
   position: fixed;
   right: 25px;
-  top: 18px;
+  top: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.main-text {
+  position: fixed;
+  right: 84px;
+  top: 20px;
   color: white;
   text-decoration: none;
 }
@@ -45,11 +53,31 @@
 .profile-text {
   position: fixed;
   right: 78px;
-  top: 18px;
+  top: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.register-text {
+  position: fixed;
+  right: 15px;
+  top: 28px;
   color: white;
   text-decoration: none;
 }
 
 .link-text:hover {
+  text-decoration: underline;
+}
+
+.main-text:hover {
+  text-decoration: underline;
+}
+
+.profile-text:hover {
+  text-decoration: underline;
+}
+
+.register-text:hover {
   text-decoration: underline;
 }

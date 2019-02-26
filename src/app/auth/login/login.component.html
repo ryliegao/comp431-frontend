@@ -1,3 +1,15 @@
-<p>
-  login works!
-</p>
+<div class="content" id="login">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="login-form">
+
+    <header><b>--- Welcome back! ---</b></header>
+
+    <input type="text" placeholder="Username" formControlName="username">
+    <input type="text" placeholder="Password" formControlName="password" id="last_field">
+    <!--<input type="hidden" id="timestamp" name="time">-->
+
+    <div class="buttons">
+      <input type="submit" class="submit" value="Log In">
+    </div>
+
+  </form>
+</div>

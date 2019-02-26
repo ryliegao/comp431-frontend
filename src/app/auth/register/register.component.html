@@ -1,23 +1,17 @@
-<div class="content" id="login">
-  <form (ngSubmit)="onSubmit()" id="registration-form" name="info">
+<div class="content" id="registration">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" id="registration-form">
 
     <header><b>--- Welcome! ---</b></header>
 
-    <input type="text" name="username" placeholder="Account Name" [(ngModel)]="username"
-           pattern="^[a-zA-Z]([a-zA-Z0-9]+)*" required>
-    <input type="text" name="display" placeholder="Display Name (Optional)" [(ngModel)]="displayname">
-    <input type="text" name="email" placeholder="E-mail Address" [(ngModel)]="email"
-           pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+" required>
-    <input type="text" name="phone" placeholder="Phone Number: 000-000-0000"[(ngModel)]="phone"
-           pattern="^[1-9]\d{2}-\d{3}-\d{4}" required>
+    <input type="text" placeholder="Account Name" formControlName="username">
+    <input type="text" placeholder="Display Name (Optional)" formControlName="displayname">
+    <input type="text" placeholder="E-mail Address" formControlName="email">
+    <input type="text" placeholder="Phone Number: 000-000-0000"formControlName="phone">
     <!-- The "date" type does not work on Safari or IE -->
-    <input type="date" name="bday" placeholder="Date of Birth: YYYY-MM-DD" [(ngModel)]="birthday"
-           pattern="^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])" required>
-    <input type="text" name="zip" placeholder="Zip Code: XXXXX" [(ngModel)]="zipcode"
-           pattern="^\d{5}$" required>
-    <input type="password" name="pswd_1" placeholder="Password" [(ngModel)]="password1" required>
-    <input type="password" name="pswd_2" placeholder="Confirm Password" [(ngModel)]="password2"
-           id="last_field" required>
+    <input type="date" placeholder="Date of Birth: YYYY-MM-DD" formControlName="birthday">
+    <input type="text" placeholder="Zip Code: XXXXX" formControlName="zipcode">
+    <input type="password" placeholder="Password" formControlName="password1">
+    <input type="password" placeholder="Confirm Password" formControlName="password2" id="last_field">
 
     <!--<input type="hidden" id="timestamp" name="time">-->
 
@@ -25,6 +19,28 @@
       <input type="submit" class="submit" value="Submit">
       <input type="reset" class="clear" value="Clear">
     </div>
+
+    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+      <div *ngIf="f.username.errors.required">Username required</div>
+      <div *ngIf="f.username.errors.pattern">Username does not match</div>
+    </div>
+    <div *ngIf="submitted && f.birthday.errors" class="invalid-feedback">
+      <div *ngIf="f.birthday.errors.required">Birthday required</div>
+      <div *ngIf="f.birthday.errors.pattern">Birthday does not match</div>
+    </div>
+    <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+      <div *ngIf="f.phone.errors.required">Phone required</div>
+      <div *ngIf="f.phone.errors.pattern">Phone does not match</div>
+    </div>
+    <div *ngIf="submitted && f.zipcode.errors" class="invalid-feedback">
+      <div *ngIf="f.zipcode.errors.required">Zip Code required</div>
+      <div *ngIf="f.zipcode.errors.pattern">Zip Code does not match</div>
+    </div>
+    <div *ngIf="submitted && f.password1.errors" class="invalid-feedback">
+      <div *ngIf="f.password1.errors.required">Password required</div>
+      <div *ngIf="f.password1.errors.pattern">Password does not match</div>
+    </div>
+
 
   </form>
 </div>
