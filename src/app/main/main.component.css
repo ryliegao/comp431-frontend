@@ -1,14 +1,31 @@
-#dashboard {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-  transform: translateX(-50%);
+.main-page {
+  margin: 50px;
+}
+
+.dashboard {
+  float: right;
+  margin: 0 50px 0 0;
+}
+
+.following {
+  position: fixed;
+  float: left;
+  height: 500px !important;
+  width: auto;
+  overflow-y: scroll;
 }
 
 .grid-container {
   display: grid;
-  width: 1000px;
   grid-template-columns: repeat(1, 1fr);
+}
+
+.user-grid {
+  grid-gap: 49px;
+}
+
+.post-grid {
+  width: 800px;
   grid-gap: 20px;
 }
 
@@ -33,7 +50,7 @@
 }
 
 .text-holder-odd {
-  width: 500px !important;
+  width: 300px !important;
   height: 130px !important;
   float: left;
   margin: 30px;
@@ -46,7 +63,7 @@
 }
 
 .text-holder-even {
-  width: 500px !important;
+  width: 300px !important;
   height: 130px !important;
   float: right;
   margin: 30px;
@@ -60,7 +77,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 530px;
+  width: 338px;
   height: 52px;
   border-top: 1px solid #E0E0E0;
   box-sizing: border-box;
@@ -76,7 +93,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 530px;
+  width: 338px;
   height: 52px;
   border-top: 1px solid #E0E0E0;
   box-sizing: border-box;

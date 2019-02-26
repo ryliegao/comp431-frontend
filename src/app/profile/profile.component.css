@@ -1,0 +1,68 @@
+.edit-profile {
+  position: absolute;
+  left: 10%;
+  display: flex;
+}
+
+.profile-input {
+  border: solid 1px #969696;
+}
+
+.form-header {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #474747;
+  padding: 1rem;
+  margin: 0 0 1.5rem;
+  position: relative;
+  right: 1rem;
+  top: 1.25rem;
+  transition: color .2s ease;
+}
+
+.form-grp label {
+  display: block;
+  margin: 0.5rem 0;
+  font-weight: 700;
+  letter-spacing: .2px;
+  font-size: .875rem;
+  color: #474747;
+}
+
+.form-grp label.inline {
+  display: inline-block;
+  width: 100px;
+}
+
+.form-grp label.inline.right {
+  text-align: right;
+  padding-right: .5rem;
+}
+
+.submit-button {
+  background: transparent;
+  color: #474747;
+  width:150px;
+  height: 50px;
+  margin: 25px 0;
+}
+
+.submit-button:hover {
+  background: #969696;
+}
+
+.left-pane {
+  float: left;
+}
+
+.right-pane {
+  float: right;
+  height: 500px;
+  margin: 100px;
+  line-height: 2em;
+}
+
+.profile-msg {
+  padding: 20px;
+}
