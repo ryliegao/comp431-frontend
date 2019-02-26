@@ -1,22 +1,26 @@
-<div id="header">
+<div class="header">
+  <div class="display-name" *ngIf="hasLogOut()">
+    <img class="profile-image" src="assets/images/profile-image.jpeg" alt="">
+    <div id="user-name">Firstname Lastname</div>
+  </div>
   <div class="left-part" *ngIf="hasMain()">
-    <img class="left-icon" src="assets/images/main-page-icon.png" alt="">
+    <img class="icon" src="assets/images/main-page-icon.png" alt="">
     <a class="main-text" routerLink="/main">Main<br>Page</a>
   </div>
   <div class="left-part" *ngIf="hasProfile()">
-    <img class="left-icon" src="assets/images/profile-icon.png" alt="">
+    <img class="icon" src="assets/images/profile-icon.png" alt="">
     <a class="profile-text" routerLink="/profile">Your<br>Profile</a>
   </div>
   <div class="right-div" *ngIf="hasLogIn()">
-    <img class="right-icon" src="assets/images/profile-icon.png" alt="">
+    <img class="icon" src="assets/images/profile-icon.png" alt="">
     <a class="link-text" routerLink="/auth/login">Log<br>In</a>
   </div>
   <div class="right-div" *ngIf="hasLogOut()">
-    <img class="right-icon" src="assets/images/profile-icon.png" alt="">
+    <img class="icon" src="assets/images/profile-icon.png" alt="">
     <a class="link-text" routerLink="/auth/login">Log<br>Out</a>
   </div>
   <div class="right-div" *ngIf="hasRegister()">
-    <img class="right-icon" src="assets/images/profile-icon.png" alt="">
+    <img class="icon" src="assets/images/profile-icon.png" alt="">
     <a class="register-text" routerLink="/auth/register">Register</a>
   </div>
 </div>

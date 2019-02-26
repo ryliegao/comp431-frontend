@@ -1,4 +1,4 @@
-#header {
+.header {
   position: fixed;
   width: 100%;
   top: 0;
@@ -8,6 +8,22 @@
   height: 80px;
   background: #555;
   opacity: 0.9;
+}
+
+.display-name {
+  float: left;
+  margin: 15px;
+}
+
+#user-name {
+  float: right;
+  margin: 15px;
+  line-height: 25px;
+}
+
+img {
+  height: 50px;
+  width: auto;
 }
 
 .left-part {
@@ -22,15 +38,7 @@
   top: 15px;
 }
 
-.left-icon {
-  height: 50px;
-  width: auto;
-  -webkit-filter: invert(100%);
-}
-
-.right-icon {
-  height: 50px;
-  width: auto;
+.icon {
   -webkit-filter: invert(100%);
 }
 
