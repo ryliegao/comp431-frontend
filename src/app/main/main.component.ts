@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { first } from 'rxjs/operators';
-
-import { User } from 'src/app/_models';
-import { UserService } from 'src/app/_services';
+import { User } from 'src/app/_models/user';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main',
@@ -13,9 +11,13 @@ import { UserService } from 'src/app/_services';
 export class MainComponent implements OnInit {
   currentUser: User;
   users: User[] = [];
+  footer: SafeHtml;
+  safeHtml: SafeHtml;
 
-  constructor(private userService: UserService) {
+  constructor(private sanitizer: DomSanitizer) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
+    this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
   }
 
   ngOnInit() {

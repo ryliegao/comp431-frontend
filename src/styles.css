@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  background: #FCE4E4;
+  color: #969696;
+  line-height: 1.4em;
+}
+
+.content {
+  position: relative;
+  display: table;
+  table-layout: fixed;
+  padding-top: 50px;
+  width: 94%;
+  height: auto;
+}
+
+@media (max-width: 1200px) {
+  body {
+    line-height: 1.2em;
+  }
+}
+

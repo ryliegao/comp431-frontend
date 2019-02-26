@@ -1,18 +1,30 @@
+<div class="content" id="login">
+  <form (ngSubmit)="onSubmit()" id="registration-form" name="info">
 
-<input type="text" name="username" placeholder="Account Name" pattern="^[a-zA-Z]([a-zA-Z0-9]+)*" id="username" required>
-<input type="text" name="display" placeholder="Display Name (Optional)">
-<input type="text" name="email" placeholder="E-mail Address"
-       pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+" required>
-<input type="text" name="phone" placeholder="Phone Number: 000-000-0000" pattern="^[1-9]\d{2}-\d{3}-\d{4}" required>
-<!-- The "date" type does not work on Safari or IE -->
-<input type="date" name="bday" placeholder="Date of Birth: YYYY-MM-DD" pattern="^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])" required>
-<input type="text" name="zip" placeholder="Zip Code: XXXXX" pattern="^\d{5}$" required>
-<input type="password" name="pswd_1" placeholder="Password" required>
-<input type="password" name="pswd_2" placeholder="Confirm Password" id="last_field" required>
+    <header><b>--- Welcome! ---</b></header>
 
-<input type="hidden" id="timestamp" name="time">
+    <input type="text" name="username" placeholder="Account Name" [(ngModel)]="username"
+           pattern="^[a-zA-Z]([a-zA-Z0-9]+)*" required>
+    <input type="text" name="display" placeholder="Display Name (Optional)" [(ngModel)]="displayname">
+    <input type="text" name="email" placeholder="E-mail Address" [(ngModel)]="email"
+           pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+" required>
+    <input type="text" name="phone" placeholder="Phone Number: 000-000-0000"[(ngModel)]="phone"
+           pattern="^[1-9]\d{2}-\d{3}-\d{4}" required>
+    <!-- The "date" type does not work on Safari or IE -->
+    <input type="date" name="bday" placeholder="Date of Birth: YYYY-MM-DD" [(ngModel)]="birthday"
+           pattern="^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])" required>
+    <input type="text" name="zip" placeholder="Zip Code: XXXXX" [(ngModel)]="zipcode"
+           pattern="^\d{5}$" required>
+    <input type="password" name="pswd_1" placeholder="Password" [(ngModel)]="password1" required>
+    <input type="password" name="pswd_2" placeholder="Confirm Password" [(ngModel)]="password2"
+           id="last_field" required>
 
-<div class="buttons">
-  <input type="submit" class="submit" value="Submit">
-  <input type="reset" class="clear" value="Clear">
+    <!--<input type="hidden" id="timestamp" name="time">-->
+
+    <div class="buttons">
+      <input type="submit" class="submit" value="Submit">
+      <input type="reset" class="clear" value="Clear">
+    </div>
+
+  </form>
 </div>

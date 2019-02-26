@@ -1,0 +1,152 @@
+#dashboard {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.grid-container {
+  display: grid;
+  width: 1000px;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 20px;
+}
+
+.card {
+  position: relative;
+  height: 300px !important;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.img-holder-odd {
+  width: 500px !important;
+  float: right;
+  overflow: hidden;
+}
+
+.text-holder-odd {
+  width: 500px !important;
+  height: 130px !important;
+  float: left;
+  margin: 30px;
+}
+
+.img-holder-even {
+  width: 500px !important;
+  float: left;
+  overflow: hidden;
+}
+
+.text-holder-even {
+  width: 500px !important;
+  height: 130px !important;
+  float: right;
+  margin: 30px;
+}
+
+.action-bar-odd {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 530px;
+  height: 52px;
+  border-top: 1px solid #E0E0E0;
+  box-sizing: border-box;
+  transition: left 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  text-align: center;
+}
+
+.action-bar-even {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 530px;
+  height: 52px;
+  border-top: 1px solid #E0E0E0;
+  box-sizing: border-box;
+  transition: left 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  text-align: center;
+}
+
+.stop-button {
+  outline: none;
+  position: relative;
+  display: inline-block;
+  line-height: 52px;
+  padding: 0 16px;
+  color: #FF1744;
+  border: none;
+  background: transparent;
+  -webkit-appearance: button;
+  text-transform: none;
+  font-family: sans-serif;
+  font-size: 90%;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+p {
+  display: -webkit-box;
+  margin: 0;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 5;
+}
+
+@media (max-width: 1200px) {
+  .grid-container {
+    width: 500px;
+    flex-wrap: wrap;
+  }
+  .card {
+    height: 500px !important;
+    clear: both;
+  }
+  .img-holder-odd {
+    position: fixed;
+    clear: both;
+    overflow: visible;
+    left: 0;
+  }
+  .img-holder-even {
+    clear: both;
+    overflow: visible;
+  }
+  .text-holder-odd {
+    clear: both;
+    padding-top: 300px;
+  }
+  .text-holder-even {
+    position: absolute;
+    clear: both;
+    height: 88px !important;
+    width: 440px !important;
+    bottom: 52px;
+  }
+  p {
+    -webkit-line-clamp: 3;
+  }
+}
+
+.footer {
+  margin: 50px 0;
+  text-align: center;
+}
+

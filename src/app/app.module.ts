@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AlertComponent } from 'src/app/_directives';
 import { AuthGuard } from 'src/app/_guards';
 import { JwtInterceptor, ErrorInterceptor } from 'src/app/_helpers';
-import { AlertService, AuthenticationService, UserService } from 'src/app/_services';
+import { AlertService, AuthenticationService } from 'src/app/_services';
 import { fakeBackendProvider } from 'src/app/_helpers';
 import { FormsModule } from '@angular/forms';
 
@@ -31,16 +31,16 @@ import { HeaderComponent } from 'src/app/header/header.component';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    FormsModule
+    HttpClientModule
   ],
   providers: [
     AuthGuard,
     AlertService,
     AuthenticationService,
-    UserService,
+    MainComponent,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 

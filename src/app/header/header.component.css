@@ -10,10 +10,25 @@
   opacity: 0.9;
 }
 
-.profile-icon {
+.profile-div {
+  position: fixed;
+  right: 75px;
+  top: 15px;
+}
+
+.multi-div {
   position: fixed;
   right: 15px;
   top: 15px;
+}
+
+.profile-icon {
+  height: 50px;
+  width: auto;
+  -webkit-filter: invert(100%);
+}
+
+.multi-icon {
   height: 50px;
   width: auto;
   -webkit-filter: invert(100%);
@@ -21,7 +36,15 @@
 
 .link-text {
   position: fixed;
-  right: 18px;
+  right: 25px;
+  top: 18px;
+  color: white;
+  text-decoration: none;
+}
+
+.profile-text {
+  position: fixed;
+  right: 78px;
   top: 18px;
   color: white;
   text-decoration: none;
