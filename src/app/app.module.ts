@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AlertComponent } from 'src/app/_directives';
 import { AuthGuard } from 'src/app/_guards';
 import { JwtInterceptor, ErrorInterceptor } from 'src/app/_helpers';
-import { AlertService, AuthenticationService } from 'src/app/_services';
+import { AlertService, AuthenticationService, StorageService } from 'src/app/_services';
 import { fakeBackendProvider } from 'src/app/_helpers';
 import { FormsModule } from '@angular/forms';
 
@@ -42,6 +42,7 @@ import { UserComponent } from './main/user/user.component';
     AuthGuard,
     AlertService,
     AuthenticationService,
+    StorageService,
     MainComponent,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

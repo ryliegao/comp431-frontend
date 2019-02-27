@@ -1,21 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import { Injectable } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from 'src/app/_services/storage.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['../auth.component.css', './register.component.css']
 })
-
-@Injectable()
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private storageService: StorageService) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -68,7 +69,7 @@ export class RegisterComponent implements OnInit {
       try {
         const user = new User(
           this.registerForm.value.username,
-          this.registerForm.value.display,
+          this.registerForm.value.displayname,
           this.registerForm.value.email,
           this.registerForm.value.phone,
           this.registerForm.value.birthday,
@@ -82,7 +83,12 @@ export class RegisterComponent implements OnInit {
       }
       alert(this.registerForm.value.username + ', you have successfully registered!');
       this.router.navigate(['/auth/login']);
+      this.storageService.setItem(
+        this.registerForm.value.displayname === null || this.registerForm.value.displayname === '' ?
+          this.registerForm.value.username : this.registerForm.value.displayname
+      );
     }
+
     return false;
   }
 }

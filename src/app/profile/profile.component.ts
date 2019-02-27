@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {User} from '../_models/user';
+import { User } from 'src/app/_models/user';
+import { StorageService } from 'src/app/_services';
 
 @Component({
   selector: 'app-profile',
@@ -7,7 +8,7 @@ import {User} from '../_models/user';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  display = '';
+  displayname = '';
   email = '';
   phone = '';
   zipcode = '';
@@ -29,13 +30,13 @@ export class ProfileComponent implements OnInit {
   pw1: string;
   pw2: string;
 
-  constructor() { }
+  constructor(private storageService: StorageService) { }
 
   ngOnInit() {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.display = user.displayname;
+        this.displayname = user.displayname;
         this.email = user.email;
         this.phone = user.phone;
         this.zipcode = user.zipcode;
@@ -67,8 +68,8 @@ export class ProfileComponent implements OnInit {
       }
     }
 
-    if (this.dn && this.dn !== this.display) {
-      this.display = this.dn;
+    if (this.dn && this.dn !== this.displayname) {
+      this.displayname = this.dn;
       this.dnSuccess = true;
     }
 
@@ -104,7 +105,7 @@ export class ProfileComponent implements OnInit {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         const newUser = new User(
           user.username,
-          this.display,
+          this.displayname,
           this.email,
           this.phone,
           user.birthday,
@@ -127,6 +128,7 @@ export class ProfileComponent implements OnInit {
       this.zc = '';
     }
 
+    this.storageService.setItem(this.displayname);
     this.submitted = false;
   }
 }

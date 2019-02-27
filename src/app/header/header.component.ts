@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import {User} from '../_models/user';
+import { User } from 'src/app/_models/user';
+import { StorageService } from 'src/app/_services';
 
 @Component({
   selector: 'app-header',
@@ -15,13 +16,25 @@ import {User} from '../_models/user';
 export class HeaderComponent implements OnInit {
   name: string;
 
-  constructor(private location: Location) { }
+  constructor(
+    private location: Location,
+    private storageService: StorageService) {
+    this.storageService.watchStorage().subscribe((data: string) => {
+      console.log(data);
+      this.updateName();
+    });
+  }
 
   ngOnInit() {
+    this.updateName();
+  }
+
+  updateName() {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.name = user.displayname === null ? user.username : user.displayname;
+        this.name = user.displayname === null || user.displayname === '' ?
+          user.username : user.displayname;
       } else {
         this.name = 'Default Name';
       }

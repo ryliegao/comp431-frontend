@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/_models/user';
@@ -6,14 +6,14 @@ import { User } from 'src/app/_models/user';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['../auth.component.css', './login.component.css']
+  styleUrls: ['../auth.component.css', './login.component.css'],
 })
-
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
   wrong = false;
+  @Output() loginEmiiter = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
