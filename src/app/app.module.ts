@@ -18,6 +18,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { HeaderComponent } from 'src/app/header/header.component';
 import { UserComponent } from './main/user/user.component';
+import { Imagepost1Component } from './main/imagepost1/imagepost1.component';
+import { Imagepost2Component } from './main/imagepost2/imagepost2.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { UserComponent } from './main/user/user.component';
     LoginComponent,
     RegisterComponent,
     HeaderComponent,
-    UserComponent
+    UserComponent,
+    Imagepost1Component,
+    Imagepost2Component
   ],
   imports: [
     BrowserModule,
