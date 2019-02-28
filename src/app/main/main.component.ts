@@ -114,7 +114,7 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createPost(content: string, image: string, clear: boolean, index = this.postContainer.length) {
+  createPost(content: string, image: string, clear: boolean, index = this.postContainer.length) {
     if (clear) {
       this.postContainer.clear();
       index = 0;
@@ -143,7 +143,7 @@ export class MainComponent implements OnInit, OnDestroy {
     // }
   }
 
-  private addUser(username: string, image: string, clear: boolean, index = this.userContainer.length) {
+  addUser(username: string, image: string, clear: boolean, index = this.userContainer.length) {
     if (clear) {
       this.userContainer.clear();
     }
