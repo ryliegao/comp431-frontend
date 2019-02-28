@@ -15,18 +15,20 @@ import { StorageService } from 'src/app/_services';
 
 export class HeaderComponent implements OnInit {
   name: string;
+  status: string;
 
   constructor(
     private location: Location,
     private storageService: StorageService) {
     this.storageService.watchStorage().subscribe((data: string) => {
-      console.log(data);
       this.updateName();
+      this.updateStatus();
     });
   }
 
   ngOnInit() {
     this.updateName();
+    this.updateStatus();
   }
 
   updateName() {
@@ -39,7 +41,20 @@ export class HeaderComponent implements OnInit {
         this.name = 'Default Name';
       }
     } catch (e) {
-      console.log('This browser does not support local storage.');
+      console.log('This browser does not support local storage. [Header]');
+    }
+  }
+
+  updateStatus() {
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        this.status = user.status;
+      } else {
+        this.status = 'Hey! I\'m new to here!';
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage. [Header]');
     }
   }
 

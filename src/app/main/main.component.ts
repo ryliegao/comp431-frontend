@@ -13,6 +13,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Imagepost1Component } from './imagepost1/imagepost1.component';
 import { Imagepost2Component } from './imagepost2/imagepost2.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { StorageService } from 'src/app/_services';
 
 @Component({
   selector: 'app-main',
@@ -20,7 +21,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./main.component.css'],
   providers: [ Imagepost1Component, Imagepost2Component ]
 })
-
 export class MainComponent implements OnInit, OnDestroy {
   @ViewChild('postContainer', { read: ViewContainerRef }) container;
   currentUser: User;
@@ -38,6 +38,7 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(
     private sanitizer: DomSanitizer,
     private httpService: HttpClient,
+    private storageService: StorageService,
     private resolver: ComponentFactoryResolver) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
@@ -111,8 +112,33 @@ export class MainComponent implements OnInit, OnDestroy {
     this.componentRef.instance.image = image;
   }
 
+  changeStatus(status: string) {
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        const newUser = new User(
+          user.username,
+          user.displayname,
+          user.email,
+          user.phone,
+          user.birthday,
+          user.zipcode,
+          user.password,
+          user.loggedin,
+          status
+        );
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        this.storageService.setItem(status);
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+    }
+  }
+
   ngOnDestroy() {
-    this.componentRef.destroy();
+    if (this.componentRef) {
+      this.componentRef.destroy();
+    }
   }
 
 

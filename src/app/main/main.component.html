@@ -1,13 +1,16 @@
 <div class="content main-page">
 
   <div class="input-box">
-    <textarea class="input-style-post" placeholder="Type here ..." rows="5" [(ngModel)]="postText"></textarea>
+    <textarea class="input-style-post" placeholder="What's on your mind?" rows="5" [(ngModel)]="postText"></textarea>
     <div class="btn">
       <span>upload</span>
       <input class="upload-image-input input-button" type="file">
     </div>
     <div class="btn">
-      <span (click)="createPost(this.postText, this.defaultImage, false, 0)">post</span>
+      <span (click)="createPost(this.postText, this.defaultImage, false, 0);this.postText = '';">make post</span>
+    </div>
+    <div class="btn">
+      <span (click)="changeStatus(postText);this.postText = '';">make status</span>
     </div>
     <div class="btn">
       <span (click)="this.postText = '';">cancel</span>
@@ -30,18 +33,7 @@
   </div>
 
   <div class="dashboard">
-    <div class="grid-container post-grid" #postContainer>
-
-      <!--<app-imagepost1 content="{{ content[0] }}" image="{{ image[0] }}"></app-imagepost1>-->
-      <!--<app-imagepost2 content="{{ content[1] }}" image="{{ image[1] }}"></app-imagepost2>-->
-      <!--<app-imagepost1 content="{{ content[2] }}" image="{{ image[2] }}"></app-imagepost1>-->
-      <!--<app-imagepost2 content="{{ content[3] }}" image="{{ image[3] }}"></app-imagepost2>-->
-      <!--<app-imagepost1 content="{{ content[4] }}" image="{{ image[4] }}"></app-imagepost1>-->
-      <!--<app-imagepost2 content="{{ content[5] }}" image="{{ image[5] }}"></app-imagepost2>-->
-      <!--<app-imagepost1 content="{{ content[6] }}" image="{{ image[6] }}"></app-imagepost1>-->
-      <!--<app-imagepost2 content="{{ content[7] }}" image="{{ image[7] }}"></app-imagepost2>-->
-
-    </div>
+    <div class="grid-container post-grid" #postContainer></div>
     <div id="footer" class="footer" [innerHtml]="footer"></div>
   </div>
 

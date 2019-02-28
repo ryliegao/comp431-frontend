@@ -15,10 +15,14 @@
   margin: 15px;
 }
 
-#user-name {
+.user-info {
   float: right;
-  margin: 15px;
-  line-height: 25px;
+}
+
+#username, #status {
+  margin: 10px;
+  line-height: 12px;
+  text-align: left;
 }
 
 img {

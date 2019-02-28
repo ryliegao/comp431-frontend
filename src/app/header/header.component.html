@@ -1,7 +1,10 @@
 <div class="header">
   <div class="display-name" *ngIf="hasLogOut()">
     <img class="profile-image" src="assets/images/profile-image.jpeg" alt="">
-    <div id="user-name">{{ name }}</div>
+    <div class="user-info">
+      <div id="username">{{ name }}</div>
+      <div id="status"><b>Status:</b> {{ status }}</div>
+    </div>
   </div>
   <div class="left-part" *ngIf="hasMain()">
     <img class="icon" src="assets/images/main-page-icon.png" alt="">
