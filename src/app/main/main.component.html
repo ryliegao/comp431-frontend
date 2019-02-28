@@ -1,4 +1,10 @@
 <div class="content main-page">
+
+  <div id="accordion_search_bar_container">
+    <input type="search" id="accordion_search_bar" placeholder="  Search" [(ngModel)]="searchText"
+           (change)="search()" (keyup)="search()" (paste)="search()" (click)="search()"/>
+  </div>
+
   <div class="following">
     <div class="grid-container user-grid">
       <app-user></app-user>
@@ -10,10 +16,16 @@
   </div>
 
   <div class="dashboard">
-    <div class="grid-container post-grid">
+    <div class="grid-container post-grid" #postContainer>
 
-      <app-imagepost1 content="{{content}}" image="assets/images/default-img-3.jpg"></app-imagepost1>
-      <app-imagepost2 content="{{content}}" image="assets/images/default-img-3.jpg"></app-imagepost2>
+      <!--<app-imagepost1 content="{{ content[0] }}" image="{{ image[0] }}"></app-imagepost1>-->
+      <!--<app-imagepost2 content="{{ content[1] }}" image="{{ image[1] }}"></app-imagepost2>-->
+      <!--<app-imagepost1 content="{{ content[2] }}" image="{{ image[2] }}"></app-imagepost1>-->
+      <!--<app-imagepost2 content="{{ content[3] }}" image="{{ image[3] }}"></app-imagepost2>-->
+      <!--<app-imagepost1 content="{{ content[4] }}" image="{{ image[4] }}"></app-imagepost1>-->
+      <!--<app-imagepost2 content="{{ content[5] }}" image="{{ image[5] }}"></app-imagepost2>-->
+      <!--<app-imagepost1 content="{{ content[6] }}" image="{{ image[6] }}"></app-imagepost1>-->
+      <!--<app-imagepost2 content="{{ content[7] }}" image="{{ image[7] }}"></app-imagepost2>-->
 
     </div>
     <div id="footer" class="footer" [innerHtml]="footer"></div>

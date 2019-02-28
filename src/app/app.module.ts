@@ -1,46 +1,45 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AlertComponent } from 'src/app/_directives';
 import { AuthGuard } from 'src/app/_guards';
 import { JwtInterceptor, ErrorInterceptor } from 'src/app/_helpers';
 import { AlertService, AuthenticationService, StorageService } from 'src/app/_services';
 import { fakeBackendProvider } from 'src/app/_helpers';
-import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
 import { MainComponent } from 'src/app/main/main.component';
-import { ProfileComponent } from './profile/profile.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
+import { ProfileComponent } from 'src/app/profile/profile.component';
+import { LoginComponent } from 'src/app/auth/login/login.component';
+import { RegisterComponent } from 'src/app/auth/register/register.component';
 import { HeaderComponent } from 'src/app/header/header.component';
-import { UserComponent } from './main/user/user.component';
-import { Imagepost1Component } from './main/imagepost1/imagepost1.component';
-import { Imagepost2Component } from './main/imagepost2/imagepost2.component';
+import { UserComponent } from 'src/app/main/user/user.component';
+import { Imagepost1Component } from 'src/app/main/imagepost1/imagepost1.component';
+import { Imagepost2Component } from 'src/app/main/imagepost2/imagepost2.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AlertComponent,
-    AuthComponent,
-    MainComponent,
-    ProfileComponent,
-    LoginComponent,
-    RegisterComponent,
-    HeaderComponent,
-    UserComponent,
-    Imagepost1Component,
-    Imagepost2Component
-  ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule
+  ],
+  declarations: [
+    AppComponent,
+    AlertComponent,
+    AuthComponent,
+    UserComponent,
+    Imagepost1Component,
+    Imagepost2Component,
+    MainComponent,
+    ProfileComponent,
+    LoginComponent,
+    RegisterComponent,
+    HeaderComponent
   ],
   providers: [
     AuthGuard,
@@ -54,7 +53,8 @@ import { Imagepost2Component } from './main/imagepost2/imagepost2.component';
     // provider used to create fake backend
     fakeBackendProvider
   ],
-  bootstrap: [AppComponent]
+  entryComponents: [ Imagepost1Component, Imagepost2Component, UserComponent ],
+  bootstrap: [ AppComponent ]
 })
 
 export class AppModule { }
