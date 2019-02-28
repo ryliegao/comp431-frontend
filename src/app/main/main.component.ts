@@ -31,6 +31,7 @@ export class MainComponent implements OnInit, OnDestroy {
   searchText = '';
   data = {};
   componentRef: ComponentRef<Imagepost1Component>;
+  cleared = true;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -67,15 +68,25 @@ export class MainComponent implements OnInit, OnDestroy {
 
   search() {
     if (this.searchText === null || this.searchText === '') {
+      if (!this.cleared) {
+        this.cleared = true;
+        this.loadPosts();
+      }
       return;
     }
+    this.cleared = false;
     let i = 0;
+    let found = false;
     while (this.data[i]) {
       const str = this.data[i].content as string;
       if (str.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0) {
         this.createPost(this.data[i].content, this.data[i].image, true);
+        found = true;
       }
       i++;
+    }
+    if (!found) {
+      this.container.clear();
     }
   }
 
