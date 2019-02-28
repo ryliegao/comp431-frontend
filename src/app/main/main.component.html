@@ -1,5 +1,19 @@
 <div class="content main-page">
 
+  <div class="input-box">
+    <textarea class="input-style-post" placeholder="Type here ..." rows="5" [(ngModel)]="postText"></textarea>
+    <div class="btn">
+      <span>upload</span>
+      <input class="upload-image-input input-button" type="file">
+    </div>
+    <div class="btn">
+      <span (click)="createPost(this.postText, this.defaultImage, false, 0)">post</span>
+    </div>
+    <div class="btn">
+      <span (click)="this.postText = '';">cancel</span>
+    </div>
+  </div>
+
   <div id="accordion_search_bar_container">
     <input type="search" id="accordion_search_bar" placeholder="  Search" [(ngModel)]="searchText"
            (change)="search()" (keyup)="search()" (paste)="search()" (click)="search()"/>

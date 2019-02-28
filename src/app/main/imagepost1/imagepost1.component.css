@@ -1,11 +1,13 @@
 .card {
   position: relative;
   height: 300px !important;
+  width: 800px !important;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   background-color: white;
   border-radius: 5px;
   overflow: hidden;
   display: flex;
+  margin-bottom: 20px;
 }
 
 .card:hover {
@@ -73,6 +75,7 @@ p {
 @media (max-width: 1300px) {
   .card {
     height: 500px !important;
+    width: 500px !important;
     clear: both;
   }
 

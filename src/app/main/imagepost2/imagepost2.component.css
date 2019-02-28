@@ -6,6 +6,7 @@
   border-radius: 5px;
   overflow: hidden;
   display: flex;
+  margin-bottom: 20px;
 }
 
 .card:hover {

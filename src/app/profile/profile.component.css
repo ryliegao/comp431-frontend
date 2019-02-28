@@ -93,13 +93,13 @@
   cursor: pointer;
 }
 
-.upload-image {
+.btn {
   position: relative;
   overflow: hidden;
   display: inline-block;
 }
 
-.upload-image input {
+.btn input {
   position: absolute;
   top: 0;
   right: 0;

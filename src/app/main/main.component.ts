@@ -32,6 +32,8 @@ export class MainComponent implements OnInit, OnDestroy {
   data = {};
   componentRef: ComponentRef<Imagepost1Component>;
   cleared = true;
+  postText: string;
+  defaultImage = 'assets/images/default-img.jpg';
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -90,12 +92,21 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createPost(content: string, image: string, clear: boolean) {
-    if (clear) {
+  private createPost(content: string, image: string, clear: boolean, index = this.container.length) {
+    let check: boolean;
+    if (this.container.length === 0 || clear) {
       this.container.clear();
+      check = true;
+    } else {
+      check = index === 0;
     }
-    const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
-    this.componentRef = this.container.createComponent(factory);
+    if (check) {
+      const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
+      this.componentRef = this.container.createComponent(factory, index);
+    } else {
+      const factory: ComponentFactory<Imagepost2Component> = this.resolver.resolveComponentFactory(Imagepost2Component);
+      this.componentRef = this.container.createComponent(factory, index);
+    }
     this.componentRef.instance.content = content;
     this.componentRef.instance.image = image;
   }

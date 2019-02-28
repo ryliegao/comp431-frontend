@@ -1,9 +1,9 @@
 .main-page {
   position: absolute;
-  top: 20%;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 1150px;
 }
 
 .dashboard {
@@ -33,6 +33,10 @@
 }
 
 @media (max-width: 1300px) {
+  .main-page {
+    width: 852px;
+  }
+
   .post-grid {
     width: 500px;
     flex-wrap: wrap;
@@ -51,7 +55,7 @@
 
 #accordion_search_bar_container {
   position: relative;
-  width: 80%;
+  width: 500px;
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 50px;
@@ -75,4 +79,63 @@
   border: 2px solid #cacaca;
   border-radius: 25px;
   outline: 0;
+}
+
+.input-box {
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.input-style-post {
+  background-color: #ffffff;
+  opacity: 0.8;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  width: 500px;
+  float: left;
+  margin-left: 50px;
+}
+
+.input-button {
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  /* prevents bg color from leaking outside the border */
+  display: inline-block;
+  border: 0;
+  -webkit-appearance: button;
+  /* for input */
+  -webkit-user-select: none;
+  /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.btn {
+  background: lightpink;
+  color: #fff;
+  text-align: center;
+  padding: 10px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+  width: 100px;
+  height: 25px;
+  margin-left: 50px;
+}
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
 }
