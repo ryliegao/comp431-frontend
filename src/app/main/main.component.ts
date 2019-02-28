@@ -12,6 +12,7 @@ import { User } from 'src/app/_models/user';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Imagepost1Component } from './imagepost1/imagepost1.component';
 import { Imagepost2Component } from './imagepost2/imagepost2.component';
+import { HeaderComponent } from 'src/app/header/header.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { StorageService } from 'src/app/_services';
 
@@ -19,7 +20,7 @@ import { StorageService } from 'src/app/_services';
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
-  providers: [ Imagepost1Component, Imagepost2Component ]
+  providers: [ Imagepost1Component, Imagepost2Component, HeaderComponent ]
 })
 export class MainComponent implements OnInit, OnDestroy {
   @ViewChild('postContainer', { read: ViewContainerRef }) container;
@@ -39,7 +40,8 @@ export class MainComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private httpService: HttpClient,
     private storageService: StorageService,
-    private resolver: ComponentFactoryResolver) {
+    private resolver: ComponentFactoryResolver,
+    private header: HeaderComponent) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
     this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
@@ -114,9 +116,10 @@ export class MainComponent implements OnInit, OnDestroy {
 
   changeStatus(status: string) {
     try {
+      let newUser;
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const newUser = new User(
+        newUser = new User(
           user.username,
           user.displayname,
           user.email,
@@ -129,7 +132,21 @@ export class MainComponent implements OnInit, OnDestroy {
         );
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         this.storageService.setItem(status);
+      } else {
+        newUser = new User(
+          '',
+          'Default Name',
+          '',
+          '',
+          null,
+          '',
+          '',
+          true,
+          status
+        );
       }
+      localStorage.setItem('currentUser', JSON.stringify(newUser));
+      this.storageService.setItem(status);
     } catch (e) {
       console.log('This browser does not support local storage.');
     }
