@@ -1,23 +1,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
-<div class="user-profile">
-  <img class="avatar" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTF_erFD1SeUnxEpvFjzBCCDxLvf-wlh9ZuPMqi02qGnyyBtPWdE-3KoH3s" alt="Ash" />
-  <div class="username">Will Smith</div>
-  <div class="bio">
-    Senior UI Designer
-  </div>
-  <div class="description">
-    I use to design websites and applications
-    for the web.
-  </div>
+<div class="user-profile" *ngIf="show">
+  <img class="avatar" [src]="image" alt="" />
+  <div class="username">{{ username }}</div>
+  <div class="bio">Senior UI Designer</div>
+  <div class="status">{{ status }}</div>
   <ul class="data">
     <li>
-      <span class="entypo-heart"> 127</span>
+      <span class="entypo-heart"> {{ hearts }}</span>
     </li>
     <li>
-      <span class="entypo-eye"> 853</span>
+      <span class="entypo-eye"> {{ following }}</span>
     </li>
     <li>
-      <span class="entypo-user"> 311</span>
+      <span class="entypo-user"> {{ followers }}</span>
+    </li>
+    <li (click)="this.show = false;">
+      <span>Unfollow</span>
     </li>
   </ul>
 </div>

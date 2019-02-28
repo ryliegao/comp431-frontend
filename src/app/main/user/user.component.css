@@ -6,11 +6,11 @@
 }
 
 .user-profile {
-  margin: auto;
   width: 20em !important;
   height: 8em;
   background: #fff;
   border-radius: .3em;
+  margin-bottom: 50px;
 }
 
 .user-profile  .username {
@@ -29,7 +29,7 @@
   font-family: "varela round", sans-serif;
 }
 
-.user-profile > .description {
+.user-profile > .status {
   margin: 0.1em 0 auto auto;
   width: 14em;
   color: #c0c5c5;
@@ -52,12 +52,13 @@
   background: #C0C0C0;
   text-align: center;
   border-radius: 0 0 .3em .3em;
+  padding-inline-start: 0px;
 }
 
 .user-profile li {
   margin: 0 auto;
   padding: 0.8em;
-  width: 33.33334%;
+  width: 25%;
   display: table-cell;
   text-align: center;
 }
@@ -66,7 +67,7 @@
   font-family: "varela round", sans-serif;
   color: #F6F6F6;
   white-space: nowrap;
-  font-size: 0.8em;
+  font-size: 0.9em;
   font-weight: bold;
 }
 

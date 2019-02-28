@@ -6,14 +6,14 @@
       <span>upload</span>
       <input class="upload-image-input input-button" type="file">
     </div>
-    <div class="btn">
-      <span (click)="createPost(this.postText, this.defaultImage, false, 0);this.postText = '';">make post</span>
+    <div class="btn" (click)="createPost(this.postText, this.defaultImage, false, 0);this.postText = '';">
+      <span>post</span>
     </div>
-    <div class="btn">
-      <span (click)="changeStatus(postText);this.postText = '';">make status</span>
+    <div class="btn" (click)="changeStatus(postText);this.postText = '';">
+      <span>status</span>
     </div>
-    <div class="btn">
-      <span (click)="this.postText = '';">cancel</span>
+    <div class="btn" (click)="this.postText = '';">
+      <span>cancel</span>
     </div>
   </div>
 
@@ -22,13 +22,12 @@
            (change)="search()" (keyup)="search()" (paste)="search()" (click)="search()"/>
   </div>
 
-  <div class="following">
-    <div class="grid-container user-grid">
-      <app-user></app-user>
-      <app-user></app-user>
-      <app-user></app-user>
-      <app-user></app-user>
-      <app-user></app-user>
+  <div class="userpane">
+    <div class="following">
+      <div class="grid-container user-grid" #userContainer></div>
+    </div>
+    <div class="btn" id="add-user" (click)="addUser('Mack Joyner', this.defaultAvatar, false, 0);">
+      <span>Add</span>
     </div>
   </div>
 

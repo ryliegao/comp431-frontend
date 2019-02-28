@@ -12,7 +12,7 @@ import { User } from 'src/app/_models/user';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Imagepost1Component } from './imagepost1/imagepost1.component';
 import { Imagepost2Component } from './imagepost2/imagepost2.component';
-import { HeaderComponent } from 'src/app/header/header.component';
+import { UserComponent } from './user/user.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { StorageService } from 'src/app/_services';
 
@@ -20,10 +20,11 @@ import { StorageService } from 'src/app/_services';
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
-  providers: [ Imagepost1Component, Imagepost2Component, HeaderComponent ]
+  providers: [ Imagepost1Component, Imagepost2Component, UserComponent ]
 })
 export class MainComponent implements OnInit, OnDestroy {
-  @ViewChild('postContainer', { read: ViewContainerRef }) container;
+  @ViewChild('postContainer', { read: ViewContainerRef }) postContainer;
+  @ViewChild('userContainer', { read: ViewContainerRef }) userContainer;
   currentUser: User;
   users: User[] = [];
   footer: SafeHtml;
@@ -31,17 +32,19 @@ export class MainComponent implements OnInit, OnDestroy {
   image: string[] = [];
   searchText = '';
   data = {};
-  componentRef: ComponentRef<Imagepost1Component>;
+  post1Ref: ComponentRef<Imagepost1Component>;
+  post2Ref: ComponentRef<Imagepost2Component>;
+  userRef: ComponentRef<UserComponent>;
   cleared = true;
   postText: string;
   defaultImage = 'assets/images/default-img.jpg';
+  defaultAvatar = 'assets/images/mack-joyner.jpg';
 
   constructor(
     private sanitizer: DomSanitizer,
     private httpService: HttpClient,
     private storageService: StorageService,
-    private resolver: ComponentFactoryResolver,
-    private header: HeaderComponent) {
+    private resolver: ComponentFactoryResolver) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
     this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
@@ -69,7 +72,21 @@ export class MainComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadUsers() { }
+  private loadUsers() {
+    this.httpService.get('assets/users.json').subscribe(
+      data => {
+        let i = 0;
+        while (data[i]) {
+          // only clear former users on entry
+          this.addUser(data[i].username, data[i].image, i === 0);
+          i++;
+        }
+      },
+      (err: HttpErrorResponse) => {
+        console.log (err.message);
+      }
+    );
+  }
 
   search() {
     if (this.searchText === null || this.searchText === '') {
@@ -91,27 +108,40 @@ export class MainComponent implements OnInit, OnDestroy {
       i++;
     }
     if (!found) {
-      this.container.clear();
+      this.postContainer.clear();
     }
   }
 
-  private createPost(content: string, image: string, clear: boolean, index = this.container.length) {
+  private createPost(content: string, image: string, clear: boolean, index = this.postContainer.length) {
     let check: boolean;
-    if (this.container.length === 0 || clear) {
-      this.container.clear();
+    if (this.postContainer.length === 0 || clear) {
+      this.postContainer.clear();
       check = true;
     } else {
       check = index === 0;
     }
     if (check) {
       const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
-      this.componentRef = this.container.createComponent(factory, index);
+      this.post1Ref = this.postContainer.createComponent(factory, index);
+      this.post1Ref.instance.content = content;
+      this.post1Ref.instance.image = image;
     } else {
       const factory: ComponentFactory<Imagepost2Component> = this.resolver.resolveComponentFactory(Imagepost2Component);
-      this.componentRef = this.container.createComponent(factory, index);
+      this.post2Ref = this.postContainer.createComponent(factory, index);
+      this.post2Ref.instance.content = content;
+      this.post2Ref.instance.image = image;
     }
-    this.componentRef.instance.content = content;
-    this.componentRef.instance.image = image;
+
+  }
+
+  private addUser(username: string, image: string, clear: boolean, index = this.userContainer.length) {
+    if (clear) {
+      this.userContainer.clear();
+    }
+    const factory: ComponentFactory<UserComponent> = this.resolver.resolveComponentFactory(UserComponent);
+    this.userRef = this.userContainer.createComponent(factory, index);
+    this.userRef.instance.username = username;
+    this.userRef.instance.image = image;
   }
 
   changeStatus(status: string) {
@@ -153,8 +183,11 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.componentRef) {
-      this.componentRef.destroy();
+    if (this.post1Ref) {
+      this.post1Ref.destroy();
+    }
+    if (this.post2Ref) {
+      this.post2Ref.destroy();
     }
   }
 
