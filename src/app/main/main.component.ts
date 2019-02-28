@@ -36,6 +36,8 @@ export class MainComponent implements OnInit, OnDestroy {
   post2Ref: ComponentRef<Imagepost2Component>;
   userRef: ComponentRef<UserComponent>;
   cleared = true;
+  beginningPost = true;
+  endingPost = true;
   postText: string;
   defaultImage = 'assets/images/default-img.jpg';
   defaultAvatar = 'assets/images/mack-joyner.jpg';
@@ -113,25 +115,32 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   private createPost(content: string, image: string, clear: boolean, index = this.postContainer.length) {
-    let check: boolean;
-    if (this.postContainer.length === 0 || clear) {
+    if (clear) {
       this.postContainer.clear();
-      check = true;
-    } else {
-      check = index === 0;
-    }
-    if (check) {
-      const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
-      this.post1Ref = this.postContainer.createComponent(factory, index);
-      this.post1Ref.instance.content = content;
-      this.post1Ref.instance.image = image;
-    } else {
-      const factory: ComponentFactory<Imagepost2Component> = this.resolver.resolveComponentFactory(Imagepost2Component);
-      this.post2Ref = this.postContainer.createComponent(factory, index);
-      this.post2Ref.instance.content = content;
-      this.post2Ref.instance.image = image;
+      index = 0;
     }
 
+    const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
+    this.post1Ref = this.postContainer.createComponent(factory, index);
+    this.post1Ref.instance.content = content;
+    this.post1Ref.instance.image = image;
+
+    // if ((isAdding && this.beginningPost) || this.endingPost) {
+    //   const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
+    //   this.post1Ref = this.postContainer.createComponent(factory, index);
+    //   this.post1Ref.instance.content = content;
+    //   this.post1Ref.instance.image = image;
+    // } else {
+    //   const factory: ComponentFactory<Imagepost2Component> = this.resolver.resolveComponentFactory(Imagepost2Component);
+    //   this.post2Ref = this.postContainer.createComponent(factory, index);
+    //   this.post2Ref.instance.content = content;
+    //   this.post2Ref.instance.image = image;
+    //   if (!this.endingPost) {
+    //     this.endingPost = true;
+    //   } else if () {
+    //     this.endingPost = false;
+    //   }
+    // }
   }
 
   private addUser(username: string, image: string, clear: boolean, index = this.userContainer.length) {
