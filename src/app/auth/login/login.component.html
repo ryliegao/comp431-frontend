@@ -3,21 +3,17 @@
 
     <header><b>--- Welcome back! ---</b></header>
 
-    <input type="text" placeholder="Username" formControlName="username">
-    <input type="password" placeholder="Password" formControlName="password" id="last_field">
-    <!--<input type="hidden" id="timestamp" name="time">-->
+    <input type="text" placeholder="Username" formControlName="username" (change)="removeMsg()">
+    <span class="error-message" *ngIf="submitted && invalid">
+      Please enter both of your username and your password!
+    </span>
+    <span class="error-message" *ngIf="submitted && notMatch">
+      Username and password do not match!
+    </span>
+    <input type="password" placeholder="Password" formControlName="password" id="last_field" (change)="removeMsg()">
 
     <div class="buttons">
       <input type="submit" class="submit" value="Log In">
-    </div>
-
-
-    <div *ngIf="submitted && invalid" class="invalid-feedback">
-      Please enter both your username and your password!
-    </div>
-
-    <div *ngIf="submitted && notMatch" class="invalid-feedback">
-      Username and password do not match!
     </div>
 
   </form>

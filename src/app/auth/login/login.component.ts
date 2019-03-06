@@ -28,6 +28,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  removeMsg() {
+    this.invalid = false;
+    this.notMatch = false;
+    this.submitted = false;
+  }
+
   onSubmit() {
     this.invalid = false;
     this.notMatch = false;
@@ -39,12 +45,13 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    // check if the username and password matches
-    if (!this.service.checkLogin(this.loginForm.get('username').value, this.loginForm.get('password').value)) {
-      this.notMatch = true;
-      return;
-    }
-
-    this.router.navigate(['/main']);
+    // check if the username and password match
+    this.service.checkLogin(this.loginForm.get('username').value, this.loginForm.get('password').value).then(match => {
+      if (match) {
+        this.router.navigate(['/main']);
+      } else {
+        this.notMatch = true;
+      }
+    });
   }
 }
