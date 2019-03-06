@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { StorageService } from 'src/app/_services';
 import { MainComponent } from './main.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -8,7 +10,9 @@ describe('MainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MainComponent ]
+      imports: [ ReactiveFormsModule, FormsModule, HttpClientTestingModule ],
+      declarations: [ MainComponent ],
+      providers: [ StorageService ]
     })
     .compileComponents();
   }));

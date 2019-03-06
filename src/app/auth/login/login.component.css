@@ -9,9 +9,9 @@
   border-radius: 0.25em;
   /* prevent click and touch events */
   pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s 0, visibility 0 0.2s;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.2s 0, visibility 0 0;
 }
 
 .error-message::after {
@@ -25,10 +25,4 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 8px solid rgba(215, 102, 102, 0.9);
-}
-
-.error-message {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.2s 0, visibility 0 0;
 }
