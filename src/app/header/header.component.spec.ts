@@ -44,7 +44,7 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should log out a user and login state should be cleared', () => {
+  it('should log out a user and clear the login state', () => {
     localStorage.setItem('currentUser', JSON.stringify({username: 'user', password: 'password'}));
     expect(removed).toBeFalsy();
     expect(component.name).toBe('Mark Lee');
