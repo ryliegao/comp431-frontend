@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
-import { StorageService } from 'src/app/_services';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
   pw1: string;
   pw2: string;
 
-  constructor(private storageService: StorageService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     try {
@@ -103,17 +103,19 @@ export class ProfileComponent implements OnInit {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const newUser = new User(
-          user.username,
-          this.displayname,
-          this.email,
-          this.phone,
-          user.birthday,
-          this.zipcode,
-          this.password,
-          true
-        );
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        const newUser = {
+          username: user.username,
+          displayname: this.displayname,
+          email: this.email,
+          phone: this.phone,
+          birthday: user.birthday,
+          zipcode: this.zipcode,
+          password: this.password,
+          loggedin: true,
+          status: user.status,
+          avatar: user.avatar
+        };
+        this.authService.makeNewUser(newUser);
       }
     } catch (e) {
       console.log('This browser does not support local storage.');
@@ -128,7 +130,6 @@ export class ProfileComponent implements OnInit {
       this.zc = '';
     }
 
-    this.storageService.setItem(this.displayname);
     this.submitted = false;
   }
 }
