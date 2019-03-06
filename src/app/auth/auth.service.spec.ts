@@ -1,15 +1,16 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { AuthService } from './auth.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { AuthService } from './auth.service';
+import { StorageService } from 'src/app/_services';
 
 describe('AuthService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ AuthService ],
       imports: [
         HttpClientTestingModule
-      ]
+      ],
+      providers: [ AuthService, StorageService ]
     });
 
     spyOn(AuthService.prototype, 'checkLogin').and.callThrough();

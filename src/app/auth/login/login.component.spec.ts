@@ -12,6 +12,7 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authSpy;
+  let storageSpy;
   let routerSpy;
 
   beforeEach(async(() => {
@@ -25,15 +26,17 @@ describe('LoginComponent', () => {
     spyOn(LoginComponent.prototype, 'removeMsg').and.callThrough();
     spyOn(LoginComponent.prototype, 'onSubmit').and.callThrough();
     authSpy = spyOn(AuthService.prototype, 'checkLogin').and.callFake((user, pass) => {
-      // return Promise.resolve({username: user, password: pass}).then((data) => {
-      //   return data.username === 'ml82' && data.password === 'Mark123';
-      // });
       return new Promise((resolve, reject) => {
         if (user === 'ml82' && pass === 'Mark123') {
           resolve(true);
         } else {
           resolve(false);
         }
+      });
+    });
+    storageSpy = spyOn(StorageService.prototype, 'waitForUserLogin').and.callFake(() => {
+      return new Promise((resolve, reject) => {
+        resolve();
       });
     });
     routerSpy = spyOn(TestBed.get(Router), 'navigate');
@@ -69,6 +72,7 @@ describe('LoginComponent', () => {
       const notMatchMsg = fixture.debugElement.query(By.css('.error-message'));
       expect(notMatchMsg).not.toBeNull();
       expect(notMatchMsg.nativeElement.textContent).toContain('Username and password do not match!');
+      expect(authSpy).toHaveBeenCalledTimes(1);
       component.removeMsg();
       fixture.detectChanges();
     }).then(() => {
@@ -116,6 +120,8 @@ describe('LoginComponent', () => {
       expect(component.submitted).toBeTruthy();
       expect(component.invalid).toBeFalsy();
       expect(component.notMatch).toBeFalsy();
+      expect(authSpy).toHaveBeenCalledTimes(1);
+      expect(storageSpy).toHaveBeenCalledTimes(1);
       fixture.detectChanges();
     }).then(() => {
       expect(fixture.debugElement.query(By.css('.error-message'))).toBeNull();
