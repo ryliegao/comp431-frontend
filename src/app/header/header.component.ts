@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
-import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-header',
