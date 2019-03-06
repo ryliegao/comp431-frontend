@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { User } from 'src/app/_models/user';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,15 +10,16 @@ import { User } from 'src/app/_models/user';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  loading = false;
   submitted = false;
-  wrong = false;
+  invalid = false;
+  notMatch = false;
   @Output() loginEmiiter = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router) {}
+    private router: Router,
+    private service: AuthService) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -28,44 +29,21 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.invalid = false;
+    this.notMatch = false;
     this.submitted = true;
 
-    // stop here if form is invalid
+    // check if the input fields are filled
     if (this.loginForm.invalid) {
-      this.wrong = true;
+      this.invalid = true;
       return;
     }
 
-    // try {
-    //   if (localStorage.getItem('currentUser')) {
-    //     const user: User = JSON.parse(localStorage.getItem('currentUser'));
-    //
-    //     if (this.loginForm.value.username === user.username &&
-    //       this.loginForm.value.password === user.password) {
-    //       this.wrong = false;
-    //       this.loading = true;
-    //       const newUser = new User(
-    //         user.username,
-    //         user.displayname,
-    //         user.email,
-    //         user.phone,
-    //         user.birthday,
-    //         user.zipcode,
-    //         user.password,
-    //         true
-    //       );
-    //       localStorage.setItem('currentUser', JSON.stringify(newUser));
-    //       this.router.navigate(['/main']);
-    //     } else {
-    //       this.wrong = true;
-    //     }
-    //   }
-    // } catch (e) {
-    //   console.log('This browser does not support local storage.');
-    //   this.wrong = false;
-    //   this.loading = true;
-    //   this.router.navigate(['/main']);
-    // }
+    // check if the username and password matches
+    if (!this.service.checkLogin(this.loginForm.get('username').value, this.loginForm.get('password').value)) {
+      this.notMatch = true;
+      return;
+    }
 
     this.router.navigate(['/main']);
   }

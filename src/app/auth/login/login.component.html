@@ -11,7 +11,12 @@
       <input type="submit" class="submit" value="Log In">
     </div>
 
-    <div *ngIf="submitted && wrong" class="invalid-feedback">
+
+    <div *ngIf="submitted && invalid" class="invalid-feedback">
+      Please enter both your username and your password!
+    </div>
+
+    <div *ngIf="submitted && notMatch" class="invalid-feedback">
       Username and password do not match!
     </div>
 
