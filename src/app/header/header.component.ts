@@ -12,7 +12,6 @@ import { StorageService } from 'src/app/_services';
     { provide: LocationStrategy, useClass: PathLocationStrategy }
   ]
 })
-
 export class HeaderComponent implements OnInit {
   name: string;
   status: string;
@@ -22,6 +21,7 @@ export class HeaderComponent implements OnInit {
     private location: Location,
     private storageService: StorageService) {
     this.storageService.watchStorage().subscribe((data: string) => {
+      console.log('Saw change(s) on data: ' + data);
       this.updateName();
       this.updateStatus();
       this.updateAvatar();
