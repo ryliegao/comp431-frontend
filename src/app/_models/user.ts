@@ -7,27 +7,19 @@
   zipcode: string;
   password: string;
   loggedin: boolean;
+  avatar: string;
   status: string;
 
-  constructor(
-    username,
-    displayname,
-    email,
-    phone,
-    birthday,
-    zipcode,
-    password,
-    loggedin,
-    status = 'Hey! I\'m new to here!'
-  ) {
-    this.username = username;
-    this.displayname = displayname;
-    this.email = email;
-    this.phone = phone;
-    this.birthday = birthday;
-    this.zipcode = zipcode;
-    this.password = password;
-    this.loggedin = loggedin;
-    this.status = status;
+  constructor(obj) {
+    this.username = obj.username;
+    this.displayname = obj.displayname ? obj.displayname : obj.username;
+    this.email = obj.email;
+    this.phone = obj.phone;
+    this.birthday = obj.birthday;
+    this.zipcode = obj.zipcode;
+    this.password = obj.password;
+    this.loggedin = obj.loggedin;
+    this.avatar = obj.avatar ? obj.avatar : 'assets/images/profile-image.jpeg';
+    this.status = obj.status ? obj.status : 'Hey! I\'m new to here :)';
   }
 }

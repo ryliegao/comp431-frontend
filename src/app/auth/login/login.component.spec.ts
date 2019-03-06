@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
+import { StorageService } from 'src/app/_services';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -17,7 +18,7 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule, FormsModule, RouterTestingModule, HttpClientTestingModule ],
       declarations: [ LoginComponent ],
-      providers: [ AuthService ]
+      providers: [ AuthService, StorageService ]
     })
     .compileComponents();
 

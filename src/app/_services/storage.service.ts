@@ -12,4 +12,21 @@ export class StorageService {
   setItem(displayName: string) {
     this.storageSubject.next(displayName);
   }
+
+  waitForUserLogin() {
+    return new Promise((resolve, reject) => {
+      try {
+        if (localStorage.getItem('currentUser')) {
+          while (JSON.parse(localStorage.getItem('currentUser')) === null ||
+            JSON.parse(localStorage.getItem('currentUser')).loggedin === false) { }
+          resolve();
+        } else {
+          reject();
+        }
+      } catch (e) {
+        console.log('This browser does not support local storage. [StorageService]');
+        reject();
+      }
+    });
+  }
 }

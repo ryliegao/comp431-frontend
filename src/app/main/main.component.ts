@@ -15,6 +15,7 @@ import { Imagepost2Component } from './imagepost2/imagepost2.component';
 import { UserComponent } from './user/user.component';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { StorageService } from 'src/app/_services';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-main',
@@ -46,6 +47,7 @@ export class MainComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private httpService: HttpClient,
     private storageService: StorageService,
+    private authService: AuthService,
     private resolver: ComponentFactoryResolver) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
@@ -155,37 +157,24 @@ export class MainComponent implements OnInit, OnDestroy {
 
   changeStatus(status: string) {
     try {
-      let newUser;
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        newUser = new User(
-          user.username,
-          user.displayname,
-          user.email,
-          user.phone,
-          user.birthday,
-          user.zipcode,
-          user.password,
-          user.loggedin,
+        const newUser = {
+          username: user.username,
+          displayname: user.displayname,
+          email: user.email,
+          phone: user.phone,
+          birthday: user.birthday,
+          zipcode: user.zipcode,
+          password: user.password,
+          loggedin: user.loggedin,
+          avatar: user.avatar,
           status
-        );
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
-        this.storageService.setItem(status);
+        };
+        this.authService.makeNewUser(newUser);
       } else {
-        newUser = new User(
-          '',
-          'Default Name',
-          '',
-          '',
-          null,
-          '',
-          '',
-          true,
-          status
-        );
+        this.authService.makeNewUser({ status });
       }
-      localStorage.setItem('currentUser', JSON.stringify(newUser));
-      this.storageService.setItem(status);
     } catch (e) {
       console.log('This browser does not support local storage.');
     }

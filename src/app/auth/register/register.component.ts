@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StorageService } from 'src/app/_services/storage.service';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private storageService: StorageService) { }
+    private storageService: StorageService,
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -36,51 +38,25 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  checkUnderage() {
-    const today = new Date(Date.now());
-    const birthday = new Date(this.registerForm.value.birthday);
-    const year = today.getFullYear() - birthday.getFullYear();
-    const month = today.getMonth() - birthday.getMonth();
-    const day = today.getDate() - birthday.getDate() - 1; // Do not use getDay()
-    if (year < 18 || (year === 18 && month < 0) || (year === 18 && month === 0 && day < 0)) {
-      alert('Sorry, you are underage!\n\nOnly individuals 18 years of age ' +
-        'or older on the day of registration are allowed to register');
-      return false;
-    }
-    return true;
-  }
-
-  checkPasswordEquality() {
-    if (this.registerForm.value.password1 !== this.registerForm.value.password2) {
-      alert('ERROR: The passwords you entered do not match.');
-      return false;
-    }
-    return true;
-  }
-
   get f() { return this.registerForm.controls; }
 
   onSubmit() {
-    const age = this.checkUnderage();
-    const pswd = this.checkPasswordEquality();
+    const age = AuthService.checkUnderage(new Date(this.registerForm.value.birthday));
+    const pswd = AuthService.checkPasswordEquality(this.registerForm.value.password1, this.registerForm.value.password2);
     this.submitted = true;
 
     if (age && pswd && this.registerForm.valid) {
-      try {
-        const user = new User(
-          this.registerForm.value.username,
-          this.registerForm.value.displayname,
-          this.registerForm.value.email,
-          this.registerForm.value.phone,
-          this.registerForm.value.birthday,
-          this.registerForm.value.zipcode,
-          this.registerForm.value.password1,
-          false
-        );
-        localStorage.setItem('currentUser', JSON.stringify(user));
-      } catch (e) {
-        console.log('This browser does not support local storage.');
-      }
+      const user = {
+        username: this.registerForm.value.username,
+        displayname: this.registerForm.value.displayname,
+        email: this.registerForm.value.email,
+        phone: this.registerForm.value.phone,
+        birthday: this.registerForm.value.birthday,
+        zipcode: this.registerForm.value.zipcode,
+        password: this.registerForm.value.password1,
+        loggedin: true
+      };
+      AuthService.makeNewUser(user);
       alert(this.registerForm.value.username + ', you have successfully registered!');
       this.router.navigate(['/auth/login']);
       this.storageService.setItem(

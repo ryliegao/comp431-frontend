@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +17,7 @@ import { StorageService } from 'src/app/_services';
 export class HeaderComponent implements OnInit {
   name: string;
   status: string;
+  avatar: string;
 
   constructor(
     private location: Location,
@@ -23,12 +25,14 @@ export class HeaderComponent implements OnInit {
     this.storageService.watchStorage().subscribe((data: string) => {
       this.updateName();
       this.updateStatus();
+      this.updateAvatar();
     });
   }
 
   ngOnInit() {
     this.updateName();
     this.updateStatus();
+    this.updateAvatar();
   }
 
   updateName() {
@@ -38,7 +42,7 @@ export class HeaderComponent implements OnInit {
         this.name = user.displayname === null || user.displayname === '' ?
           user.username : user.displayname;
       } else {
-        this.name = 'Default Name';
+        this.name = 'Default User';
       }
     } catch (e) {
       console.log('This browser does not support local storage. [Header]');
@@ -51,7 +55,20 @@ export class HeaderComponent implements OnInit {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         this.status = user.status;
       } else {
-        this.status = 'Hey! I\'m new to here!';
+        this.status = 'Hey! I\'m new to here :)';
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage. [Header]');
+    }
+  }
+
+  updateAvatar() {
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        this.avatar = user.avatar;
+      } else {
+        this.avatar = 'assets/images/profile-image.jpeg';
       }
     } catch (e) {
       console.log('This browser does not support local storage. [Header]');
@@ -81,22 +98,24 @@ export class HeaderComponent implements OnInit {
 
   logOut() {
     try {
-      if (localStorage.getItem('currentUser')) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const newUser = new User(
-          user.username,
-          user.displayname,
-          user.email,
-          user.phone,
-          user.birthday,
-          user.zipcode,
-          user.password,
-          false
-        );
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
-      }
+      localStorage.removeItem('currentUser');
     } catch (e) {
-      console.log('This browser does not support local storage.');
+      console.log('This browser does not support local storage. [Header]');
     }
+    this.storageService.setItem('User removed!');
+    // const user: User = JSON.parse(localStorage.getItem('currentUser'));
+    // const obj = {
+    //   username: user.username,
+    //   displayname: user.displayname,
+    //   email: user.email,
+    //   phone: user.phone,
+    //   birthday: user.birthday,
+    //   zipcode: user.zipcode,
+    //   password: user.password,
+    //   loggedin: false,
+    //   status: user.status,
+    //   avatar: user.avatar
+    // };
+    // AuthService.makeNewUser(obj);
   }
 }
