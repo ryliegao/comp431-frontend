@@ -158,28 +158,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   changeStatus(status: string) {
-  //   try {
-  //     if (localStorage.getItem('currentUser')) {
-  //       const user: User = JSON.parse(localStorage.getItem('currentUser'));
-  //       const newUser = {
-  //         username: user.username,
-  //         displayname: user.displayname,
-  //         email: user.email,
-  //         phone: user.phone,
-  //         birthday: user.birthday,
-  //         zipcode: user.zipcode,
-  //         password: user.password,
-  //         loggedin: user.loggedin,
-  //         avatar: user.avatar,
-  //         status
-  //       };
-  //       this.authService.makeNewUser(newUser);
-  //     } else {
-  //       this.authService.makeNewUser({ status });
-  //     }
-  //   } catch (e) {
-  //     console.log('This browser does not support local storage.');
-  //   }
+    this.service.changeStatus(status);
   }
 
   ngOnDestroy() {

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { User } from 'src/app/_models/user';
+import { AuthService } from 'src/app/auth/auth.service';
 
 export interface FollowInfo {
   followers: Array<string>;
@@ -25,7 +27,7 @@ export class MainService {
   username: string;
   followInfo: FollowInfo;
 
-  constructor(private httpService: HttpClient) { }
+  constructor(private httpService: HttpClient, private authService: AuthService) { }
 
   loadUsers(username: string): Promise<FollowInfo> {
     this.username = username;
@@ -106,5 +108,28 @@ export class MainService {
         return null;
       }
     );
+  }
+
+  changeStatus(status: string) {
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        const newUser = {
+          username: user.username,
+          displayname: user.displayname,
+          email: user.email,
+          phone: user.phone,
+          birthday: user.birthday,
+          zipcode: user.zipcode,
+          password: user.password,
+          loggedin: user.loggedin,
+          avatar: user.avatar,
+          status
+        };
+        this.authService.makeNewUser(newUser);
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+    }
   }
 }
