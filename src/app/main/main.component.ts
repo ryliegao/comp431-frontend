@@ -51,6 +51,11 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loadUsers();
+    this.loadPosts();
+  }
+
+  loadUsers() {
     this.service.loadUsers(this.currentUser.username).then(
       data => {
         for (let i = 0; i < data.following.length; i++) {
@@ -64,11 +69,12 @@ export class MainComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
 
+  loadPosts() {
     this.service.loadPosts().then(
       data => {
         this.posts = data;
-        console.log('data received has length ' + data.length);
         for (let i = 0; i < data.length; i++) {
           // only clear former posts on entry
           this.createPost(data[i].content, data[i].image, i === 0);
@@ -81,20 +87,20 @@ export class MainComponent implements OnInit, OnDestroy {
     if (this.searchText === null || this.searchText === '') {
       if (!this.cleared) {
         this.cleared = true;
-        this.service.loadPosts();
+        this.loadPosts();
       }
       return;
     }
     this.cleared = false;
-    let i = 0;
     let found = false;
-    while (this.posts[i]) {
+    console.log('searchTest is ' + this.searchText);
+    for (let i = 0; i < this.posts.length; i++) {
       const str = this.posts[i].content as string;
+      console.log('content is ' + str);
       if (str.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0) {
-        this.createPost(this.posts[i].content, this.posts[i].image, true);
+        this.createPost(this.posts[i].content, this.posts[i].image, !found);
         found = true;
       }
-      i++;
     }
     if (!found) {
       this.postContainer.clear();
