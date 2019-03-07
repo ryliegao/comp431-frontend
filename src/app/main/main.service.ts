@@ -22,11 +22,13 @@ export interface Post {
   providedIn: 'root'
 })
 export class MainService {
+  username: string;
   followInfo: FollowInfo;
 
   constructor(private httpService: HttpClient) { }
 
   loadUsers(username: string): Promise<FollowInfo> {
+    this.username = username;
     return this.httpService.get('assets/following.json').toPromise().then(
       data => {
         let followers = [];
@@ -70,10 +72,13 @@ export class MainService {
     return this.httpService.get('assets/posts.json').toPromise().then(
       posts => {
         const followeePosts = [];
+        if (posts[this.username]) {
+          followeePosts.push.apply(followeePosts, posts[this.username]);
+        }
+
         for (const followee of this.followInfo.following) {
           if (posts[followee]) {
             followeePosts.push.apply(followeePosts, posts[followee]);
-            console.log(followee + ' ' + followeePosts.length);
           }
         }
         return followeePosts;
