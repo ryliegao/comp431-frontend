@@ -93,10 +93,8 @@ export class MainComponent implements OnInit, OnDestroy {
     }
     this.cleared = false;
     let found = false;
-    console.log('searchTest is ' + this.searchText);
     for (let i = 0; i < this.posts.length; i++) {
       const str = this.posts[i].content as string;
-      console.log('content is ' + str);
       if (str.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0) {
         this.createPost(this.posts[i].content, this.posts[i].image, !found);
         found = true;
