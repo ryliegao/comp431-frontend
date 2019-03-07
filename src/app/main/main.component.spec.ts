@@ -67,4 +67,30 @@ describe('MainComponent', () => {
       expect(component.search).toHaveBeenCalled();
     });
   });
+
+  it('should filter displayed articles by the search keyword', () => {
+    let first = 0;
+    let second = 0;
+    spyOn(MainComponent.prototype, 'createPost').and.callFake((content, image, clear) => {
+      if (clear) {
+        first++;
+      } else {
+        second++;
+      }
+    });
+    component.posts = [
+      {content: 'abc', image: 'image', comments: []},
+      {content: 'image', image: 'abc', comments: []},
+      {content: 'abc def', image: 'image', comments: []}
+      ];
+    component.searchText = 'text';
+    component.search();
+    expect(first).toEqual(0);
+    expect(second).toEqual(0);
+
+    component.searchText = 'abc';
+    component.search();
+    expect(first).toEqual(1);
+    expect(second).toEqual(1);
+  });
 });

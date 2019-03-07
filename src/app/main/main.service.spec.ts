@@ -32,9 +32,15 @@ describe('MainService', () => {
             ]);
 
           expect(service.loadPosts).toHaveBeenCalled();
-          expect(posts).toContain(jasmine.objectContaining({content: 'a', image: 'a', comments: []}));
-          expect(posts).toContain(jasmine.objectContaining({content: 'b', image: 'b', comments: []}));
-          expect(posts).not.toContain(jasmine.objectContaining({content: 'c', image: 'c', comments: []}));
+          expect(posts).toContain(jasmine.objectContaining(
+            {content: 'a', image: 'a', comments: []}
+            ));
+          expect(posts).toContain(jasmine.objectContaining(
+            {content: 'b', image: 'b', comments: []}
+            ));
+          expect(posts).not.toContain(jasmine.objectContaining(
+            {content: 'c', image: 'c', comments: []}
+            ));
         });
       });
   });
