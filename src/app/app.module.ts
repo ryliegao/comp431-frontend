@@ -17,7 +17,7 @@ import { LoginComponent } from 'src/app/auth/login/login.component';
 import { RegisterComponent } from 'src/app/auth/register/register.component';
 import { HeaderComponent } from 'src/app/header/header.component';
 import { UserComponent } from 'src/app/main/user/user.component';
-import { Imagepost1Component } from 'src/app/main/imagepost1/imagepost1.component';
+import { ImagepostComponent } from 'src/app/main/imagepost/imagepost.component';
 import { Imagepost2Component } from 'src/app/main/imagepost2/imagepost2.component';
 
 @NgModule({
@@ -33,7 +33,7 @@ import { Imagepost2Component } from 'src/app/main/imagepost2/imagepost2.componen
     AlertComponent,
     AuthComponent,
     UserComponent,
-    Imagepost1Component,
+    ImagepostComponent,
     Imagepost2Component,
     MainComponent,
     ProfileComponent,
@@ -53,7 +53,7 @@ import { Imagepost2Component } from 'src/app/main/imagepost2/imagepost2.componen
     // provider used to create fake backend
     fakeBackendProvider
   ],
-  entryComponents: [ Imagepost1Component, Imagepost2Component, UserComponent ],
+  entryComponents: [ ImagepostComponent, Imagepost2Component, UserComponent ],
   bootstrap: [ AppComponent ]
 })
 

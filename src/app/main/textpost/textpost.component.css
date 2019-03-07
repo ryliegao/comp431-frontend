@@ -13,12 +13,6 @@
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.img-holder {
-  width: 500px !important;
-  float: left;
-  overflow: hidden;
-}
-
 .text-holder {
   width: 300px !important;
   height: 130px !important;
@@ -75,11 +69,6 @@ p {
   .card {
     height: 500px !important;
     clear: both;
-  }
-
-  .img-holder {
-    clear: both;
-    overflow: visible;
   }
 
   .text-holder {

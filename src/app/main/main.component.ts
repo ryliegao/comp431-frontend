@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Imagepost1Component } from './imagepost1/imagepost1.component';
-import { Imagepost2Component } from './imagepost2/imagepost2.component';
+import { ImagepostComponent } from './imagepost/imagepost.component';
+import { TextpostComponent } from './textpost/textpost.component';
 import { UserComponent } from './user/user.component';
 import { MainService } from './main.service';
 
@@ -19,7 +19,7 @@ import { MainService } from './main.service';
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
-  providers: [ Imagepost1Component, Imagepost2Component, UserComponent ]
+  providers: [ ImagepostComponent, TextpostComponent, UserComponent ]
 })
 export class MainComponent implements OnInit, OnDestroy {
   @ViewChild('postContainer', { read: ViewContainerRef }) postContainer;
@@ -31,8 +31,8 @@ export class MainComponent implements OnInit, OnDestroy {
   image: string[] = [];
   searchText = '';
   posts = [];
-  post1Ref: ComponentRef<Imagepost1Component>;
-  post2Ref: ComponentRef<Imagepost2Component>;
+  post1Ref: ComponentRef<ImagepostComponent>;
+  post2Ref: ComponentRef<TextpostComponent>;
   userRef: ComponentRef<UserComponent>;
   cleared = true;
   beginningPost = true;
@@ -107,7 +107,7 @@ export class MainComponent implements OnInit, OnDestroy {
       index = 0;
     }
 
-    const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
+    const factory: ComponentFactory<ImagepostComponent> = this.resolver.resolveComponentFactory(ImagepostComponent);
     this.post1Ref = this.postContainer.createComponent(factory, index);
     this.post1Ref.instance.content = content;
     this.post1Ref.instance.image = image;
