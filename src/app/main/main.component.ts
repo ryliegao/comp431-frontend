@@ -147,7 +147,7 @@ export class MainComponent implements OnInit, OnDestroy {
     this.userRef.instance.status = status;
   }
 
-  // changeStatus(status: string) {
+  changeStatus(status: string) {
   //   try {
   //     if (localStorage.getItem('currentUser')) {
   //       const user: User = JSON.parse(localStorage.getItem('currentUser'));
@@ -170,7 +170,7 @@ export class MainComponent implements OnInit, OnDestroy {
   //   } catch (e) {
   //     console.log('This browser does not support local storage.');
   //   }
-  // }
+  }
 
   ngOnDestroy() {
     if (this.post1Ref) {
