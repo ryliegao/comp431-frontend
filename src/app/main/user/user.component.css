@@ -32,9 +32,11 @@
 .user-profile > .status {
   margin: 0.1em 0 auto auto;
   width: 14em;
+  height: 4.8em;
   color: #c0c5c5;
   font-size: .87em;
   font-family: "varela round", sans-serif;
+  -webkit-line-clamp: 3;
 }
 
 .user-profile > img.avatar {

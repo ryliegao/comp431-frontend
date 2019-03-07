@@ -43,25 +43,23 @@ export class AuthService {
 
   checkLogin(username: string, password: string) {
     return this.httpService.get('assets/profile.json').toPromise().then(data => {
-      let i = 0;
-      while (data[i]) {
-        if (username === data[i].username && password === data[i].password) {
+      if (data[username]) {
+        if (password === data[username].password) {
           const user = {
-            username: data[i].username,
-            displayname: data[i].displayname,
-            email: data[i].email,
-            phone: data[i].phone,
-            birthday: data[i].birthday,
-            zipcode: data[i].zipcode,
-            password: data[i].password,
+            username: data[username].username,
+            displayname: data[username].displayname,
+            email: data[username].email,
+            phone: data[username].phone,
+            birthday: data[username].birthday,
+            zipcode: data[username].zipcode,
+            password: data[username].password,
             loggedin: true,
-            status: data[i].status,
-            avatar: data[i].avatar
+            status: data[username].status,
+            avatar: data[username].avatar
           };
           this.makeNewUser(user);
           return true;
         }
-        i++;
       }
       return false;
     }).catch((err: HttpErrorResponse) => {

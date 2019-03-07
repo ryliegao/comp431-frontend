@@ -13,9 +13,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Imagepost1Component } from './imagepost1/imagepost1.component';
 import { Imagepost2Component } from './imagepost2/imagepost2.component';
 import { UserComponent } from './user/user.component';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { StorageService } from 'src/app/_services';
-import { AuthService } from 'src/app/auth/auth.service';
+import { MainService } from './main.service';
 
 @Component({
   selector: 'app-main',
@@ -32,7 +30,7 @@ export class MainComponent implements OnInit, OnDestroy {
   content: string[] = [];
   image: string[] = [];
   searchText = '';
-  data = {};
+  posts = [];
   post1Ref: ComponentRef<Imagepost1Component>;
   post2Ref: ComponentRef<Imagepost2Component>;
   userRef: ComponentRef<UserComponent>;
@@ -45,49 +43,36 @@ export class MainComponent implements OnInit, OnDestroy {
 
   constructor(
     private sanitizer: DomSanitizer,
-    private httpService: HttpClient,
-    private storageService: StorageService,
-    private authService: AuthService,
-    private resolver: ComponentFactoryResolver) {
+    private resolver: ComponentFactoryResolver,
+    private service: MainService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
     this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
   }
 
   ngOnInit() {
-    this.loadPosts();
-    this.loadUsers();
-  }
-
-  private loadPosts() {
-    this.httpService.get('assets/posts.json').subscribe(
+    this.service.loadUsers(this.currentUser.username).then(
       data => {
-        this.data = data;
-        let i = 0;
-        while (data[i]) {
-          // only clear former posts on entry
-          this.createPost(data[i].content, data[i].image, i === 0);
-          i++;
+        for (let i = 0; i < data.following.length; i++) {
+          this.service.getFollowingUsersInfo(data.following[i]).then(
+            followee => {
+              if (followee) {
+                this.addUser(followee.name, followee.avatar, followee.status, i === 0);
+              }
+            }
+          );
         }
-      },
-      (err: HttpErrorResponse) => {
-        console.log (err.message);
       }
     );
-  }
 
-  private loadUsers() {
-    this.httpService.get('assets/users.json').subscribe(
+    this.service.loadPosts().then(
       data => {
-        let i = 0;
-        while (data[i]) {
-          // only clear former users on entry
-          this.addUser(data[i].username, data[i].image, i === 0);
-          i++;
+        this.posts = data;
+        console.log('data received has length ' + data.length);
+        for (let i = 0; i < data.length; i++) {
+          // only clear former posts on entry
+          this.createPost(data[i].content, data[i].image, i === 0);
         }
-      },
-      (err: HttpErrorResponse) => {
-        console.log (err.message);
       }
     );
   }
@@ -96,17 +81,17 @@ export class MainComponent implements OnInit, OnDestroy {
     if (this.searchText === null || this.searchText === '') {
       if (!this.cleared) {
         this.cleared = true;
-        this.loadPosts();
+        this.service.loadPosts();
       }
       return;
     }
     this.cleared = false;
     let i = 0;
     let found = false;
-    while (this.data[i]) {
-      const str = this.data[i].content as string;
+    while (this.posts[i]) {
+      const str = this.posts[i].content as string;
       if (str.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0) {
-        this.createPost(this.data[i].content, this.data[i].image, true);
+        this.createPost(this.posts[i].content, this.posts[i].image, true);
         found = true;
       }
       i++;
@@ -145,40 +130,41 @@ export class MainComponent implements OnInit, OnDestroy {
     // }
   }
 
-  addUser(username: string, image: string, clear: boolean, index = this.userContainer.length) {
+  addUser(username: string, avatar: string, status: string, clear: boolean, index = this.userContainer.length) {
     if (clear) {
       this.userContainer.clear();
     }
     const factory: ComponentFactory<UserComponent> = this.resolver.resolveComponentFactory(UserComponent);
     this.userRef = this.userContainer.createComponent(factory, index);
     this.userRef.instance.username = username;
-    this.userRef.instance.image = image;
+    this.userRef.instance.avatar = avatar;
+    this.userRef.instance.status = status;
   }
 
-  changeStatus(status: string) {
-    try {
-      if (localStorage.getItem('currentUser')) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const newUser = {
-          username: user.username,
-          displayname: user.displayname,
-          email: user.email,
-          phone: user.phone,
-          birthday: user.birthday,
-          zipcode: user.zipcode,
-          password: user.password,
-          loggedin: user.loggedin,
-          avatar: user.avatar,
-          status
-        };
-        this.authService.makeNewUser(newUser);
-      } else {
-        this.authService.makeNewUser({ status });
-      }
-    } catch (e) {
-      console.log('This browser does not support local storage.');
-    }
-  }
+  // changeStatus(status: string) {
+  //   try {
+  //     if (localStorage.getItem('currentUser')) {
+  //       const user: User = JSON.parse(localStorage.getItem('currentUser'));
+  //       const newUser = {
+  //         username: user.username,
+  //         displayname: user.displayname,
+  //         email: user.email,
+  //         phone: user.phone,
+  //         birthday: user.birthday,
+  //         zipcode: user.zipcode,
+  //         password: user.password,
+  //         loggedin: user.loggedin,
+  //         avatar: user.avatar,
+  //         status
+  //       };
+  //       this.authService.makeNewUser(newUser);
+  //     } else {
+  //       this.authService.makeNewUser({ status });
+  //     }
+  //   } catch (e) {
+  //     console.log('This browser does not support local storage.');
+  //   }
+  // }
 
   ngOnDestroy() {
     if (this.post1Ref) {

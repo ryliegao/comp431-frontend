@@ -28,7 +28,7 @@ describe('AuthService', () => {
         service.checkLogin('ml82', 'Mark123').then(match => {
           const req = httpMock.expectOne('assets/profile.json');
           expect(req.request.method).toEqual('GET');
-          req.flush({ username: 'ml82', password: 'Mark123'});
+          req.flush({ username: 'ml82', password: 'Mark123' });
 
           expect(service.checkLogin).toHaveBeenCalledWith('ml82', 'Mark123');
           expect(match).toBeTruthy();
