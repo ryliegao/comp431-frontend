@@ -17,8 +17,8 @@
     </div>
   </div>
 
-  <div id="accordion_search_bar_container">
-    <input type="search" id="accordion_search_bar" placeholder="  Search" [(ngModel)]="searchText"
+  <div class="accordion_search_bar_container">
+    <input type="search" class="accordion_search_bar" placeholder="  Search Posts" [(ngModel)]="searchText"
            (change)="search()" (keyup)="search()" (paste)="search()" (click)="search()"/>
   </div>
 
@@ -26,8 +26,25 @@
     <div class="following">
       <div class="grid-container user-grid" #userContainer></div>
     </div>
-    <div class="btn" id="add-user" (click)="addUser('Mack Joyner', this.defaultAvatar, '', false, 0);">
+    <div class="user_search_bar_container">
+      <input type="search" class="user_search_bar" placeholder="  Search User" [(ngModel)]="addText"
+             (change)="this.adding = false;" (keyup)="this.adding = false;" (paste)="this.adding = false;"
+             (click)="this.adding = false;"/>
+    </div>
+    <div class="btn" id="add-user" (click)="addFollowee();">
       <span>Add</span>
+    </div>
+    <div class="profile-msg" *ngIf="adding && addSuccess">
+      > User added! You're now following "<b>{{ lastFollowed }}</b>".
+    </div>
+    <div class="profile-msg" *ngIf="adding && addFailure">
+      > ERROR! Could not find user "<b>{{ lastFollowed }}</b>".
+    </div>
+    <div class="profile-msg" *ngIf="adding && addMyself">
+      > ERROR! You cannot follow yourself.
+    </div>
+    <div class="profile-msg" *ngIf="adding && addAlreadyFollowing">
+      > ERROR! You're already following user "<b>{{ addText }}</b>".
     </div>
   </div>
 

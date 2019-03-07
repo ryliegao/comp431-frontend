@@ -30,16 +30,18 @@ export class MainComponent implements OnInit, OnDestroy {
   content: string[] = [];
   image: string[] = [];
   searchText = '';
+  addText = '';
   posts = [];
   post1Ref: ComponentRef<ImagepostComponent>;
   post2Ref: ComponentRef<TextpostComponent>;
   userRef: ComponentRef<UserComponent>;
   cleared = true;
-  beginningPost = true;
-  endingPost = true;
-  postText: string;
-  defaultImage = 'assets/images/default-img.jpg';
-  defaultAvatar = 'assets/images/mack-joyner.jpg';
+  adding = false;
+  lastFollowed = '';
+  addSuccess = false;
+  addMyself = false;
+  addFailure = false;
+  addAlreadyFollowing = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -55,11 +57,38 @@ export class MainComponent implements OnInit, OnDestroy {
     this.loadPosts();
   }
 
+  addFollowee() {
+    this.addSuccess = false;
+    this.addFailure = false;
+    this.addMyself = false;
+    this.addAlreadyFollowing = false;
+    this.adding = true;
+    if (this.addText === this.currentUser.username) {
+      this.addMyself = true;
+      return;
+    } else if (this.service.followInfo.following.indexOf(this.addText) >= 0) {
+      this.addAlreadyFollowing = true;
+      return;
+    }
+    this.lastFollowed = this.addText;
+    this.service.addFollowee(this.addText).then(
+      newFollowee => {
+        if (newFollowee) {
+          this.addSuccess = true;
+          this.addUser(newFollowee.name, newFollowee.avatar, newFollowee.status, false, 0);
+          this.loadPosts();
+        } else {
+          this.addFailure = true;
+        }
+      }
+    );
+  }
+
   loadUsers() {
     this.service.loadUsers(this.currentUser.username).then(
       data => {
         for (let i = 0; i < data.following.length; i++) {
-          this.service.getFollowingUsersInfo(data.following[i]).then(
+          this.service.getFolloweeInfo(data.following[i]).then(
             followee => {
               if (followee) {
                 this.addUser(followee.name, followee.avatar, followee.status, i === 0);
@@ -115,23 +144,6 @@ export class MainComponent implements OnInit, OnDestroy {
     this.post1Ref = this.postContainer.createComponent(factory, index);
     this.post1Ref.instance.content = content;
     this.post1Ref.instance.image = image;
-
-    // if ((isAdding && this.beginningPost) || this.endingPost) {
-    //   const factory: ComponentFactory<Imagepost1Component> = this.resolver.resolveComponentFactory(Imagepost1Component);
-    //   this.post1Ref = this.postContainer.createComponent(factory, index);
-    //   this.post1Ref.instance.content = content;
-    //   this.post1Ref.instance.image = image;
-    // } else {
-    //   const factory: ComponentFactory<Imagepost2Component> = this.resolver.resolveComponentFactory(Imagepost2Component);
-    //   this.post2Ref = this.postContainer.createComponent(factory, index);
-    //   this.post2Ref.instance.content = content;
-    //   this.post2Ref.instance.image = image;
-    //   if (!this.endingPost) {
-    //     this.endingPost = true;
-    //   } else if () {
-    //     this.endingPost = false;
-    //   }
-    // }
   }
 
   addUser(username: string, avatar: string, status: string, clear: boolean, index = this.userContainer.length) {

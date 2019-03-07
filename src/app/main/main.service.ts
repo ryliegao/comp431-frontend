@@ -48,7 +48,7 @@ export class MainService {
     );
   }
 
-  getFollowingUsersInfo(followee: string): Promise<FolloweeInfo> {
+  getFolloweeInfo(followee: string): Promise<FolloweeInfo> {
     return this.httpService.get('assets/profile.json').toPromise().then(
       userinfo => {
         if (userinfo[followee]) {
@@ -82,6 +82,28 @@ export class MainService {
           }
         }
         return followeePosts;
+      }
+    );
+  }
+
+  addFollowee(username: string): Promise<FolloweeInfo> {
+    return this.httpService.get('assets/profile.json').toPromise().then(
+      userinfo => {
+        if (userinfo[username]) {
+          this.followInfo.following.push(userinfo[username].username);
+          // write to server side file
+          return {
+            name: userinfo[username].displayname ? userinfo[username].displayname : userinfo[username].username,
+            status: userinfo[username].status,
+            avatar: userinfo[username].avatar,
+          };
+        } else {
+          return null;
+        }
+      },
+      (err: HttpErrorResponse) => {
+        console.log (err.message);
+        return null;
       }
     );
   }
