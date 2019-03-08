@@ -21,6 +21,8 @@
     <div class="no-comment" *ngIf="showComments && this.comments.length === 0">
       This post has no comment yet! Shall we leave one here?
     </div>
-    <div class="comment" *ngFor="let comment of comments"></div>
+    <div class="comment" *ngFor="let comment of comments">
+      <b>{{ comment.commenter }}</b>: {{ comment.content }}
+    </div>
   </div>
 </div>

@@ -21,6 +21,12 @@ export interface Post {
   content: string;
   image: string;
   comments: Array<object>;
+  date: string;
+}
+
+export interface Comment {
+  commenter: string;
+  content: string;
 }
 
 @Injectable({
@@ -88,9 +94,14 @@ export class MainService {
             followeePosts.push.apply(followeePosts, posts[followee]);
           }
         }
-        return followeePosts;
+        return this.sortPosts(followeePosts);
       }
     );
+  }
+
+  private sortPosts(posts: Array<Post>) {
+    posts.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+    return posts;
   }
 
   addFollowee(username: string): Promise<FolloweeInfo> {
@@ -152,7 +163,7 @@ export class MainService {
     }
   }
 
-  loadComments(author: string, postID: number): Promise<Array<any>> {
+  loadComments(author: string, postID: number): Promise<Array<Comment>> {
     return this.httpService.get('assets/posts.json').toPromise().then(
       data => {
         let comments = [];
