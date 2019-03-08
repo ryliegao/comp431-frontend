@@ -18,7 +18,7 @@ describe('MainService', () => {
   });
 
   it('should fetch articles for current logged in user', () => {
-    inject([ HttpTestingController, AuthService],
+    inject([ HttpTestingController, AuthService ],
       (httpMock: HttpTestingController, service: MainService) => {
         service.followInfo = { following: ['a', 'b'], followers: ['c'] };
 

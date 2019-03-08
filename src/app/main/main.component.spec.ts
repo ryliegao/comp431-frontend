@@ -37,7 +37,7 @@ describe('MainComponent', () => {
   });
 
   it('should fetch articles for current logged in user', () => {
-    fakeAsync(inject([MainComponent], (comp) => {
+    fakeAsync(inject([MainComponent], () => {
       component.ngOnInit();
       tick();
       fixture.detectChanges();
@@ -92,5 +92,34 @@ describe('MainComponent', () => {
     component.search();
     expect(first).toEqual(1);
     expect(second).toEqual(1);
+  });
+
+  it('should add articles when adding a follower', () => {
+    fakeAsync(inject([MainComponent], () => {
+      MainService.prototype.followInfo = { following: [], followers: []};
+      component.posts = [];
+      spyOn(MainService.prototype, 'addFollowee').and.callFake((username) => {
+        MainService.prototype.followInfo.following.push(username);
+        return Promise.resolve({ username });
+      });
+
+      component.currentUser = new User({ username: 'ml82' });
+      component.addText = 'kj1024';
+      component.addFollowee();
+      tick();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(MainService.prototype.addFollowee).toHaveBeenCalledTimes(1);
+        expect(MainService.prototype.loadPosts).toHaveBeenCalledTimes(1);
+        expect(MainService.prototype.followInfo.following.length).toEqual(1);
+        expect(MainService.prototype.followInfo.following).toContain('kj1024');
+
+        expect(component.posts[0]).not.toBeNull();
+        expect(component.posts[0].content).toEqual('content');
+        expect(component.posts[0].image).toEqual('image');
+        expect(component.posts[0].comments).toEqual([]);
+      });
+    }));
   });
 });
