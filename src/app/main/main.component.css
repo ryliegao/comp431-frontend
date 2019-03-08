@@ -140,6 +140,9 @@
 }
 
 .btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
   background: lightpink;
   color: #fff;
   text-align: center;
@@ -149,12 +152,6 @@
   width: 100px;
   height: 25px;
   margin-left: 50px;
-}
-
-.btn {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
 }
 
 .btn input {
