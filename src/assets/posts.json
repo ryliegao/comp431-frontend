@@ -21,7 +21,9 @@
       "postID": 2,
       "content": "Her companions instrument set estimating sex remarkably solicitude motionless. Property men the why smallest graceful day insisted required. Inquiry justice country old placing sitting any ten age.",
       "image": "assets/images/default-img-4.jpg",
-      "comments": [],
+      "comments": [
+        {"commenter":  "lm327", "content": "This picture is so cool, eonni!"}
+      ],
       "date": "Thu Mar 07 2019 23:59:37 GMT-0600 (Central Standard Time)"
     }
   ],
@@ -51,7 +53,10 @@
       "postID": 1,
       "content": "Whole wound wrote at whose to style in. Figure ye innate former do so we. Shutters but sir yourself provided you required his. So neither related he am do believe. Nothing but you hundred had use regular.",
       "image": "assets/images/default-img-2.jpg",
-      "comments": [],
+      "comments": [
+        {"commenter":  "yj26", "content": "This picture is so cool, boa!"},
+        {"commenter":  "cp1127", "content": "Nice caption, nuna!"}
+      ],
       "date": "Mon Apr 03 2017 11:03:15 GMT-0500 (Central Daylight Time)"
     }
   ],
@@ -78,7 +83,10 @@
       "postID": 2,
       "content": "Up am intention on dependent questions oh elsewhere september. No betrayed pleasure possible jointure we in throwing. And can event rapid any shall woman green. Hope they dear who its bred.",
       "image": "assets/images/default-img-3.jpg",
-      "comments": [],
+      "comments": [
+        {"commenter":  "kk114", "content": "Hahahahahahaha. You're so funny!"},
+        {"commenter":  "ml82", "content": "My first comment, hyeong ~"}
+      ],
       "date": "Mon Aug 08 2016 18:59:53 GMT-0500 (Central Daylight Time)"
     },
     {
@@ -119,10 +127,7 @@
       "postID": 0,
       "content": "Be is lose girl long of up give. Trifling wondered unpacked ye at he. In household certainty an on tolerably smallness difficult. Many no each like up be is next neat. Put not enjoyment behaviour her supposing.",
       "image": "assets/images/default-img-3.jpg",
-      "comments": [
-        {"commenter":  "bk115", "content": "This picture is so cool, yunho!"},
-        {"commenter":  "cp1127", "content": "This picture is so cool, hyeong!"}
-      ],
+      "comments": [],
       "date": "Wed Sep 09 2009 16:11:59 GMT-0500 (Central Daylight Time)"
     },
     {

@@ -1,19 +1,21 @@
 <div class="content main-page">
 
-  <div class="input-box">
-    <textarea class="input-style-post" placeholder="What's on your mind?" rows="5" [(ngModel)]="postText"></textarea>
-    <div class="btn">
-      <span>upload</span>
+  <div class="input-box" (appClickOutside)="closeTextarea()">
+    <textarea class="input-style-post" placeholder="What's on your mind?" rows="5"
+              [style.height]="height" [(ngModel)]="postText" (focus)="expandTextarea()">
+    </textarea>
+    <div class="input-btn" *ngIf="this.height === '100px'">
+      <span>Upload File</span>
       <input class="upload-image-input input-button" type="file">
     </div>
-    <div class="btn" (click)="makePost()">
-      <span>to post</span>
+    <div class="input-btn" *ngIf="this.height === '100px'" (click)="makePost()">
+      <span>Post It!</span>
     </div>
-    <div class="btn" (click)="changeStatus(postText);this.postText = '';">
-      <span>to status</span>
+    <div class="input-btn" *ngIf="this.height === '100px'" (click)="changeStatus(postText);this.postText = '';">
+      <span>Update Status</span>
     </div>
-    <div class="btn" (click)="this.postText = '';">
-      <span>cancel</span>
+    <div class="input-btn" *ngIf="this.height === '100px'" (click)="this.postText = '';">
+      <span>Cancel</span>
     </div>
   </div>
 

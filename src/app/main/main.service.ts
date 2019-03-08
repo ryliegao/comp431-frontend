@@ -100,7 +100,7 @@ export class MainService {
   }
 
   private sortPosts(posts: Array<Post>) {
-    posts.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
+    posts.sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
     return posts;
   }
 

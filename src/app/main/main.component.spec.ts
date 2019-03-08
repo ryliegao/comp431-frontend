@@ -3,10 +3,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { StorageService } from 'src/app/_services';
-import { MainComponent } from './main.component';
+import { MainComponent } from 'src/app/main/main.component';
 import { User } from 'src/app/_models/user';
-import { MainService } from './main.service';
-import { UserComponent } from './user/user.component';
+import { MainService } from 'src/app/main/main.service';
+import { UserComponent } from 'src/app/main/user/user.component';
 
 describe('MainComponent', () => {
   let component: MainComponent;

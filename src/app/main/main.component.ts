@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewContainerRef,
   EventEmitter,
-  Output, Input
+  Output
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { User } from 'src/app/_models/user';
@@ -48,12 +48,13 @@ export class MainComponent implements OnInit, OnDestroy {
   nextID = 0;
   postText = '';
   private serviceSubscription;
+  height = '40px';
 
   constructor(
     private sanitizer: DomSanitizer,
     private resolver: ComponentFactoryResolver,
-    private service: MainService) {
-
+    private service: MainService
+  ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
     this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
@@ -226,6 +227,14 @@ export class MainComponent implements OnInit, OnDestroy {
 
   changeStatus(status: string) {
     this.service.changeStatus(status);
+  }
+
+  expandTextarea() {
+    this.height = '100px';
+  }
+
+  closeTextarea() {
+    this.height = '40px';
   }
 
   ngOnDestroy() {
