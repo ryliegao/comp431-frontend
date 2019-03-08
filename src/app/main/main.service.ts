@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -9,7 +9,8 @@ export interface FollowInfo {
 }
 
 export interface FolloweeInfo {
-  name: string;
+  username: string;
+  displayname: string;
   status: string;
   avatar: string;
 }
@@ -26,6 +27,7 @@ export interface Post {
 export class MainService {
   username: string;
   followInfo: FollowInfo;
+  onRemove: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private httpService: HttpClient, private authService: AuthService) { }
 
@@ -55,7 +57,8 @@ export class MainService {
       userinfo => {
         if (userinfo[followee]) {
           return {
-            name: userinfo[followee].displayname ? userinfo[followee].displayname : userinfo[followee].username,
+            username: userinfo[followee].username,
+            displayname: userinfo[followee].displayname ? userinfo[followee].displayname : userinfo[followee].username,
             status: userinfo[followee].status,
             avatar: userinfo[followee].avatar,
           };
@@ -94,8 +97,10 @@ export class MainService {
         if (userinfo[username]) {
           this.followInfo.following.push(userinfo[username].username);
           // write to server side file
+          // add this user to followee's followers' list
           return {
-            name: userinfo[username].displayname ? userinfo[username].displayname : userinfo[username].username,
+            username: userinfo[username].username,
+            displayname: userinfo[username].displayname ? userinfo[username].displayname : userinfo[username].username,
             status: userinfo[username].status,
             avatar: userinfo[username].avatar,
           };
@@ -108,6 +113,19 @@ export class MainService {
         return null;
       }
     );
+  }
+
+  removeFollowee(username: string) {
+    for (let i = 0; i < this.followInfo.following.length; i++) {
+      if (this.followInfo.following[i] === username) {
+        console.log('User removed! ' + username);
+        this.followInfo.following.splice(i, 1);
+      }
+    }
+    this.onRemove.emit();
+
+    // write to server side file
+    // remove this user from followee's followers' list
   }
 
   changeStatus(status: string) {

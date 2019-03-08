@@ -6,7 +6,9 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -24,6 +26,7 @@ import { MainService } from './main.service';
 export class MainComponent implements OnInit, OnDestroy {
   @ViewChild('postContainer', { read: ViewContainerRef }) postContainer;
   @ViewChild('userContainer', { read: ViewContainerRef }) userContainer;
+  @Output() eventEmitter = new EventEmitter();
   currentUser: User;
   users: User[] = [];
   footer: SafeHtml;
@@ -42,14 +45,22 @@ export class MainComponent implements OnInit, OnDestroy {
   addMyself = false;
   addFailure = false;
   addAlreadyFollowing = false;
+  private serviceSubscription;
 
   constructor(
     private sanitizer: DomSanitizer,
     private resolver: ComponentFactoryResolver,
     private service: MainService) {
+
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
     this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
+
+    this.serviceSubscription = this.service.onRemove.subscribe({
+      next: (event: any) => {
+        this.loadPosts();
+      }
+    });
   }
 
   ngOnInit() {
@@ -75,7 +86,7 @@ export class MainComponent implements OnInit, OnDestroy {
       newFollowee => {
         if (newFollowee) {
           this.addSuccess = true;
-          this.addUser(newFollowee.name, newFollowee.avatar, newFollowee.status, false, 0);
+          this.addUser(newFollowee.username, newFollowee.displayname, newFollowee.avatar, newFollowee.status, false, 0);
           this.loadPosts();
         } else {
           this.addFailure = true;
@@ -91,7 +102,7 @@ export class MainComponent implements OnInit, OnDestroy {
           this.service.getFolloweeInfo(data.following[i]).then(
             followee => {
               if (followee) {
-                this.addUser(followee.name, followee.avatar, followee.status, i === 0);
+                this.addUser(followee.username, followee.displayname, followee.avatar, followee.status, i === 0);
               }
             }
           );
@@ -146,13 +157,14 @@ export class MainComponent implements OnInit, OnDestroy {
     this.post1Ref.instance.image = image;
   }
 
-  addUser(username: string, avatar: string, status: string, clear: boolean, index = this.userContainer.length) {
+  addUser(username: string, displayname: string, avatar: string, status: string, clear: boolean, index = this.userContainer.length) {
     if (clear) {
       this.userContainer.clear();
     }
     const factory: ComponentFactory<UserComponent> = this.resolver.resolveComponentFactory(UserComponent);
     this.userRef = this.userContainer.createComponent(factory, index);
     this.userRef.instance.username = username;
+    this.userRef.instance.displayname = displayname;
     this.userRef.instance.avatar = avatar;
     this.userRef.instance.status = status;
   }

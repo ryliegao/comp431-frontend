@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit } from '@angular/core';
+import { MainService } from 'src/app/main/main.service';
 
 @Component({
   selector: 'app-user',
@@ -6,8 +7,8 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-
   @Input() username: string;
+  @Input() displayname: string;
   @Input() avatar: string;
   @Input() status: string;
   hearts: number;
@@ -15,8 +16,7 @@ export class UserComponent implements OnInit {
   followers: number;
   show = true;
 
-  constructor() {
-    this.status = 'I use to design websites and applications for the web.';
+  constructor(private service: MainService) {
     this.hearts = 127;
     this.following = 853;
     this.followers = 505;
@@ -25,4 +25,8 @@ export class UserComponent implements OnInit {
   ngOnInit() {
   }
 
+  removeFollowee() {
+    this.show = false;
+    this.service.removeFollowee(this.username);
+  }
 }

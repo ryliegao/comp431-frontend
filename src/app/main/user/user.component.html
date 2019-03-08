@@ -1,7 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 <div class="user-profile" *ngIf="show">
   <img class="avatar" [src]="avatar" alt=""/>
-  <div class="username">{{ username }}</div>
+  <div class="username">{{ displayname }}</div>
   <div class="status">{{ status }}</div>
   <ul class="data">
     <li>
@@ -13,7 +13,7 @@
     <li>
       <span class="entypo-user"> {{ followers }}</span>
     </li>
-    <li (click)="this.show = false;">
+    <li (click)="removeFollowee()">
       <span>Unfollow</span>
     </li>
   </ul>

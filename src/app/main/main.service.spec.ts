@@ -1,14 +1,14 @@
 import { inject, TestBed } from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { MainService } from './main.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { StorageService } from 'src/app/_services';
 
 describe('MainService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule
-      ]
+      imports: [ HttpClientTestingModule ],
+      providers: [ AuthService, StorageService ]
     });
   });
 

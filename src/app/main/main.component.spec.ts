@@ -56,7 +56,7 @@ describe('MainComponent', () => {
     spyOn(MainComponent.prototype, 'search');
     expect(component.searchText).toEqual('');
 
-    const input = fixture.debugElement.query(By.css('#accordion_search_bar')).nativeElement;
+    const input = fixture.debugElement.query(By.css('.accordion_search_bar')).nativeElement;
     input.value = 'dummy';
     input.dispatchEvent(new Event('input'));
     input.click();

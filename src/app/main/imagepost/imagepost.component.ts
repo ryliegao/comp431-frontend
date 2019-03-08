@@ -9,7 +9,7 @@ export class ImagepostComponent implements OnInit {
   @Input() content: string;
   @Input() image: string;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() { }
 
