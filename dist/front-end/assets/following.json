@@ -1,0 +1,41 @@
+{
+  "jk116": {
+    "following": ["lm327", "kk114", "kj1024"],
+    "followers": ["lm327", "cp1127", "kk114"]
+  },
+
+  "lm327": {
+    "following": ["jk116", "kk114", "yj26"],
+    "followers": ["jk116", "cp1127"]
+  },
+
+  "bk115": {
+    "following": ["yj26", "cp1127"],
+    "followers": ["cp1127", "ml82", "kk114", "yj26", "kj1024"]
+  },
+
+  "cp1127": {
+    "following": ["jk116", "lm327", "bk115", "ml82", "kk114", "yj26", "kj1024"],
+    "followers": ["bk115", "ml82", "yj26", "kj1024", "kk114"]
+  },
+
+  "ml82": {
+    "following": ["bk115", "cp1127", "kk114", "yj26"],
+    "followers": ["cp1127", "yj26"]
+  },
+
+  "kk114": {
+    "following": ["cp1127", "jk116", "kj1024", "bk115"],
+    "followers": ["jk116", "lm327", "cp1127", "kj1024", "ml82"]
+  },
+
+  "yj26": {
+    "following": ["bk115", "ml82", "cp1127"],
+    "followers": ["lm327", "bk115", "cp1127", "ml82"]
+  },
+
+  "kj1024": {
+    "following": ["bk115", "cp1127", "kk114"],
+    "followers": ["jk116", "cp1127", "kk114"]
+  }
+}

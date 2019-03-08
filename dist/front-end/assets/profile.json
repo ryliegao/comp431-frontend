@@ -1,0 +1,91 @@
+{
+  "jk116": {
+    "username": "jk116",
+    "displayname": "Jennie Kim",
+    "email": "jk116@rice.edu",
+    "phone": "346-346-0131",
+    "birthday": "1996-01-16",
+    "zipcode": "77001",
+    "password": "Jennie123",
+    "status": "Kai taught me how to dance! I must be the dancing queen now!",
+    "avatar": "assets/images/jk116.png"
+  },
+  "lm327": {
+    "username": "lm327",
+    "displayname": "Lalisa Manoban",
+    "email": "lm327@rice.edu",
+    "phone": "730-340-2497",
+    "birthday": "1997-03-27",
+    "zipcode": "77002",
+    "password": "Lalisa123",
+    "status": "TBH Jennie unnie still dances really stiffly -_-||",
+    "avatar": "assets/images/lm327.png"
+  },
+  "bk115": {
+    "username": "bk115",
+    "displayname": "Boa Kwon",
+    "email": "bk115@rice.edu",
+    "phone": "426-452-6241",
+    "birthday": "1986-11-05",
+    "zipcode": "77003",
+    "password": "Boa123",
+    "status": "I heard someone said \"dancing queen\"?",
+    "avatar": "assets/images/bk115.png"
+  },
+  "cp1127": {
+    "username": "cp1127",
+    "displayname": "Chanyeol Park",
+    "email": "cp1127@rice.edu",
+    "phone": "741-443-1162",
+    "birthday": "1992-11-27",
+    "zipcode": "77004",
+    "password": "Chanyeol123",
+    "status": "Haters gonna hate. Just forget about them.",
+    "avatar": "assets/images/cp1127.png"
+  },
+  "ml82": {
+    "username": "ml82",
+    "displayname": "Mark Lee",
+    "email": "ml82@rice.edu",
+    "phone": "295-429-5050",
+    "birthday": "1999-08-02",
+    "zipcode": "77005",
+    "password": "Mark123",
+    "status": "Had too much blue cheese... makes me feeling blue today :(",
+    "avatar": "assets/images/ml82.png"
+  },
+  "kk114": {
+    "username": "kk114",
+    "displayname": "Kai Kim",
+    "email": "kk114@rice.edu",
+    "phone": "235-493-8964",
+    "birthday": "1994-01-14",
+    "zipcode": "77006",
+    "password": "Kai123",
+    "status": "Offering 1-to-1 dance courses. Who's next?",
+    "avatar": "assets/images/kk114.png"
+  },
+  "yj26": {
+    "username": "yj26",
+    "displayname": "Yunho Jung",
+    "email": "yj26@rice.edu",
+    "phone": "306-938-4008",
+    "birthday": "1986-02-06",
+    "zipcode": "77007",
+    "password": "Yunho123",
+    "status": "I'm the most passionate enthusiast ^_^",
+    "avatar": "assets/images/yj26.png"
+  },
+  "kj1024": {
+    "username": "kj1024",
+    "displayname": "Krystal Jung",
+    "email": "kj1024@rice.edu",
+    "phone": "670-462-6714",
+    "birthday": "1994-10-24",
+    "zipcode": "77008",
+    "password": "Krystal123",
+    "status": "Actually, I don't speak French haha!",
+    "avatar": "assets/images/kj1024.png"
+  }
+}
+
