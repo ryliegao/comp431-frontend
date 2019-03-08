@@ -1,4 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MainService } from 'src/app/main/main.service';
+import { StorageService } from 'src/app/_services';
 
 import { TextpostComponent } from './textpost.component';
 
@@ -8,7 +11,9 @@ describe('TextpostComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TextpostComponent ]
+      imports: [ HttpClientTestingModule ],
+      declarations: [ TextpostComponent ],
+      providers: [ MainService, StorageService ]
     })
     .compileComponents();
   }));

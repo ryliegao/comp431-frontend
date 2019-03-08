@@ -1,11 +1,23 @@
-<div class="card">
-  <div class="text-holder">
-    <article >
-      <p>{{ content }}</p>
-    </article>
+<div class="text-post">
+  <div class="card">
+    <div class="text-holder">
+      <div class="author-field">
+        <b>{{ author }}</b>:
+      </div>
+      <article>
+        <p>{{ content }}</p>
+      </article>
+    </div>
+    <div class="action-bar">
+      <button class="action-button">Comment</button>
+      <button class="action-button" style="border-left:0;">Edit</button>
+      <button class="see-comments-button" (click)="loadComments()">{{ btnText }}</button>
+    </div>
   </div>
-  <div class="action-bar">
-    <button class="action-button">Comment</button>
-    <button class="action-button">Edit</button>
+  <div class="comment-area" *ngIf="showComments">
+    <div class="no-comment" *ngIf="showComments && this.comments.length === 0">
+      This post has no comment yet! Shall we leave one here?
+    </div>
+    <div class="comment" *ngFor="let comment of comments"></div>
   </div>
 </div>

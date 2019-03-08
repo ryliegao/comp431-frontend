@@ -45,6 +45,8 @@ export class MainComponent implements OnInit, OnDestroy {
   addMyself = false;
   addFailure = false;
   addAlreadyFollowing = false;
+  nextID = 0;
+  postText = '';
   private serviceSubscription;
 
   constructor(
@@ -115,15 +117,17 @@ export class MainComponent implements OnInit, OnDestroy {
     this.service.loadPosts().then(
       data => {
         this.posts = data;
+        this.nextID = 0;
         for (let i = 0; i < data.length; i++) {
           // only clear former posts on entry
-          this.createPost(
-            data[i].postID,
-            data[i].author,
-            data[i].content,
-            data[i].image,
-            i === 0
-          );
+          if (data[i].author === this.currentUser.username) {
+            this.nextID++;
+          }
+          if (data[i].image || data[i].image === '') {
+            this.createImagePost(data[i].postID, data[i].author, data[i].content, data[i].image, i === 0);
+          } else {
+            this.createTextPost(data[i].postID, data[i].author, data[i].content, i === 0);
+          }
         }
       }
     );
@@ -142,7 +146,7 @@ export class MainComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.posts.length; i++) {
       const str = this.posts[i].content as string;
       if (str.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0) {
-        this.createPost(
+        this.createImagePost(
           this.posts[i].postID,
           this.posts[i].author,
           this.posts[i].content,
@@ -157,7 +161,31 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
-  createPost(
+  makePost() {
+    this.createTextPost(this.nextID, this.currentUser.username, this.postText, false, 0);
+    this.postText = '';
+    this.nextID++;
+  }
+
+  createTextPost(
+    postID: number,
+    author: string,
+    content: string,
+    clear: boolean,
+    index = this.postContainer.length
+  ) {
+    if (clear) {
+      this.postContainer.clear();
+      index = 0;
+    }
+    const factory: ComponentFactory<TextpostComponent> = this.resolver.resolveComponentFactory(TextpostComponent);
+    this.post2Ref = this.postContainer.createComponent(factory, index);
+    this.post2Ref.instance.postID = postID;
+    this.post2Ref.instance.author = author;
+    this.post2Ref.instance.content = content;
+  }
+
+  createImagePost(
     postID: number,
     author: string,
     content: string,

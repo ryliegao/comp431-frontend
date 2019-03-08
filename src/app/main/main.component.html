@@ -6,7 +6,7 @@
       <span>upload</span>
       <input class="upload-image-input input-button" type="file">
     </div>
-    <div class="btn" (click)="createPost(this.postText, 'assets/images/default-img.jpg', false, 0);this.postText = '';">
+    <div class="btn" (click)="makePost()">
       <span>to post</span>
     </div>
     <div class="btn" (click)="changeStatus(postText);this.postText = '';">
