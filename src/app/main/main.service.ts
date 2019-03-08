@@ -16,6 +16,8 @@ export interface FolloweeInfo {
 }
 
 export interface Post {
+  author: string;
+  postID: number;
   content: string;
   image: string;
   comments: Array<object>;
@@ -148,5 +150,22 @@ export class MainService {
     } catch (e) {
       console.log('This browser does not support local storage.');
     }
+  }
+
+  loadComments(author: string, postID: number): Promise<Array<any>> {
+    return this.httpService.get('assets/posts.json').toPromise().then(
+      data => {
+        let comments = [];
+        if (data[author]) {
+          for (const post of data[author]) {
+            if (post.postID === postID) {
+              comments = post.comments;
+              break;
+            }
+          }
+        }
+        return comments;
+      }
+    );
   }
 }

@@ -1,13 +1,28 @@
+.image-post {
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  width: 800px !important;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.comment-area {
+  position: relative;
+  background-color: white;
+  width: 800px !important;
+  margin-top: 5px;
+}
+
+.no-comment, .comment {
+  padding: 10px;
+}
+
 .card {
   position: relative;
-  height: 300px !important;
-  width: 800px !important;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   background-color: white;
-  border-radius: 5px;
+  height: 300px !important;
   overflow: hidden;
   display: flex;
-  margin-bottom: 20px;
 }
 
 .card:hover {
@@ -35,17 +50,17 @@
   bottom: 0;
   left: 0;
   width: 300px;
-  height: 52px;
+  height: 80px;
   box-sizing: border-box;
   transition: left 200ms cubic-bezier(0.075, 0.82, 0.165, 1);
   text-align: center;
 }
 
-.action-button {
+.action-button, .see-comments-button {
   outline: none;
   position: relative;
   display: inline-block;
-  line-height: 52px;
+  line-height: 40px;
   padding: 0 16px;
   width: 150px;
   color: white;
@@ -59,7 +74,16 @@
   cursor: pointer;
 }
 
+.see-comments-button {
+  width: 300px;
+  bottom: 2px;
+}
+
 .action-button:hover {
+  text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+}
+
+.see-comments-button:hover {
   text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -73,6 +97,10 @@ p {
 }
 
 @media (max-width: 1300px) {
+  .image-post {
+    width: 500px !important;
+  }
+
   .card {
     height: 500px !important;
     width: 500px !important;
@@ -95,14 +123,25 @@ p {
 
   .action-bar {
     width: 500px !important;
+    height: 40px !important;
+  }
+
+  .see-comments-button {
+    width: 166px;
+    bottom: 0;
+    border-left: 0;
   }
 
   .action-button {
-    width: 250px;
+    width: 166px;
   }
 
   p {
     -webkit-line-clamp: 3;
     margin-top: 0;
+  }
+
+  .comment-area {
+    width: 500px !important;
   }
 }

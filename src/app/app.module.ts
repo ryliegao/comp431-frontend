@@ -7,6 +7,7 @@ import { AuthGuard } from 'src/app/_guards';
 import { JwtInterceptor, ErrorInterceptor } from 'src/app/_helpers';
 import { AlertService, AuthenticationService, StorageService } from 'src/app/_services';
 import { fakeBackendProvider } from 'src/app/_helpers';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import { TextpostComponent } from 'src/app/main/textpost/textpost.component';
 @NgModule({
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,

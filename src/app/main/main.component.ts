@@ -10,8 +10,8 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-import { User } from 'src/app/_models/user';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { User } from 'src/app/_models/user';
 import { ImagepostComponent } from './imagepost/imagepost.component';
 import { TextpostComponent } from './textpost/textpost.component';
 import { UserComponent } from './user/user.component';
