@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">32.73% </span>
+        <span class="strong">32.2% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>18/55</span>
+        <span class='fraction'>19/59</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">18.75% </span>
+        <span class="strong">16.67% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/16</span>
+        <span class='fraction'>3/18</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">28% </span>
+        <span class="strong">28.3% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/50</span>
+        <span class='fraction'>15/53</span>
       </div>
     </div>
     <p class="quiet">
@@ -217,7 +217,24 @@
 <a name='L169'></a><a href='#L169'>169</a>
 <a name='L170'></a><a href='#L170'>170</a>
 <a name='L171'></a><a href='#L171'>171</a>
-<a name='L172'></a><a href='#L172'>172</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -248,9 +265,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -310,6 +327,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -411,6 +433,12 @@ export interface Post {
   content: string;
   image: string;
   comments: Array&lt;object&gt;;
+  date: string;
+}
+&nbsp;
+export interface Comment {
+  commenter: string;
+  content: string;
 }
 &nbsp;
 @Injectable({
@@ -478,9 +506,14 @@ export class MainService {
 <span class="cstat-no" title="statement not covered" >            followeePosts.push.apply(followeePosts, posts[followee]);</span>
           }
         }
-<span class="cstat-no" title="statement not covered" >        return followeePosts;</span>
+<span class="cstat-no" title="statement not covered" >        return this.sortPosts(followeePosts);</span>
       }
     );
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  private s</span>ortPosts(posts: Array&lt;Post&gt;) {
+<span class="cstat-no" title="statement not covered" >    posts.sort(<span class="fstat-no" title="function not covered" >(a</span>, b) =&gt; <span class="cstat-no" title="statement not covered" >new Date(b.date).valueOf() - new Date(a.date).valueOf());</span></span>
+<span class="cstat-no" title="statement not covered" >    return posts;</span>
   }
 &nbsp;
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  addFollowee(</span></span>username: string): Promise&lt;FolloweeInfo&gt; {
@@ -542,7 +575,7 @@ export class MainService {
     }
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  loadComments(</span>author: string, postID: number): Promise&lt;Array&lt;any&gt;&gt; {
+<span class="fstat-no" title="function not covered" >  loadComments(</span>author: string, postID: number): Promise&lt;Array&lt;Comment&gt;&gt; {
 <span class="cstat-no" title="statement not covered" >    return this.httpService.get('assets/posts.json').toPromise().then(</span>
 <span class="fstat-no" title="function not covered" >      data </span>=&gt; {
         let comments = <span class="cstat-no" title="statement not covered" >[];</span>
@@ -565,7 +598,7 @@ export class MainService {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Mar 07 2019 23:33:26 GMT-0600 (Central Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Mar 08 2019 03:21:42 GMT-0600 (Central Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>
