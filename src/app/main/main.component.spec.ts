@@ -69,7 +69,8 @@ describe('MainComponent', () => {
   it('should filter displayed articles by the search keyword', () => {
     let first = 0;
     let second = 0;
-    spyOn(MainComponent.prototype, 'createPost').and.callFake((content, image, clear) => {
+    spyOn(MainComponent.prototype, 'createPost').and.callFake(
+      (postID, author, content, image, clear) => {
       if (clear) {
         first++;
       } else {

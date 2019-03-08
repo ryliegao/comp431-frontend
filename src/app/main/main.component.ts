@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewContainerRef,
   EventEmitter,
-  Output
+  Output, Input
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { User } from 'src/app/_models/user';
@@ -117,7 +117,13 @@ export class MainComponent implements OnInit, OnDestroy {
         this.posts = data;
         for (let i = 0; i < data.length; i++) {
           // only clear former posts on entry
-          this.createPost(data[i].content, data[i].image, i === 0);
+          this.createPost(
+            data[i].postID,
+            data[i].author,
+            data[i].content,
+            data[i].image,
+            i === 0
+          );
         }
       }
     );
@@ -136,7 +142,13 @@ export class MainComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.posts.length; i++) {
       const str = this.posts[i].content as string;
       if (str.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0) {
-        this.createPost(this.posts[i].content, this.posts[i].image, !found);
+        this.createPost(
+          this.posts[i].postID,
+          this.posts[i].author,
+          this.posts[i].content,
+          this.posts[i].image,
+          !found
+        );
         found = true;
       }
     }
@@ -145,19 +157,34 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
-  createPost(content: string, image: string, clear: boolean, index = this.postContainer.length) {
+  createPost(
+    postID: number,
+    author: string,
+    content: string,
+    image: string,
+    clear: boolean,
+    index = this.postContainer.length
+  ) {
     if (clear) {
       this.postContainer.clear();
       index = 0;
     }
-
     const factory: ComponentFactory<ImagepostComponent> = this.resolver.resolveComponentFactory(ImagepostComponent);
     this.post1Ref = this.postContainer.createComponent(factory, index);
+    this.post1Ref.instance.postID = postID;
+    this.post1Ref.instance.author = author;
     this.post1Ref.instance.content = content;
     this.post1Ref.instance.image = image;
   }
 
-  addUser(username: string, displayname: string, avatar: string, status: string, clear: boolean, index = this.userContainer.length) {
+  addUser(
+    username: string,
+    displayname: string,
+    avatar: string,
+    status: string,
+    clear: boolean,
+    index = this.userContainer.length
+  ) {
     if (clear) {
       this.userContainer.clear();
     }

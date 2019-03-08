@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MainService } from 'src/app/main/main.service';
 
 @Component({
@@ -12,10 +11,8 @@ export class ImagepostComponent implements OnInit {
   @Input() author: string;
   @Input() content: string;
   @Input() image: string;
-  @Input() comments = [];
-  postForm: FormGroup;
+  comments = [];
   showComments = false;
-  noComment = false;
   btnText = 'See Comments';
 
   constructor(private service: MainService) {}
@@ -27,7 +24,7 @@ export class ImagepostComponent implements OnInit {
       this.service.loadComments(this.author, this.postID).then(
         comments => {
           this.showComments = true;
-          this.btnText = 'Close Comments';
+          this.btnText = 'Fold Comments';
           this.comments = comments;
         }
       );
