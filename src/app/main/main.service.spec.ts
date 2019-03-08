@@ -44,4 +44,26 @@ describe('MainService', () => {
         });
       });
   });
+
+  it('should add a follower on request', () => {
+    inject([ HttpTestingController, AuthService ],
+      (httpMock: HttpTestingController, service: MainService) => {
+        service.followInfo = { following: ['a', 'b'], followers: ['c'] };
+
+        service.addFollowee('kj1024').then(() => {
+          expect(service.followInfo.following).toContain('kj1024');
+          }
+        );
+      });
+  });
+
+  it('should remove a follower on request', () => {
+    inject([ HttpTestingController, AuthService ],
+      (httpMock: HttpTestingController, service: MainService) => {
+        service.followInfo = { following: ['a', 'b'], followers: ['c'] };
+
+        service.removeFollowee('a');
+        expect(service.followInfo.following).not.toContain('a');
+      });
+  });
 });

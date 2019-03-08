@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/_services';
 import { MainComponent } from './main.component';
 import { User } from 'src/app/_models/user';
 import { MainService } from './main.service';
+import { UserComponent } from './user/user.component';
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -14,16 +15,13 @@ describe('MainComponent', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule, FormsModule, HttpClientTestingModule ],
-      declarations: [ MainComponent ],
+      declarations: [ MainComponent, UserComponent ],
       providers: [ StorageService ]
     })
     .compileComponents();
 
     const info = { username: 'ml82' };
     spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify(new User(info)));
-    spyOn(MainService.prototype, 'loadPosts').and.returnValue(
-      Promise.resolve({ content: 'content', image: 'image', comments: [] })
-    );
   }));
 
   beforeEach(() => {
@@ -98,6 +96,9 @@ describe('MainComponent', () => {
     fakeAsync(inject([MainComponent], () => {
       MainService.prototype.followInfo = { following: [], followers: []};
       component.posts = [];
+      spyOn(MainService.prototype, 'loadPosts').and.returnValue(
+        Promise.resolve({ content: 'content', image: 'image', comments: [] })
+      );
       spyOn(MainService.prototype, 'addFollowee').and.callFake((username) => {
         MainService.prototype.followInfo.following.push(username);
         return Promise.resolve({ username });
@@ -119,6 +120,31 @@ describe('MainComponent', () => {
         expect(component.posts[0].content).toEqual('content');
         expect(component.posts[0].image).toEqual('image');
         expect(component.posts[0].comments).toEqual([]);
+      });
+    }));
+  });
+
+  it('should remove articles when removing a follower', () => {
+    fakeAsync(inject([MainComponent], () => {
+      component.posts = [{ content: 'content', image: 'image', comments: [] }];
+      MainService.prototype.followInfo = { following: [ 'kj1024' ], followers: []};
+      spyOn(MainService.prototype, 'removeFollowee').and.callFake((username) => {
+        MainService.prototype.followInfo.following.splice(0, 1);
+      });
+      spyOn(MainService.prototype, 'loadPosts').and.returnValue(
+        Promise.resolve([])
+      );
+      UserComponent.prototype.removeFollowee();
+      tick();
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(MainService.prototype.removeFollowee).toHaveBeenCalledTimes(1);
+        expect(MainService.prototype.loadPosts).toHaveBeenCalledTimes(1);
+        expect(MainService.prototype.followInfo.following.length).toEqual(0);
+        expect(MainService.prototype.followInfo.following).not.toContain('kj1024');
+
+        expect(component.posts.length).toEqual(0);
       });
     }));
   });

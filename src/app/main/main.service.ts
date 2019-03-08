@@ -118,7 +118,6 @@ export class MainService {
   removeFollowee(username: string) {
     for (let i = 0; i < this.followInfo.following.length; i++) {
       if (this.followInfo.following[i] === username) {
-        console.log('User removed! ' + username);
         this.followInfo.following.splice(i, 1);
       }
     }
