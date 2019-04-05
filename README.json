@@ -1,6 +1,6 @@
 {
-	"netid": "yg38",
-	"frontend": "",
-   	"backend": "",
-   	"note": "I request using one slip day for this assignment."
+  "netid": "yg38",
+  "frontend": "https://ryliesfrontend.surge.sh",
+  "backend": "https://ryliesbackend.herokuapp.com/",
+  "note": "I request using one slip day for this assignment."
 }
