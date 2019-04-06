@@ -91,7 +91,7 @@ export class MainService {
   }
 
   loadPosts(): Promise<Array<Post>> {
-    const request = this.httpService.post<Response>(
+    const request = this.httpService.get<Response>(
       this.globalService.serverURL + '/articles',
       this.globalService.options
     );
