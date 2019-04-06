@@ -3,20 +3,20 @@
 
     <header><b>--- Welcome! ---</b></header>
 
-    <input type="text" placeholder="Account Name" formControlName="username">
+    <input id="register_username" type="text" placeholder="Account Name" formControlName="username">
     <input type="text" placeholder="Display Name (Optional)" formControlName="displayname">
-    <input type="text" placeholder="E-mail Address" formControlName="email">
-    <input type="text" placeholder="Phone Number: 000-000-0000"formControlName="phone">
+    <input id="register_email" type="text" placeholder="E-mail Address" formControlName="email">
+    <input id="register_phone" type="text" placeholder="Phone Number: 000-000-0000"formControlName="phone">
     <!-- The "date" type does not work on Safari or IE -->
-    <input type="date" placeholder="Date of Birth: YYYY-MM-DD" formControlName="birthday">
-    <input type="text" placeholder="Zip Code: XXXXX" formControlName="zipcode">
+    <input id="register_birthday" type="date" placeholder="Date of Birth: YYYY-MM-DD" formControlName="birthday">
+    <input id="register_zipcode" type="text" placeholder="Zip Code: XXXXX" formControlName="zipcode">
     <input type="password" placeholder="Password" formControlName="password1">
     <input type="password" placeholder="Confirm Password" formControlName="password2" id="last_field">
 
     <!--<input type="hidden" id="timestamp" name="time">-->
 
     <div class="buttons">
-      <input type="submit" class="submit" value="Submit">
+      <input id="register_submit" type="submit" class="submit" value="Submit">
       <input type="reset" class="clear" value="Clear">
     </div>
 

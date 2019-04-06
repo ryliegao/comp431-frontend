@@ -1,17 +1,18 @@
 <div class="content main-page">
 
   <div class="input-box" (appClickOutside)="closeTextarea()">
-    <textarea class="input-style-post" placeholder="What's on your mind?" rows="5"
+    <textarea id="main_textarea" class="input-style-post" placeholder="What's on your mind?" rows="5"
               [style.height]="height" [(ngModel)]="postText" (focus)="expandTextarea()">
     </textarea>
     <div class="input-btn" *ngIf="this.height === '100px'">
       <span>Upload File</span>
       <input class="upload-image-input input-button" type="file">
     </div>
-    <div class="input-btn" *ngIf="this.height === '100px'" (click)="makePost()">
+    <div id="main_postit" class="input-btn" *ngIf="this.height === '100px'" (click)="makePost()">
       <span>Post It!</span>
     </div>
-    <div class="input-btn" *ngIf="this.height === '100px'" (click)="changeStatus(postText);this.postText = '';">
+    <div id="main_status" class="input-btn" *ngIf="this.height === '100px'"
+         (click)="changeStatus(postText);this.postText = '';">
       <span>Update Status</span>
     </div>
     <div class="input-btn" *ngIf="this.height === '100px'" (click)="this.postText = '';">
@@ -20,8 +21,8 @@
   </div>
 
   <div class="accordion_search_bar_container">
-    <input type="search" class="accordion_search_bar" placeholder="  Search Posts" [(ngModel)]="searchText"
-           (change)="search()" (keyup)="search()" (paste)="search()" (click)="search()"/>
+    <input id="main_search" type="search" class="accordion_search_bar" placeholder="  Search Posts"
+           [(ngModel)]="searchText" (change)="search()" (keyup)="search()" (paste)="search()" (click)="search()"/>
   </div>
 
   <div class="userpane">

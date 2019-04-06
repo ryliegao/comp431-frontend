@@ -18,7 +18,7 @@
     <img class="icon" src="assets/images/profile-icon.png" alt="">
     <a class="link-text" routerLink="/auth/login">Log<br>In</a>
   </div>
-  <div class="right-div" *ngIf="hasLogOut()">
+  <div id="header_logout" class="right-div" *ngIf="hasLogOut()">
     <img class="icon" src="assets/images/profile-icon.png" alt="">
     <a class="link-text" routerLink="/auth/login" (click)="logOut()">Log<br>Out</a>
   </div>
