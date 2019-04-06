@@ -83,24 +83,24 @@ export class HeaderComponent implements OnInit {
   }
 
   hasMain(): boolean {
-    return this.location.path().indexOf('/profile') > -1;
+    return window.location.href.indexOf('/profile') > -1;
   }
 
   hasProfile(): boolean {
-    return this.location.path().indexOf('/main') > -1;
+    return window.location.href.indexOf('/main') > -1;
   }
 
   hasLogIn(): boolean {
-    return this.location.path().indexOf('/auth/register') > -1;
+    return window.location.href.indexOf('/auth/register') > -1;
   }
 
   hasLogOut(): boolean {
-    return this.location.path().indexOf('/main') > -1 ||
-      this.location.path().indexOf('/profile') > -1;
+    return window.location.href.indexOf('/main') > -1 ||
+      window.location.href.indexOf('/profile') > -1;
   }
 
   hasRegister(): boolean {
-    return this.location.path().indexOf('/auth/login') > -1;
+    return window.location.href.indexOf('/auth/login') > -1;
   }
 
   logOut() {
