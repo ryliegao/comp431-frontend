@@ -80,6 +80,40 @@ export class AuthService {
     }).catch((err: HttpErrorResponse) => {
       console.log (err.message);
     });
+
+    // const header = new Headers();
+    // header.append('Content-Type', 'application/json');
+    // header.append('Cookie', 'sessionid=');
+    //
+    // return fetch(this.globalService.serverURL + '/login', {
+    //   method: 'POST',
+    //   credentials: 'include',
+    //   headers: header,
+    //   body: JSON.stringify({ username, password })
+    // }).then(response => {
+    //   console.log(response.headers['set-cookie']);
+    //   return response.json();
+    // }).then(res => {
+    //   if (res.result && res.result === 'success') {
+    //     const user = {
+    //       username: res.username,
+    //       // displayname: data[username].displayname,
+    //       // email: data[username].email,
+    //       // phone: data[username].phone,
+    //       // birthday: data[username].birthday,
+    //       // zipcode: data[username].zipcode,
+    //       // password: data[username].password,
+    //       loggedin: true
+    //       // status: data[username].status,
+    //       // avatar: data[username].avatar
+    //     };
+    //     this.makeNewUser(user);
+    //     return true;
+    //   }
+    //   return false;
+    // }).catch((err: HttpErrorResponse) => {
+    //   console.log (err.message);
+    // });
   }
 
   registerUser(user: User) {
@@ -95,7 +129,8 @@ export class AuthService {
     const request = this.httpService.post<Response>(
       this.globalService.serverURL + '/register',
       body,
-      this.globalService.options);
+      { withCredentials: true }
+    );
 
     return request.toPromise().then(res => {
       return res.result && res.result === 'success';

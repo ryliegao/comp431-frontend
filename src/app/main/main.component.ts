@@ -125,9 +125,9 @@ export class MainComponent implements OnInit, OnDestroy {
             this.nextID++;
           }
           if (data[i].image || data[i].image === '') {
-            this.createImagePost(data[i].postID, data[i].author, data[i].content, data[i].image, i === 0);
+            this.createImagePost(data[i].id, data[i].author, data[i].content, data[i].image, i === 0);
           } else {
-            this.createTextPost(data[i].postID, data[i].author, data[i].content, i === 0);
+            this.createTextPost(data[i].id, data[i].author, data[i].content, i === 0);
           }
         }
       }

@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
+import { GlobalService } from 'src/app/_services';
 
 export interface FollowInfo {
   followers: Array<string>;
@@ -17,7 +18,7 @@ export interface FolloweeInfo {
 
 export interface Post {
   author: string;
-  postID: number;
+  id: number;
   content: string;
   image: string;
   comments: Array<object>;
@@ -29,6 +30,10 @@ export interface Comment {
   content: string;
 }
 
+interface Response {
+  articles: Array<Post>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,7 +42,11 @@ export class MainService {
   followInfo: FollowInfo;
   onRemove: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private httpService: HttpClient, private authService: AuthService) { }
+  constructor(
+    private httpService: HttpClient,
+    private authService: AuthService,
+    private globalService: GlobalService
+  ) { }
 
   loadUsers(username: string): Promise<FollowInfo> {
     this.username = username;
@@ -53,7 +62,7 @@ export class MainService {
         return { followers, following };
       },
       (err: HttpErrorResponse) => {
-        console.log (err.message);
+        console.log(err.message);
         this.followInfo = { followers: [], following: [] };
         return { followers: [], following: [] };
       }
@@ -82,19 +91,22 @@ export class MainService {
   }
 
   loadPosts(): Promise<Array<Post>> {
-    return this.httpService.get('assets/posts.json').toPromise().then(
-      posts => {
-        const followeePosts = [];
-        if (posts[this.username]) {
-          followeePosts.push.apply(followeePosts, posts[this.username]);
-        }
-
-        for (const followee of this.followInfo.following) {
-          if (posts[followee]) {
-            followeePosts.push.apply(followeePosts, posts[followee]);
-          }
-        }
-        return this.sortPosts(followeePosts);
+    const request = this.httpService.post<Response>(
+      this.globalService.serverURL + '/articles',
+      this.globalService.options
+    );
+    return request.toPromise().then(res => {
+        // const followeePosts = [];
+        // if (posts[this.username]) {
+        //   followeePosts.push.apply(followeePosts, posts[this.username]);
+        // }
+        //
+        // for (const followee of this.followInfo.following) {
+        //   if (posts[followee]) {
+        //     followeePosts.push.apply(followeePosts, posts[followee]);
+        //   }
+        // }
+        return this.sortPosts(res.articles);
       }
     );
   }
@@ -163,13 +175,13 @@ export class MainService {
     }
   }
 
-  loadComments(author: string, postID: number): Promise<Array<Comment>> {
+  loadComments(author: string, id: number): Promise<Array<Comment>> {
     return this.httpService.get('assets/posts.json').toPromise().then(
       data => {
         let comments = [];
         if (data[author]) {
           for (const post of data[author]) {
-            if (post.postID === postID) {
+            if (post.id === id) {
               comments = post.comments;
               break;
             }
