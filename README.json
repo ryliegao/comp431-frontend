@@ -1,6 +1,6 @@
 {
   "netid": "yg38",
-  "frontend": "https://ryliesfrontend.surge.sh",
+  "frontend": "http://ryliesfrontend.surge.sh",
   "backend": "https://ryliesbackend.herokuapp.com/",
   "note": "I request using one slip day for this assignment. Currently, I'm having trouble setting the cookies from server to the client, and thus having error loading the posts in the main page. I'll keep debugging this part and see how far I can make.",
   "test username": "ml82",

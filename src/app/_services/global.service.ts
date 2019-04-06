@@ -5,8 +5,8 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class GlobalService {
-  // public serverURL = 'https://ryliesbackend.herokuapp.com'; // TODO: change to heroku domain
-  public serverURL = 'http://127.0.0.1:3000';
+  public serverURL = 'https://ryliesbackend.herokuapp.com'; // TODO: change to heroku domain
+  // public serverURL = 'http://127.0.0.1:3000';
 
   public options: object = {
     headers: new HttpHeaders()
