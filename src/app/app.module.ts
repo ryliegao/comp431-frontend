@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AlertComponent } from 'src/app/_directives';
 import { AuthGuard } from 'src/app/_guards';
 import { JwtInterceptor, ErrorInterceptor } from 'src/app/_helpers';
-import { AlertService, AuthenticationService, StorageService } from 'src/app/_services';
+import { AlertService, AuthenticationService, StorageService, GlobalService } from 'src/app/_services';
 import { fakeBackendProvider } from 'src/app/_helpers';
 import { CommonModule } from '@angular/common';
 
@@ -49,6 +49,7 @@ import { MainDirective } from './main/main.directive';
     AuthGuard,
     AlertService,
     AuthenticationService,
+    GlobalService,
     StorageService,
     MainComponent,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

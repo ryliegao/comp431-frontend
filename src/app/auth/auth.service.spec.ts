@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
-import { StorageService } from 'src/app/_services';
+import { StorageService, GlobalService } from 'src/app/_services';
 
 describe('AuthService', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('AuthService', () => {
       imports: [
         HttpClientTestingModule
       ],
-      providers: [ AuthService, StorageService ]
+      providers: [ AuthService, StorageService, GlobalService ]
     });
 
     spyOn(AuthService.prototype, 'checkLogin').and.callThrough();

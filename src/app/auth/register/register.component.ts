@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StorageService } from 'src/app/_services/storage.service';
-import {AuthService} from '../auth.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-register',
@@ -56,14 +57,17 @@ export class RegisterComponent implements OnInit {
         loggedin: true
       };
       this.authService.makeNewUser(user);
-      alert(this.registerForm.value.username + ', you have successfully registered!');
-      this.router.navigate(['/auth/login']);
-      this.storageService.setItem(
-        this.registerForm.value.displayname === null || this.registerForm.value.displayname === '' ?
-          this.registerForm.value.username : this.registerForm.value.displayname
-      );
+      this.authService.registerUser(new User(user)).then(result => {
+        if (result) {
+          alert(this.registerForm.value.username + ', you have successfully registered!');
+          this.router.navigate(['/auth/login']);
+          this.storageService.setItem(
+            this.registerForm.value.displayname === null || this.registerForm.value.displayname === '' ?
+              this.registerForm.value.username : this.registerForm.value.displayname
+          );
+        }
+      });
     }
-
     return false;
   }
 }

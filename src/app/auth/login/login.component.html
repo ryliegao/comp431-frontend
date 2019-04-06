@@ -3,7 +3,7 @@
 
     <header><b>--- Welcome back! ---</b></header>
 
-    <input type="text" placeholder="Username" formControlName="username" (change)="removeMsg()">
+    <input id="login_username" type="text" placeholder="Username" formControlName="username" (change)="removeMsg()">
     <input type="password" placeholder="Password" formControlName="password" id="last_field" (change)="removeMsg()">
     <span class="error-message" *ngIf="submitted && invalid">
       Please enter both of your username and your password!
@@ -13,7 +13,7 @@
     </span>
 
     <div class="buttons">
-      <input type="submit" class="submit" value="Log In">
+      <input id="login_submit" type="submit" class="submit" value="Log In">
     </div>
 
   </form>

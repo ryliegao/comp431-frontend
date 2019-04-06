@@ -1,5 +1,5 @@
 import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { browser, by, element, logging } from 'protractor';
 
 describe('workspace-project App', () => {
   let page: AppPage;
@@ -8,9 +8,9 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should displayname welcome message', () => {
+  it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to front-end!');
+    expect(page.getTitleText()).toContain('Welcome!');
   });
 
   afterEach(async () => {
@@ -19,5 +19,17 @@ describe('workspace-project App', () => {
     expect(logs).not.toContain(jasmine.objectContaining({
       level: logging.Level.SEVERE,
     } as logging.Entry));
+  });
+
+  it('should log in as test user', () => {
+    browser.get(browser.baseUrl + '/auth/login');
+    element(by.id('login_username')).sendKeys('yg38');
+    element(by.id('last_field')).sendKeys('qwe123');
+    element(by.id('login_submit')).click();
+
+    expect(page.getTitleText()).toContain('Your');
+    expect(page.getTitleText()).toContain('Profile');
+    expect(page.getTitleText()).toContain('Log');
+    expect(page.getTitleText()).toContain('Out');
   });
 });

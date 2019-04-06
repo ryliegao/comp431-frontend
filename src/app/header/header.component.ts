@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from 'src/app/_models/user';
-import { StorageService } from 'src/app/_services';
+import { GlobalService, StorageService } from 'src/app/_services';
+
+interface Response {
+  body: string;
+}
 
 @Component({
   selector: 'app-header',
@@ -19,7 +24,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private storageService: StorageService) {
+    private storageService: StorageService,
+    private globalService: GlobalService,
+    private httpService: HttpClient
+  ) {
     this.storageService.watchStorage().subscribe((data: string) => {
       console.log('Saw change(s) on data: ' + data);
       this.updateName();
@@ -102,19 +110,16 @@ export class HeaderComponent implements OnInit {
       console.log('This browser does not support local storage. [Header]');
     }
     this.storageService.setItem('User removed!');
-    // const user: User = JSON.parse(localStorage.getItem('currentUser'));
-    // const obj = {
-    //   username: user.username,
-    //   displayname: user.displayname,
-    //   email: user.email,
-    //   phone: user.phone,
-    //   birthday: user.birthday,
-    //   zipcode: user.zipcode,
-    //   password: user.password,
-    //   loggedin: false,
-    //   status: user.status,
-    //   avatar: user.avatar
-    // };
-    // AuthService.makeNewUser(obj);
+
+    const request = this.httpService.put<Response>(
+      this.globalService.serverURL + '/logout',
+      {},
+      this.globalService.options);
+
+    return request.toPromise().then(res => {
+      return res.body && res.body === 'success';
+    }).catch((err: HttpErrorResponse) => {
+      console.log (err.message);
+    });
   }
 }
