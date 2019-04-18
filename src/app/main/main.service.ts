@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { GlobalService } from 'src/app/_services';
 
 export interface FollowInfo {
-  followers: Array<string>;
+  // followers: Array<string>;
   following: Array<string>;
 }
 
@@ -30,8 +30,23 @@ export interface Comment {
   content: string;
 }
 
-interface Response {
+interface ArticleResponse {
   articles: Array<Post>;
+}
+
+interface NameResponse {
+  username: string;
+  displaynames: Array<{username: string, displayname: string}>;
+}
+
+interface StatusResponse {
+  username: string;
+  headlines: Array<{username: string, headline: string}>;
+}
+
+interface AvatarResponse {
+  username: string;
+  avatars: Array<{username: string, avatar: string}>;
 }
 
 @Injectable({
@@ -50,48 +65,69 @@ export class MainService {
 
   loadUsers(username: string): Promise<FollowInfo> {
     this.username = username;
-    return this.httpService.get('assets/following.json').toPromise().then(
-      data => {
-        let followers = [];
-        let following = [];
-        if (data[username]) {
-          followers = data[username].followers;
-          following = data[username].following;
-        }
-        this.followInfo = { followers, following };
-        return { followers, following };
-      },
-      (err: HttpErrorResponse) => {
-        console.log(err.message);
-        this.followInfo = { followers: [], following: [] };
-        return { followers: [], following: [] };
-      }
+    const request = this.httpService.get<FollowInfo>(
+      this.globalService.serverURL + '/following/:user?user=' + username,
+      this.globalService.options
     );
+    return request.toPromise().then(res => {
+      return { following: res.following };
+    });
+    // return this.httpService.get('assets/following.json').toPromise().then(
+    //   data => {
+    //     let followers = [];
+    //     let following = [];
+    //     if (data[username]) {
+    //       followers = data[username].followers;
+    //       following = data[username].following;
+    //     }
+    //     this.followInfo = { followers, following };
+    //     return { followers, following };
+    //   },
+    //   (err: HttpErrorResponse) => {
+    //     console.log(err.message);
+    //     this.followInfo = { followers: [], following: [] };
+    //     return { followers: [], following: [] };
+    //   }
+    // );
   }
 
-  getFolloweeInfo(followee: string): Promise<FolloweeInfo> {
-    return this.httpService.get('assets/profile.json').toPromise().then(
-      userinfo => {
-        if (userinfo[followee]) {
-          return {
-            username: userinfo[followee].username,
-            displayname: userinfo[followee].displayname ? userinfo[followee].displayname : userinfo[followee].username,
-            status: userinfo[followee].status,
-            avatar: userinfo[followee].avatar,
-          };
-        } else {
-          return null;
-        }
-      },
-      (err: HttpErrorResponse) => {
-        console.log (err.message);
-        return null;
-      }
-    );
+  getFolloweeInfo(followee: Array<string>): Promise<Array<FolloweeInfo>> {
+    const str = followee.join(',');
+    let displaynames;
+    let headlines;
+    let avatars;
+
+    return this.httpService.get<NameResponse>(
+      this.globalService.serverURL + '/displaynames/:users?users=' + str,
+      this.globalService.options).toPromise().then(res1 => {
+        console.log(res1);
+        displaynames = res1.displaynames;
+        return this.httpService.get<StatusResponse>(
+          this.globalService.serverURL + '/headlines/:users?users=' + str,
+          this.globalService.options).toPromise().then(res2 => {
+          headlines = res2.headlines;
+          return this.httpService.get<AvatarResponse>(
+            this.globalService.serverURL + '/avatars/:users?users=' + str,
+            this.globalService.options).toPromise().then(res3 => {
+            avatars = res3.avatars;
+          }).then(() => {
+            const infos = [];
+            for (let i = 0; i < followee.length; i++) {
+              infos.push({
+                username: followee[i],
+                displayname: displaynames[i].displayname,
+                status: headlines[i].headline,
+                avatar: avatars[i].avatar
+              });
+            }
+            return infos;
+          });
+        });
+      });
   }
 
   loadPosts(): Promise<Array<Post>> {
-    const request = this.httpService.get<Response>(
+    const request = this.httpService.get<ArticleResponse>(
       this.globalService.serverURL + '/articles',
       this.globalService.options
     );

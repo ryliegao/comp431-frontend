@@ -101,15 +101,13 @@ export class MainComponent implements OnInit, OnDestroy {
   loadUsers() {
     this.service.loadUsers(this.currentUser.username).then(
       data => {
-        for (let i = 0; i < data.following.length; i++) {
-          this.service.getFolloweeInfo(data.following[i]).then(
-            followee => {
-              if (followee) {
-                this.addUser(followee.username, followee.displayname, followee.avatar, followee.status, i === 0);
-              }
+        this.service.getFolloweeInfo(data.following).then(
+          infos => {
+            for (let i = 0; i < infos.length; i++) {
+              this.addUser(infos[i].username, infos[i].displayname, infos[i].avatar, infos[i].status, i === 0);
             }
-          );
-        }
+          }
+        );
       }
     );
   }

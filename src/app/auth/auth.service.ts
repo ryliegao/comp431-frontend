@@ -3,9 +3,44 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { StorageService, GlobalService } from 'src/app/_services';
 
-interface Response {
+interface LoginResponse {
   username: string;
   result: string;
+}
+
+interface NameResponse {
+  username: string;
+  displaynames: Array<{username: string, displayname: string}>;
+}
+
+interface EmailResponse {
+  username: string;
+  email: string;
+}
+
+interface PhoneResponse {
+  username: string;
+  phone: string;
+}
+
+interface DobResponse {
+  username: string;
+  dob: string;
+}
+
+interface ZipCodeResponse {
+  username: string;
+  zipcode: string;
+}
+
+interface StatusResponse {
+  username: string;
+  headlines: Array<{username: string, headline: string}>;
+}
+
+interface AvatarResponse {
+  username: string;
+  avatars: Array<{username: string, avatar: string}>;
 }
 
 @Injectable({
@@ -52,68 +87,64 @@ export class AuthService {
 
   checkLogin(username: string, password: string) {
     const body = { username, password };
-    const request = this.httpService.post<Response>(
+    const user = { username, displayname: null, email: null, phone: null, birthday: null, zipcode: null,
+      password: null, loggedin: true, status: null, avatar: null };
+    const request = this.httpService.post<LoginResponse>(
       this.globalService.serverURL + '/login',
       body,
       this.globalService.options
     );
 
-    return request.toPromise().then(res => {
-      console.log(document.cookie);
-      if (res.result && res.result === 'success') {
-          const user = {
-            username: res.username,
-            // displayname: data[username].displayname,
-            // email: data[username].email,
-            // phone: data[username].phone,
-            // birthday: data[username].birthday,
-            // zipcode: data[username].zipcode,
-            // password: data[username].password,
-            loggedin: true
-            // status: data[username].status,
-            // avatar: data[username].avatar
-          };
-          this.makeNewUser(user);
-          return true;
-      }
-      return false;
+    return request.toPromise().then(login => {
+      return login.result && login.result === 'success';
+    }).then(loggedin => {
+      return this.httpService.get<NameResponse>(
+        this.globalService.serverURL + '/displaynames/:users?users=' + username,
+        this.globalService.options).toPromise().then(names => {
+          if (names.displaynames.length > 0) {
+            user.displayname = names.displaynames[0].displayname;
+          }
+          return this.httpService.get<EmailResponse>(
+            this.globalService.serverURL + '/email/:user?user=' + username,
+            this.globalService.options).toPromise().then(email => {
+              user.email = email.email;
+              return this.httpService.get<PhoneResponse>(
+                this.globalService.serverURL + '/phone/:user?user=' + username,
+                this.globalService.options).toPromise().then(phone => {
+                  user.phone = phone.phone;
+                  return this.httpService.get<DobResponse>(
+                    this.globalService.serverURL + '/dob/:user?user=' + username,
+                    this.globalService.options).toPromise().then(dob => {
+                      user.birthday = dob.dob;
+                      return this.httpService.get<ZipCodeResponse>(
+                        this.globalService.serverURL + '/zipcode/:user?user=' + username,
+                        this.globalService.options).toPromise().then(zipcode => {
+                          user.zipcode = zipcode.zipcode;
+                          return this.httpService.get<StatusResponse>(
+                            this.globalService.serverURL + '/headlines/:users?users=' + username,
+                            this.globalService.options).toPromise().then(headlines => {
+                              if (headlines.headlines.length > 0) {
+                                user.status = headlines.headlines[0].headline;
+                              }
+                              return this.httpService.get<AvatarResponse>(
+                                this.globalService.serverURL + '/avatars/:users?users=' + username,
+                                this.globalService.options).toPromise().then(avatars => {
+                                  if (avatars.avatars.length > 0) {
+                                    user.avatar = avatars.avatars[0].avatar;
+                                  }
+                                }).then(() => {
+                                  if (loggedin) { this.makeNewUser(user); }
+                                  return loggedin;
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
     }).catch((err: HttpErrorResponse) => {
       console.log (err.message);
     });
-
-    // const header = new Headers();
-    // header.append('Content-Type', 'application/json');
-    // header.append('Cookie', 'sessionid=');
-    //
-    // return fetch(this.globalService.serverURL + '/login', {
-    //   method: 'POST',
-    //   credentials: 'include',
-    //   headers: header,
-    //   body: JSON.stringify({ username, password })
-    // }).then(response => {
-    //   console.log(response.headers['set-cookie']);
-    //   return response.json();
-    // }).then(res => {
-    //   if (res.result && res.result === 'success') {
-    //     const user = {
-    //       username: res.username,
-    //       // displayname: data[username].displayname,
-    //       // email: data[username].email,
-    //       // phone: data[username].phone,
-    //       // birthday: data[username].birthday,
-    //       // zipcode: data[username].zipcode,
-    //       // password: data[username].password,
-    //       loggedin: true
-    //       // status: data[username].status,
-    //       // avatar: data[username].avatar
-    //     };
-    //     this.makeNewUser(user);
-    //     return true;
-    //   }
-    //   return false;
-    // }).catch((err: HttpErrorResponse) => {
-    //   console.log (err.message);
-    // });
   }
 
   registerUser(user: User) {
@@ -126,10 +157,10 @@ export class AuthService {
       zipcode: user.zipcode,
       password: user.password
     };
-    const request = this.httpService.post<Response>(
+    const request = this.httpService.post<LoginResponse>(
       this.globalService.serverURL + '/register',
       body,
-      { withCredentials: true }
+      this.globalService.options
     );
 
     return request.toPromise().then(res => {
