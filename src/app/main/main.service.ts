@@ -100,7 +100,6 @@ export class MainService {
     return this.httpService.get<NameResponse>(
       this.globalService.serverURL + '/displaynames/:users?users=' + str,
       this.globalService.options).toPromise().then(res1 => {
-        console.log(res1);
         displaynames = res1.displaynames;
         return this.httpService.get<StatusResponse>(
           this.globalService.serverURL + '/headlines/:users?users=' + str,
