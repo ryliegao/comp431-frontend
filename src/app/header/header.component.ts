@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { GlobalService, StorageService } from 'src/app/_services';
+import { AuthGuard } from 'src/app/_guards';
 
 interface Response {
   body: string;
@@ -26,13 +28,18 @@ export class HeaderComponent implements OnInit {
     private location: Location,
     private storageService: StorageService,
     private globalService: GlobalService,
-    private httpService: HttpClient
+    private httpService: HttpClient,
+    private authGuard: AuthGuard,
+    private router: Router
   ) {
     this.storageService.watchStorage().subscribe((data: string) => {
       console.log('Saw change(s) on data: ' + data);
       this.updateName();
       this.updateStatus();
       this.updateAvatar();
+    });
+    this.router.events.subscribe(() => {
+      this.ngOnInit();
     });
   }
 
@@ -104,6 +111,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logOut() {
+    this.authGuard.submitLogout();
     try {
       localStorage.removeItem('currentUser');
     } catch (e) {

@@ -3,6 +3,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/auth/auth.service';
 import { StorageService } from 'src/app/_services';
+import { AuthGuard } from 'src/app/_guards';
+
+declare var window: any;
 
 @Component({
   selector: 'app-login',
@@ -14,14 +17,16 @@ export class LoginComponent implements OnInit {
   submitted = false;
   invalid = false;
   notMatch = false;
-  @Output() loginEmiiter = new EventEmitter();
+  FB: any;
+  @Output() loginEmitter = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private authGuard: AuthGuard
   ) {}
 
   ngOnInit() {
@@ -29,12 +34,19 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+    if (window.FB) {
+      window.FB.XFBML.parse();
+    }
   }
 
   removeMsg() {
     this.invalid = false;
     this.notMatch = false;
     this.submitted = false;
+  }
+
+  logInWithFB() {
+    this.authGuard.submitLogin();
   }
 
   onSubmit() {

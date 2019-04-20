@@ -1,19 +1,85 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { Injectable, NgZone } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
 
+declare let FB: any;
+
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router, private service: StorageService) { }
+  constructor(
+    private router: Router,
+    private service: StorageService,
+    private ngZone: NgZone
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+
+    (window as any).fbAsyncInit = () => {
+      FB.init({
+        appId      : '2289672608026531',
+        cookie     : true,  // enable cookies to allow the server to access the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v3.2' // The Graph API version to use for the call
+      });
+
+      // Now that we've initialized the JavaScript SDK, we call
+      // FB.getLoginStatus().  This function gets the state of the
+      // person visiting this page and can return one of three states to
+      // the callback you provide.  They can be:
+      //
+      // 1. Logged into your app ('connected')
+      // 2. Logged into Facebook, but not your app ('not_authorized')
+      // 3. Not logged into Facebook and can't tell if they are logged into
+      //    your app or not.
+      //
+      // These three cases are handled in the callback function.
+
+      FB.Event.subscribe('auth.statusChange', (response => {
+        if (response.status === 'connected') {
+          // use the response variable to get any information about the user and
+          // to see the tokens about the users session
+          localStorage.setItem('FBLoggedIn', 'true');
+          this.router.navigate(['/main']);
+        }
+      }));
+
+      // FB.login(response => {
+      //   if (response.authResponse) {
+      //     console.log('Welcome!  Fetching your information.... ');
+      //     FB.api('/me', res => {
+      //       console.log('Good to see you, ' + res.name + '.');
+      //     });
+      //   } else {
+      //     console.log('User cancelled login or did not fully authorize.');
+      //   }
+      // });
+    };
+
+    ((d, s, id) => {
+      let js;
+      const fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
+      }
+      js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }) (document, 'script', 'facebook-jssdk');
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     try {
       if (!localStorage.getItem('currentUser')) {
         // return false if localStorage is available but user has not registered
-        this.router.navigate(['/auth/register']); // redirect to register page
-        return false;
+        if (localStorage.getItem('FBLoggedIn') === 'true') {
+          console.log('can activate');
+          return true;
+        } else {
+          this.router.navigate(['/auth/register']); // redirect to register page
+          return false;
+        }
       } else {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         this.service.setItem('currentUser');
@@ -27,5 +93,33 @@ export class AuthGuard implements CanActivate {
       console.log('This browser does not support local storage.');
       return true;
     }
+  }
+
+  submitLogin() {
+    console.log('submit login to facebook');
+    return FB.login(response => {
+      console.log('submitLogin', response);
+      if (response.authResponse) {
+        localStorage.setItem('FBLoggedIn', 'true');
+        this.ngZone.run(() => this.router.navigate(['/main'])).then();
+      } else {
+        console.log('user login failed');
+      }
+    });
+  }
+
+  submitLogout() {
+    return FB.getLoginStatus(response => {
+      if (response.status === 'connected') {
+        return FB.logout(res => {
+          console.log('submitLogout', res);
+          if (res.authResponse) {
+            localStorage.setItem('FBLoggedIn', 'false');
+          } else {
+            console.log('user logout failed');
+          }
+        });
+      }
+    });
   }
 }
