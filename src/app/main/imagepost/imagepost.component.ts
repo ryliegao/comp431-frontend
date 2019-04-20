@@ -21,7 +21,11 @@ export class ImagepostComponent implements OnInit {
 
   ngOnInit() { }
 
-  loadComments() {
+  // eidtPost() {
+  //   this.service.
+  // }
+
+  toggleComments() {
     this.giveComment = false;
     this.editPost = false;
     if (!this.showComments) {
@@ -39,8 +43,9 @@ export class ImagepostComponent implements OnInit {
     }
   }
 
-  writeComment() {
+  toggleComment() {
     this.showComments = false;
+    this.btnText = 'See Comments';
     this.editPost = false;
     if (!this.giveComment) {
       this.giveComment = true;
@@ -49,8 +54,9 @@ export class ImagepostComponent implements OnInit {
     }
   }
 
-  rewritePost() {
+  toggleEdit() {
     this.showComments = false;
+    this.btnText = 'See Comments';
     this.giveComment = false;
     if (!this.editPost) {
       this.editPost = true;

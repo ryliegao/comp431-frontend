@@ -12,9 +12,9 @@
       <img [src]="image" class="original-img" alt="">
     </div>
     <div class="action-bar">
-      <button class="action-button" (click)="writeComment()">Comment</button>
-      <button class="action-button" (click)="rewritePost()" style="border-left:0;">Edit</button>
-      <button class="see-comments-button" (click)="loadComments()">{{ btnText }}</button>
+      <button class="action-button" (click)="toggleComment()">Comment</button>
+      <button class="action-button" (click)="toggleEdit()" style="border-left:0;">Edit</button>
+      <button class="see-comments-button" (click)="toggleComments()">{{ btnText }}</button>
     </div>
   </div>
   <!--showComments = false; giveComment = false; editPost-->
@@ -29,11 +29,11 @@
 
   <div class="comment-area" *ngIf="editPost && !showComments && !giveComment">
     <textarea></textarea>
-    <button>Finish</button>
+    <button>Finish Post</button>
   </div>
 
   <div class="comment-area" *ngIf="giveComment && !showComments && !editPost">
     <textarea></textarea>
-    <button>Finish</button>
+    <button>Finish Comment</button>
   </div>
 </div>
