@@ -20,7 +20,7 @@ export class TextpostComponent implements OnInit {
 
   loadComments() {
     if (!this.showComments) {
-      this.service.loadComments(this.author, this.postID).then(
+      this.service.loadComments(this.postID).then(
         comments => {
           this.showComments = true;
           this.btnText = 'Fold Comments';

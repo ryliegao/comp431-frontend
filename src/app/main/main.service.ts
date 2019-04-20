@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
 import { GlobalService } from 'src/app/_services';
@@ -71,8 +72,22 @@ export class MainService {
   constructor(
     private httpService: HttpClient,
     private authService: AuthService,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private router: Router
   ) { }
+
+  getCurrentUser() {
+    let username = '';
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        username = user.username;
+      }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+    }
+    return username;
+  }
 
   loadUsers(username: string): Promise<FollowInfo> {
     this.username = username;
@@ -82,6 +97,10 @@ export class MainService {
     );
     return request.toPromise().then(res => {
       return { following: res.following };
+    }).catch(error => {
+      return this.router.navigate(['/auth/login']).then(() => {
+        return { following: [] };
+      });
     });
   }
 
@@ -116,7 +135,11 @@ export class MainService {
             return infos;
           });
         });
+      }).catch(error => {
+      return this.router.navigate(['/auth/login']).then(() => {
+        return [];
       });
+    });
   }
 
   loadPosts(): Promise<Array<Post>> {
@@ -127,7 +150,11 @@ export class MainService {
     return request.toPromise().then(res => {
         return this.sortPosts(res.articles);
       }
-    );
+    ).catch(error => {
+      return this.router.navigate(['/auth/login']).then(() => {
+        return [];
+      });
+    });
   }
 
   private sortPosts(posts: Array<Post>) {
@@ -175,6 +202,8 @@ export class MainService {
     return request.toPromise().then(res => {
       this.onRemove.emit();
       this.followInfo = res;
+    }).catch(error => {
+      return this.router.navigate(['/auth/login']);
     });
   }
 
@@ -206,10 +235,14 @@ export class MainService {
     );
     return request.toPromise().then(res => {
       return res.headline;
+    }).catch(error => {
+      return this.router.navigate(['/auth/login']).then(() => {
+        return '';
+      });
     });
   }
 
-  loadComments(author: string, id: number): Promise<Array<Comment>> {
+  loadComments(id: number): Promise<Array<Comment>> {
     const request = this.httpService.get<ArticleResponse>(
       this.globalService.serverURL + '/articles/:id?id=' + id,
       this.globalService.options
@@ -222,6 +255,10 @@ export class MainService {
         }
       }
       return comments;
+    }).catch(error => {
+      return this.router.navigate(['/auth/login']).then(() => {
+        return [];
+      });
     });
   }
 
@@ -242,6 +279,38 @@ export class MainService {
     );
     return request.toPromise().then(res => {
       return { articles: res.articles };
+    }).catch(error => {
+      return this.router.navigate(['/auth/login']).then(() => {
+        return { articles: [] };
+      });
+    });
+  }
+
+  editPost(id: number, text: string) {
+    const request = this.httpService.put<ArticleResponse>(
+      this.globalService.serverURL + '/articles/:id?id=' + id,
+      { id, text },
+      this.globalService.options
+    );
+    return request.toPromise().then(res => {
+      return true;
+    }).catch(error => {
+      return false;
+    });
+  }
+
+  commentPost(id: number, text: string) {
+    return this.loadComments(id).then(comments => {
+      const commentId = comments.length;
+      const request = this.httpService.put<ArticleResponse>(
+        this.globalService.serverURL + '/articles/:id?id=' + id,
+        { id, text, commentId },
+        this.globalService.options
+      );
+      return request.toPromise().then(res => {
+      }).catch(error => {
+        console.log(error);
+      });
     });
   }
 

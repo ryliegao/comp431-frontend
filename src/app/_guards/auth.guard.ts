@@ -2,7 +2,6 @@
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
-import {stringify} from 'querystring';
 
 declare let FB: any;
 
@@ -105,13 +104,8 @@ export class AuthGuard implements CanActivate {
           return false;
         }
       } else {
-        const sid = this.getCookie('sessionid');
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         this.service.setItem('currentUser');
-        if (!sid || sid === '') {
-          user.loggedin = false;
-          localStorage.removeItem('currentUser');
-        }
         if (!user.loggedin) {
           // if user has registered but not logged in, redirect to login page
           this.router.navigate(['/auth/login']);

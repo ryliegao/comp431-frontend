@@ -28,12 +28,15 @@
   </div>
 
   <div class="comment-area" *ngIf="editPost && !showComments && !giveComment">
-    <textarea></textarea>
-    <button>Finish Post</button>
+    <div class="no-comment" *ngIf="editPost && !authorized">
+      You do not have permission to edit this post!
+    </div>
+    <textarea [(ngModel)]="editContent" *ngIf="editPost && authorized"></textarea>
+    <button *ngIf="editPost && authorized" (click)="eidtPost()">Finish Post</button>
   </div>
 
   <div class="comment-area" *ngIf="giveComment && !showComments && !editPost">
-    <textarea></textarea>
-    <button>Finish Comment</button>
+    <textarea [(ngModel)]="commentContent"></textarea>
+    <button (click)="commentPost()">Finish Comment</button>
   </div>
 </div>
