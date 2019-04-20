@@ -111,7 +111,10 @@ export class HeaderComponent implements OnInit {
   }
 
   logOut() {
-    this.authGuard.submitLogout();
+    if (localStorage.getItem('FBLoggedIn') === 'true') {
+      this.authGuard.submitLogout();
+      return;
+    }
     try {
       localStorage.removeItem('currentUser');
     } catch (e) {
