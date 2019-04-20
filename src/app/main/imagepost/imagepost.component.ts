@@ -66,21 +66,13 @@ export class ImagepostComponent implements OnInit {
     this.showComments = false;
     this.btnText = 'See Comments';
     this.editPost = false;
-    if (!this.giveComment) {
-      this.giveComment = true;
-    } else {
-      this.giveComment = false;
-    }
+    this.giveComment = !this.giveComment;
   }
 
   toggleEdit() {
     this.showComments = false;
     this.btnText = 'See Comments';
     this.giveComment = false;
-    if (!this.editPost) {
-      this.editPost = true;
-    } else {
-      this.editPost = false;
-    }
+    this.editPost = !this.editPost;
   }
 }

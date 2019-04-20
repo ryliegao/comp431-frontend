@@ -9,15 +9,30 @@
       </article>
     </div>
     <div class="action-bar">
-      <button class="action-button">Comment</button>
-      <button class="action-button" style="border-left:0;">Edit</button>
-      <button class="see-comments-button" (click)="loadComments()">{{ btnText }}</button>
+      <button class="action-button" (click)="toggleComment()">Comment</button>
+      <button class="action-button" (click)="toggleEdit()" style="border-left:0;">Edit</button>
+      <button class="see-comments-button" (click)="toggleComments()">{{ btnText }}</button>
     </div>
   </div>
   <div class="comment-area" *ngIf="showComments">
     <div class="no-comment" *ngIf="showComments && this.comments.length === 0">
       This post has no comment yet! Shall we leave one here?
     </div>
-    <div class="comment" *ngFor="let comment of comments"></div>
+    <div class="comment" *ngFor="let comment of comments">
+      <b>{{ comment.commenter }}</b>: {{ comment.content }}
+    </div>
+  </div>
+
+  <div class="comment-area" *ngIf="editPost && !showComments && !giveComment">
+    <div class="no-comment" *ngIf="editPost && !authorized">
+      You do not have permission to edit this post!
+    </div>
+    <textarea [(ngModel)]="editContent" *ngIf="editPost && authorized"></textarea>
+    <button *ngIf="editPost && authorized" (click)="eidtPost()">Finish Post</button>
+  </div>
+
+  <div class="comment-area" *ngIf="giveComment && !showComments && !editPost">
+    <textarea [(ngModel)]="commentContent"></textarea>
+    <button (click)="commentPost()">Finish Comment</button>
   </div>
 </div>
