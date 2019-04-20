@@ -6,7 +6,8 @@
     </textarea>
     <div class="input-btn" *ngIf="this.height === '100px'">
       <span>Upload File</span>
-      <input class="upload-image-input input-button" type="file">
+      <input class="upload-image-input input-button" type="file" accept="image/*" #imageInput
+             (change)="processFile(imageInput)">
     </div>
     <div id="main_postit" class="input-btn" *ngIf="this.height === '100px'" (click)="makePost()">
       <span>Post It!</span>

@@ -244,6 +244,25 @@ export class MainComponent implements OnInit, OnDestroy {
     }
   }
 
+  processFile(imageInput) {
+    console.log('Processing file');
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+      const selectedFile = { src: event.target.result, file };
+      this.service.uploadImage(selectedFile.file).subscribe(
+        (res) => {
+          console.log('SUCCESS: successfully uploaded a file');
+          console.log(res);
+        },
+        (err) => {
+          console.log('ERROR: cannot upload file');
+        });
+    });
+    reader.readAsDataURL(file);
+  }
+
 
   // deleteUser(id: number) {
   //   this.userService.delete(id).pipe(first()).subscribe(() => {

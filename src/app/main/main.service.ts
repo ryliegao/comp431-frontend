@@ -1,8 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
 import { GlobalService } from 'src/app/_services';
+import { Observable } from 'rxjs';
 
 export interface FollowInfo {
   // followers: Array<string>;
@@ -72,23 +73,6 @@ export class MainService {
     return request.toPromise().then(res => {
       return { following: res.following };
     });
-    // return this.httpService.get('assets/following.json').toPromise().then(
-    //   data => {
-    //     let followers = [];
-    //     let following = [];
-    //     if (data[username]) {
-    //       followers = data[username].followers;
-    //       following = data[username].following;
-    //     }
-    //     this.followInfo = { followers, following };
-    //     return { followers, following };
-    //   },
-    //   (err: HttpErrorResponse) => {
-    //     console.log(err.message);
-    //     this.followInfo = { followers: [], following: [] };
-    //     return { followers: [], following: [] };
-    //   }
-    // );
   }
 
   getFolloweeInfo(followee: Array<string>): Promise<Array<FolloweeInfo>> {
@@ -131,16 +115,6 @@ export class MainService {
       this.globalService.options
     );
     return request.toPromise().then(res => {
-        // const followeePosts = [];
-        // if (posts[this.username]) {
-        //   followeePosts.push.apply(followeePosts, posts[this.username]);
-        // }
-        //
-        // for (const followee of this.followInfo.following) {
-        //   if (posts[followee]) {
-        //     followeePosts.push.apply(followeePosts, posts[followee]);
-        //   }
-        // }
         return this.sortPosts(res.articles);
       }
     );
@@ -226,4 +200,18 @@ export class MainService {
       }
     );
   }
+
+  uploadImage(file: File): Observable<Response> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.httpService.post<Response>(
+      this.globalService.serverURL + '/image',
+      { formData },
+      {
+        headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
+        withCredentials: true
+      }
+    );
+  }
+
 }
