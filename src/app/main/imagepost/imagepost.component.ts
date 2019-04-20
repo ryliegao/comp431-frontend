@@ -13,6 +13,8 @@ export class ImagepostComponent implements OnInit {
   @Input() image: string;
   comments = [];
   showComments = false;
+  giveComment = false;
+  editPost = false;
   btnText = 'See Comments';
 
   constructor(private service: MainService) {}
@@ -20,6 +22,8 @@ export class ImagepostComponent implements OnInit {
   ngOnInit() { }
 
   loadComments() {
+    this.giveComment = false;
+    this.editPost = false;
     if (!this.showComments) {
       this.service.loadComments(this.author, this.postID).then(
         comments => {
@@ -32,6 +36,26 @@ export class ImagepostComponent implements OnInit {
       this.showComments = false;
       this.btnText = 'See Comments';
       this.comments = [];
+    }
+  }
+
+  writeComment() {
+    this.showComments = false;
+    this.editPost = false;
+    if (!this.giveComment) {
+      this.giveComment = true;
+    } else {
+      this.giveComment = false;
+    }
+  }
+
+  rewritePost() {
+    this.showComments = false;
+    this.giveComment = false;
+    if (!this.editPost) {
+      this.editPost = true;
+    } else {
+      this.editPost = false;
     }
   }
 }
