@@ -2,6 +2,7 @@
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
+import {stringify} from 'querystring';
 
 declare let FB: any;
 
@@ -69,6 +70,29 @@ export class AuthGuard implements CanActivate {
     }) (document, 'script', 'facebook-jssdk');
   }
 
+  private getCookie(name) {
+    const dc = document.cookie;
+    const prefix = name + '=';
+    let begin = dc.indexOf('; ' + prefix);
+    let end;
+    if (begin === -1) {
+      begin = dc.indexOf(prefix);
+      if (begin !== 0) {
+        return null;
+      }
+    }
+    else {
+      begin += 2;
+      end = document.cookie.indexOf(';', begin);
+      if (end === -1) {
+        end = dc.length;
+      }
+    }
+    // because unescape has been deprecated, replaced with decodeURI
+    // return unescape(dc.substring(begin + prefix.length, end));
+    return decodeURI(dc.substring(begin + prefix.length, end));
+  }
+
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     try {
       if (!localStorage.getItem('currentUser')) {
@@ -81,8 +105,13 @@ export class AuthGuard implements CanActivate {
           return false;
         }
       } else {
+        const sid = this.getCookie('sessionid');
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         this.service.setItem('currentUser');
+        if (!sid || sid === '') {
+          user.loggedin = false;
+          localStorage.removeItem('currentUser');
+        }
         if (!user.loggedin) {
           // if user has registered but not logged in, redirect to login page
           this.router.navigate(['/auth/login']);
