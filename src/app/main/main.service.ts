@@ -22,7 +22,7 @@ export interface Post {
   id: number;
   content: string;
   image: string;
-  comments: Array<object>;
+  comments: Array<{ author: string, content: string }>;
   date: string;
 }
 
@@ -160,15 +160,22 @@ export class MainService {
   }
 
   removeFollowee(username: string) {
-    for (let i = 0; i < this.followInfo.following.length; i++) {
-      if (this.followInfo.following[i] === username) {
-        this.followInfo.following.splice(i, 1);
-      }
-    }
-    this.onRemove.emit();
+    // for (let i = 0; i < this.followInfo.following.length; i++) {
+    //   if (this.followInfo.following[i] === username) {
+    //     this.followInfo.following.splice(i, 1);
+    //   }
+    // }
 
     // write to server side file
     // remove this user from followee's followers' list
+    const request = this.httpService.delete<FollowInfo>(
+      this.globalService.serverURL + '/following/:user?user=' + username,
+      this.globalService.options
+    );
+    return request.toPromise().then(res => {
+      this.onRemove.emit();
+      this.followInfo = res;
+    });
   }
 
   changeStatus(status: string) {
@@ -203,20 +210,19 @@ export class MainService {
   }
 
   loadComments(author: string, id: number): Promise<Array<Comment>> {
-    return this.httpService.get('assets/posts.json').toPromise().then(
-      data => {
-        let comments = [];
-        if (data[author]) {
-          for (const post of data[author]) {
-            if (post.id === id) {
-              comments = post.comments;
-              break;
-            }
-          }
-        }
-        return comments;
-      }
+    const request = this.httpService.get<ArticleResponse>(
+      this.globalService.serverURL + '/articles/:id?id=' + id,
+      this.globalService.options
     );
+    return request.toPromise().then(res => {
+      const comments = [];
+      if (res.articles && res.articles.length > 0) {
+        for (const comment of res.articles[0].comments) {
+          comments.push({ commenter: comment.author, content: comment.content });
+        }
+      }
+      return comments;
+    });
   }
 
   uploadImage(image: File): Observable<ImageResponse> {
