@@ -49,6 +49,7 @@ export class MainComponent implements OnInit, OnDestroy {
   postText = '';
   private serviceSubscription;
   height = '40px';
+  uploadedImage = '';
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -122,7 +123,7 @@ export class MainComponent implements OnInit, OnDestroy {
           if (data[i].author === this.currentUser.username) {
             this.nextID++;
           }
-          if (data[i].image || data[i].image === '') {
+          if (data[i].image && data[i].image !== '') {
             this.createImagePost(data[i].id, data[i].author, data[i].content, data[i].image, i === 0);
           } else {
             this.createTextPost(data[i].id, data[i].author, data[i].content, i === 0);
@@ -161,9 +162,14 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   makePost() {
-    this.createTextPost(this.nextID, this.currentUser.username, this.postText, false, 0);
-    this.postText = '';
-    this.nextID++;
+    return this.service.uploadPost(this.postText, this.uploadedImage).then((res) => {
+      if (res.articles.length > 0) {
+        this.postText = '';
+        this.uploadedImage = '';
+        this.nextID++;
+        return this.loadPosts();
+      }
+    });
   }
 
   createTextPost(
@@ -254,7 +260,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.service.uploadImage(selectedFile.file).subscribe(
         (res) => {
           console.log('SUCCESS: successfully uploaded a file');
-          console.log(res);
+          this.uploadedImage = res.url;
         },
         (err) => {
           console.log('ERROR: cannot upload file');

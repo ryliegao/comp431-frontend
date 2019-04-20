@@ -50,6 +50,11 @@ interface AvatarResponse {
   avatars: Array<{username: string, avatar: string}>;
 }
 
+interface ImageResponse {
+  username: string;
+  url: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -201,17 +206,24 @@ export class MainService {
     );
   }
 
-  uploadImage(file: File): Observable<Response> {
+  uploadImage(image: File): Observable<ImageResponse> {
     const formData = new FormData();
-    formData.append('file', file);
-    return this.httpService.post<Response>(
-      this.globalService.serverURL + '/image',
-      { formData },
-      {
-        headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
-        withCredentials: true
-      }
+    formData.append('image', image);
+    return this.httpService.post<ImageResponse>(
+      this.globalService.serverURL + '/image-upload',
+      formData
     );
+  }
+
+  uploadPost(text, image) {
+    const request = this.httpService.post<ArticleResponse>(
+      this.globalService.serverURL + '/article',
+      { text, image },
+      this.globalService.options
+    );
+    return request.toPromise().then(res => {
+      return { articles: res.articles };
+    });
   }
 
 }
