@@ -40,7 +40,12 @@ interface NameResponse {
   displaynames: Array<{username: string, displayname: string}>;
 }
 
-interface StatusResponse {
+interface HeadlineResponse {
+  username: string;
+  headline: string;
+}
+
+interface HeadlinesResponse {
   username: string;
   headlines: Array<{username: string, headline: string}>;
 }
@@ -90,7 +95,7 @@ export class MainService {
       this.globalService.serverURL + '/displaynames/:users?users=' + str,
       this.globalService.options).toPromise().then(res1 => {
         displaynames = res1.displaynames;
-        return this.httpService.get<StatusResponse>(
+        return this.httpService.get<HeadlinesResponse>(
           this.globalService.serverURL + '/headlines/:users?users=' + str,
           this.globalService.options).toPromise().then(res2 => {
           headlines = res2.headlines;
@@ -187,6 +192,14 @@ export class MainService {
     } catch (e) {
       console.log('This browser does not support local storage.');
     }
+    const request = this.httpService.put<HeadlineResponse>(
+      this.globalService.serverURL + '/headline',
+      { headline: status },
+      this.globalService.options
+    );
+    return request.toPromise().then(res => {
+      return res.headline;
+    });
   }
 
   loadComments(author: string, id: number): Promise<Array<Comment>> {

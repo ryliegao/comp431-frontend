@@ -269,7 +269,6 @@ export class MainComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
-
   // deleteUser(id: number) {
   //   this.userService.delete(id).pipe(first()).subscribe(() => {
   //     this.loadAllUsers();
