@@ -1,6 +1,6 @@
 {
   "netid": "yg38",
-  "frontend": "http://ryliesfrontend.surge.sh",
+  "frontend": "https://ryliesfrontend.surge.sh",
   "backend": "https://ryliesbackend.herokuapp.com/",
   "test username": "ml82",
   "test password": "Mark123"
