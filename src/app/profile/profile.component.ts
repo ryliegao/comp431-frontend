@@ -116,6 +116,13 @@ export class ProfileComponent implements OnInit {
           avatar: user.avatar
         };
         this.authService.makeNewUser(newUser);
+        this.authService.updateDisplayName(this.displayname).then(() => {
+          return this.authService.updateEmail(this.email).then(() => {
+            return this.authService.updatePhone(this.phone).then(() => {
+              return this.authService.updateZipCode(this.zipcode);
+            });
+          });
+        });
       }
     } catch (e) {
       console.log('This browser does not support local storage.');

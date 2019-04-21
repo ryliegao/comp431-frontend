@@ -169,4 +169,70 @@ export class AuthService {
       console.log(err.message);
     });
   }
+
+  // update display name
+  // update email
+  // update phone
+  // update zip code
+  // update password
+
+  updateDisplayName(displayname: string) {
+    const request = this.httpService.put<NameResponse>(
+      this.globalService.serverURL + '/displayname',
+      { displayname },
+      this.globalService.options
+    );
+
+    return request.toPromise().then(res => {
+      return res.displaynames;
+    }).catch((err: HttpErrorResponse) => {
+      console.log(err.message);
+      return '';
+    });
+  }
+
+  updateEmail(email: string) {
+    const request = this.httpService.put<EmailResponse>(
+      this.globalService.serverURL + '/email',
+      { email },
+      this.globalService.options
+    );
+
+    return request.toPromise().then(res => {
+      return res.email;
+    }).catch((err: HttpErrorResponse) => {
+      console.log(err.message);
+      return '';
+    });
+  }
+
+  updatePhone(phone: string) {
+    const request = this.httpService.put<PhoneResponse>(
+      this.globalService.serverURL + '/phone',
+      { phone },
+      this.globalService.options
+    );
+
+    return request.toPromise().then(res => {
+      return res.phone;
+    }).catch((err: HttpErrorResponse) => {
+      console.log(err.message);
+      return '';
+    });
+  }
+
+  updateZipCode(zipcode: string) {
+    const request = this.httpService.put<ZipCodeResponse>(
+      this.globalService.serverURL + '/zipcode',
+      { zipcode },
+      this.globalService.options
+    );
+
+    return request.toPromise().then(res => {
+      return res.zipcode;
+    }).catch((err: HttpErrorResponse) => {
+      console.log(err.message);
+      return '';
+    });
+  }
 }

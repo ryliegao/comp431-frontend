@@ -1,7 +1,8 @@
 {
-  "netid": "yg38",
-  "frontend": "https://ryliesfrontend.surge.sh",
-  "backend": "https://ryliesbackend.herokuapp.com/",
-  "test username": "ml82",
-  "test password": "Mark123"
+    "netid": "yg38",
+    "frontend": "https://ryliesfrontend.surge.sh",
+    "backend": "https://ryliesbackend.herokuapp.com/",
+    "test username": "ml82",
+    "test password": "Mark123",
+    "note": "The login cookie will expire in 1 minute."
 }

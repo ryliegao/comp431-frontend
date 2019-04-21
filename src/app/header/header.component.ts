@@ -33,7 +33,6 @@ export class HeaderComponent implements OnInit {
     private router: Router
   ) {
     this.storageService.watchStorage().subscribe((data: string) => {
-      console.log('Saw change(s) on data: ' + data);
       this.updateName();
       this.updateStatus();
       this.updateAvatar();
