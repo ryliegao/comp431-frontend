@@ -3,8 +3,12 @@
   <div class="left-pane">
     <div class="form-header">Edit Your Profile</div>
     <div class="btn btn">
-      <span>Upload Your Profile Picture</span>
-      <input class="upload-image-input input-button" type="file">
+      <span>Select a New Profile Picture</span>
+      <input class="upload-image-input input-button" type="file" accept="image/*"
+             (change)="processFile(imageInput)" #imageInput>
+    </div>
+    <div class="btn btn">
+      <button class="upload-image-input input-button" (click)="updateAvatar()">Upload</button>
     </div>
     <div class="form-grp">
       <label>Display Name</label>

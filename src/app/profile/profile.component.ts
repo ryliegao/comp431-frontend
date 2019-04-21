@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
+import { MainService } from 'src/app/main/main.service';
 
 @Component({
   selector: 'app-profile',
@@ -29,8 +30,9 @@ export class ProfileComponent implements OnInit {
   zc: string;
   pw1: string;
   pw2: string;
+  uploadedImage: string;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private service: MainService) { }
 
   ngOnInit() {
     try {
@@ -45,6 +47,53 @@ export class ProfileComponent implements OnInit {
     } catch (e) {
       console.log('This browser does not support local storage.');
     }
+  }
+
+  processFile(imageInput) {
+    console.log('Processing file');
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+      const selectedFile = { src: event.target.result, file };
+      this.service.uploadImage(selectedFile.file).subscribe(
+        (res) => {
+          console.log('SUCCESS: successfully uploaded a file');
+          this.uploadedImage = res.url;
+        },
+        (err) => {
+          console.log('ERROR: cannot upload file');
+        });
+    });
+
+    reader.readAsDataURL(file);
+  }
+
+  updateAvatar() {
+    console.log('updating avatar');
+    return this.authService.updateAvatar(this.uploadedImage).then(() => {
+      try {
+        console.log('changing local directory');
+        if (localStorage.getItem('currentUser')) {
+          const user: User = JSON.parse(localStorage.getItem('currentUser'));
+          const newUser = {
+            username: user.username,
+            displayname: user.displayname,
+            email: user.email,
+            phone: user.phone,
+            birthday: user.birthday,
+            zipcode: user.zipcode,
+            password: user.password,
+            loggedin: true,
+            status: user.status,
+            avatar: this.uploadedImage
+          };
+          this.authService.makeNewUser(newUser);
+        }
+      } catch (e) {
+        console.log('This browser does not support local storage.');
+      }
+    });
   }
 
   onSubmit() {

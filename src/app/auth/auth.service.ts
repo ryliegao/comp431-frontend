@@ -170,12 +170,6 @@ export class AuthService {
     });
   }
 
-  // update display name
-  // update email
-  // update phone
-  // update zip code
-  // update password
-
   updateDisplayName(displayname: string) {
     const request = this.httpService.put<NameResponse>(
       this.globalService.serverURL + '/displayname',
@@ -230,6 +224,21 @@ export class AuthService {
 
     return request.toPromise().then(res => {
       return res.zipcode;
+    }).catch((err: HttpErrorResponse) => {
+      console.log(err.message);
+      return '';
+    });
+  }
+
+  updateAvatar(avatar: string) {
+    const request = this.httpService.put<{avatar: string}>(
+      this.globalService.serverURL + '/avatar',
+      { avatar },
+      this.globalService.options
+    );
+
+    return request.toPromise().then(res => {
+      return res.avatar;
     }).catch((err: HttpErrorResponse) => {
       console.log(err.message);
       return '';

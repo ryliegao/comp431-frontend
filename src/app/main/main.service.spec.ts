@@ -20,7 +20,7 @@ describe('MainService', () => {
   it('should fetch articles for current logged in user', () => {
     inject([ HttpTestingController, AuthService ],
       (httpMock: HttpTestingController, service: MainService) => {
-        service.followInfo = { following: ['a', 'b'], followers: ['c'] };
+        service.followInfo = { following: ['a', 'b'] };
 
         service.loadPosts().then(posts => {
           const req = httpMock.expectOne('assets/posts.json');
@@ -48,7 +48,7 @@ describe('MainService', () => {
   it('should add a follower on request', () => {
     inject([ HttpTestingController, AuthService ],
       (httpMock: HttpTestingController, service: MainService) => {
-        service.followInfo = { following: ['a', 'b'], followers: ['c'] };
+        service.followInfo = { following: ['a', 'b'] };
 
         service.addFollowee('kj1024').then(() => {
           expect(service.followInfo.following).toContain('kj1024');
@@ -60,7 +60,7 @@ describe('MainService', () => {
   it('should remove a follower on request', () => {
     inject([ HttpTestingController, AuthService ],
       (httpMock: HttpTestingController, service: MainService) => {
-        service.followInfo = { following: ['a', 'b'], followers: ['c'] };
+        service.followInfo = { following: ['a', 'b'] };
 
         service.removeFollowee('a');
         expect(service.followInfo.following).not.toContain('a');
