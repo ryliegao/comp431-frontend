@@ -104,6 +104,32 @@ p {
   -webkit-line-clamp: 5;
 }
 
+textarea {
+  border: 2px solid lightpink;
+  background-color: #ffffff;
+  opacity: 0.8;
+  font-size: 12px;
+  line-height: 20px;
+  width: 90%;
+}
+
+button {
+  background-color: lightpink;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  /* prevents bg color from leaking outside the border */
+  display: inline-block;
+  -webkit-appearance: button;
+  /* for input */
+  -webkit-user-select: none;
+  /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  border: 2px solid white;
+  color: white;
+}
+
 @media (max-width: 1300px) {
   .image-post {
     width: 500px !important;
