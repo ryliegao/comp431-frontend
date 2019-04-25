@@ -4,5 +4,5 @@
     "backend": "https://ryliesbackend.herokuapp.com/",
     "test username": "ml82",
     "test password": "Mark123",
-    "note": "The login cookie will expire in 1 minute."
+    "note": "The login cookie will expire in 1 hour."
 }
