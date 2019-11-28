@@ -98,17 +98,16 @@ export class AuthService {
     const user = { lastname: null, firstname: null, email: username, password: null,
       loggedin: true, status: null, avatar: null };
     const request = this.httpService.post<LoginResponse>(
-      this.globalService.serverURL + '/api/user/login',
+      this.globalService.serverURL + 'api/user/login',
       body,
       this.globalService.options
     );
 
     return request.toPromise().then(login => {
-      return login.result && login.result === 'success';
+      return login.result;
     }).then((loggedIn) => {
       return this.httpService.get<UserResponse>(
-        this.globalService.serverURL + '/api/user/' + username,
-        this.globalService.options).toPromise().then(userRsp => {
+        this.globalService.serverURL + 'api/user/' + username).toPromise().then(userRsp => {
         user.lastname = userRsp.last_name;
         user.firstname = userRsp.first_name;
         user.password = userRsp.password;

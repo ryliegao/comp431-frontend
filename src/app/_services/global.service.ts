@@ -11,6 +11,6 @@ export class GlobalService {
   public options: object = {
     headers: new HttpHeaders()
       .set('Content-Type', 'application/json'),
-    withCredentials: true
+    // withCredentials: true
   };
 }
