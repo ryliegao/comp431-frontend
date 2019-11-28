@@ -5,7 +5,7 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class GlobalService {
-  public serverURL = 'https://ryliesbackend.herokuapp.com';
+  public serverURL = 'http://e6156yeah.us-east-2.elasticbeanstalk.com/';
   // public serverURL = 'http://127.0.0.1:3000'; // TODO: change to heroku domain
 
   public options: object = {
