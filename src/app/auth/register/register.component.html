@@ -3,44 +3,33 @@
 
     <header><b>--- Welcome! ---</b></header>
 
-    <input id="register_username" type="text" placeholder="Account Name" formControlName="username">
-    <input type="text" placeholder="Display Name (Optional)" formControlName="displayname">
+    <input id="register_username" type="text" placeholder="Last Name" formControlName="lastname">
+    <input type="text" placeholder="First Name" formControlName="firstname">
     <input id="register_email" type="text" placeholder="E-mail Address" formControlName="email">
-    <input id="register_phone" type="text" placeholder="Phone Number: 000-000-0000"formControlName="phone">
-    <!-- The "date" type does not work on Safari or IE -->
-    <input id="register_birthday" type="date" placeholder="Date of Birth: YYYY-MM-DD" formControlName="birthday">
-    <input id="register_zipcode" type="text" placeholder="Zip Code: XXXXX" formControlName="zipcode">
     <input type="password" placeholder="Password" formControlName="password1">
     <input type="password" placeholder="Confirm Password" formControlName="password2" id="last_field">
-
-    <!--<input type="hidden" id="timestamp" name="time">-->
 
     <div class="buttons">
       <input id="register_submit" type="submit" class="submit" value="Submit">
       <input type="reset" class="clear" value="Clear">
     </div>
 
-    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-      <div *ngIf="f.username.errors.required">Username required</div>
-      <div *ngIf="f.username.errors.pattern">Username does not match</div>
+    <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+      <div *ngIf="f.first_name.errors.required">First name required</div>
+      <div *ngIf="f.first_name.errors.pattern">First name does not match</div>
     </div>
-    <div *ngIf="submitted && f.birthday.errors" class="invalid-feedback">
-      <div *ngIf="f.birthday.errors.required">Birthday required</div>
-      <div *ngIf="f.birthday.errors.pattern">Birthday does not match</div>
+    <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+      <div *ngIf="f.last_name.errors.required">Last name required</div>
+      <div *ngIf="f.last_name.errors.pattern">Last name does not match</div>
     </div>
-    <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
-      <div *ngIf="f.phone.errors.required">Phone required</div>
-      <div *ngIf="f.phone.errors.pattern">Phone does not match</div>
-    </div>
-    <div *ngIf="submitted && f.zipcode.errors" class="invalid-feedback">
-      <div *ngIf="f.zipcode.errors.required">Zip Code required</div>
-      <div *ngIf="f.zipcode.errors.pattern">Zip Code does not match</div>
+    <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+      <div *ngIf="f.email.errors.required">Email required</div>
+      <div *ngIf="f.email.errors.pattern">Email does not match</div>
     </div>
     <div *ngIf="submitted && f.password1.errors" class="invalid-feedback">
       <div *ngIf="f.password1.errors.required">Password required</div>
       <div *ngIf="f.password1.errors.pattern">Password does not match</div>
     </div>
-
 
   </form>
 </div>

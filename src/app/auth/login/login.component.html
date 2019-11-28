@@ -3,13 +3,13 @@
 
     <header><b>--- Welcome back! ---</b></header>
 
-    <input id="login_username" type="text" placeholder="Username" formControlName="username" (change)="removeMsg()">
+    <input id="login_username" type="text" placeholder="E-mail Address" formControlName="email" (change)="removeMsg()">
     <input type="password" placeholder="Password" formControlName="password" id="last_field" (change)="removeMsg()">
     <span class="error-message" *ngIf="submitted && invalid">
-      Please enter both of your username and your password!
+      Please enter both of your email address and your password!
     </span>
     <span class="error-message" *ngIf="submitted && notMatch">
-      Username and password do not match!
+      E-mail address and password do not match!
     </span>
 
     <div class="buttons">
@@ -18,7 +18,7 @@
 
     <div class="buttons">
       <!--<div class="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false"-->
-           <!--data-use-continue-as="false" onclick="this.authGuard.submitLogin();">-->
+      <!--data-use-continue-as="false" onclick="this.authGuard.submitLogin();">-->
       <!--</div>-->
       <input class="submit" style="text-align: center" value="Log In with Facebook" (click)="logInWithFB()">
     </div>

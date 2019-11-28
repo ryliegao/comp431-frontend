@@ -1,22 +1,16 @@
 ﻿export class User {
-  username: string;
-  displayname: string;
+  lastname: string;
+  firstname: string;
   email: string;
-  phone: string;
-  birthday: Date;
-  zipcode: string;
   password: string;
   loggedin: boolean;
   avatar: string;
   status: string;
 
   constructor(obj) {
-    this.username = obj.username;
-    this.displayname = obj.displayname ? obj.displayname : obj.username;
+    this.lastname = obj.lastname;
+    this.firstname = obj.firstname;
     this.email = obj.email;
-    this.phone = obj.phone;
-    this.birthday = obj.birthday;
-    this.zipcode = obj.zipcode;
     this.password = obj.password;
     this.loggedin = obj.loggedin;
     this.avatar = obj.avatar ? obj.avatar : 'assets/images/profile-image.jpeg';

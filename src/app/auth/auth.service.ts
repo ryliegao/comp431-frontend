@@ -13,6 +13,14 @@ interface NameResponse {
   displaynames: Array<{username: string, displayname: string}>;
 }
 
+interface UserResponse {
+  last_name: string;
+  first_name: string;
+  email: string;
+  status: string;
+  password: string;
+}
+
 interface EmailResponse {
   username: string;
   email: string;
@@ -87,84 +95,59 @@ export class AuthService {
 
   checkLogin(username: string, password: string) {
     const body = { username, password };
-    const user = { username, displayname: null, email: null, phone: null, birthday: null, zipcode: null,
-      password: null, loggedin: true, status: null, avatar: null };
+    const user = { lastname: null, firstname: null, email: username, password: null,
+      loggedin: true, status: null, avatar: null };
     const request = this.httpService.post<LoginResponse>(
-      this.globalService.serverURL + '/login',
+      this.globalService.serverURL + '/api/user/login',
       body,
       this.globalService.options
     );
 
     return request.toPromise().then(login => {
       return login.result && login.result === 'success';
-    }).then(loggedin => {
-      return this.httpService.get<NameResponse>(
-        this.globalService.serverURL + '/displaynames/:users?users=' + username,
-        this.globalService.options).toPromise().then(names => {
-          if (names.displaynames.length > 0) {
-            user.displayname = names.displaynames[0].displayname;
-          }
-          return this.httpService.get<EmailResponse>(
-            this.globalService.serverURL + '/email/:user?user=' + username,
-            this.globalService.options).toPromise().then(email => {
-              user.email = email.email;
-              return this.httpService.get<PhoneResponse>(
-                this.globalService.serverURL + '/phone/:user?user=' + username,
-                this.globalService.options).toPromise().then(phone => {
-                  user.phone = phone.phone;
-                  return this.httpService.get<DobResponse>(
-                    this.globalService.serverURL + '/dob/:user?user=' + username,
-                    this.globalService.options).toPromise().then(dob => {
-                      user.birthday = dob.dob;
-                      return this.httpService.get<ZipCodeResponse>(
-                        this.globalService.serverURL + '/zipcode/:user?user=' + username,
-                        this.globalService.options).toPromise().then(zipcode => {
-                          user.zipcode = zipcode.zipcode;
-                          return this.httpService.get<StatusResponse>(
-                            this.globalService.serverURL + '/headlines/:users?users=' + username,
-                            this.globalService.options).toPromise().then(headlines => {
-                              if (headlines.headlines.length > 0) {
-                                user.status = headlines.headlines[0].headline;
-                              }
-                              return this.httpService.get<AvatarResponse>(
-                                this.globalService.serverURL + '/avatars/:users?users=' + username,
-                                this.globalService.options).toPromise().then(avatars => {
-                                  if (avatars.avatars.length > 0) {
-                                    user.avatar = avatars.avatars[0].avatar;
-                                  }
-                                }).then(() => {
-                                  if (loggedin) { this.makeNewUser(user); }
-                                  return loggedin;
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
+    }).then((loggedIn) => {
+      return this.httpService.get<UserResponse>(
+        this.globalService.serverURL + '/api/user/' + username,
+        this.globalService.options).toPromise().then(userRsp => {
+        user.lastname = userRsp.last_name;
+        user.firstname = userRsp.first_name;
+        user.password = userRsp.password;
+        user.status = userRsp.status; // TODO: this is not the status we want
+        this.makeNewUser(user);
+        return loggedIn;
+      });
     }).catch((err: HttpErrorResponse) => {
       console.log (err.message);
     });
+
+    // return request.toPromise().then(login => {
+    //   return login.result && login.result === 'success';
+    // }).then(loggedin => {
+    //   return this.httpService.get<UserResponse>(
+    //     this.globalService.serverURL + '/api/user/' + username,
+    //     this.globalService.options).toPromise().then(userRsp => {
+    //       this.makeNewUser(user);
+    // }).catch((err: HttpErrorResponse) => {
+    //   console.log (err.message);
+    // });
   }
 
   registerUser(user: User) {
     const body = {
-      username: user.username,
-      displayname: user.displayname,
+      lastname: user.lastname,
+      firstname: user.firstname,
       email: user.email,
-      phone: user.phone,
-      dob: user.birthday,
-      zipcode: user.zipcode,
       password: user.password
     };
     const request = this.httpService.post<LoginResponse>(
-      this.globalService.serverURL + '/register',
+      this.globalService.serverURL + '/api/registration',
       body,
       this.globalService.options
     );
 
     return request.toPromise().then(res => {
-      return res.result && res.result === 'success';
+      // return res.result && res.result === 'success';
+      return true;
     }).catch((err: HttpErrorResponse) => {
       console.log(err.message);
     });
