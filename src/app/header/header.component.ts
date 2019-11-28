@@ -52,8 +52,7 @@ export class HeaderComponent implements OnInit {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.name = user.displayname === null || user.displayname === '' ?
-          user.username : user.displayname;
+        this.name = user.firstname + ' ' + user.lastname;
       } else {
         this.name = 'Default User';
       }

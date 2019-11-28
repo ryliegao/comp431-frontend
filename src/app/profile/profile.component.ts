@@ -38,10 +38,8 @@ export class ProfileComponent implements OnInit {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.displayname = user.displayname;
+        this.displayname = user.firstname + ' ' + user.lastname;
         this.email = user.email;
-        this.phone = user.phone;
-        this.zipcode = user.zipcode;
         this.password = user.password;
       }
     } catch (e) {
@@ -77,12 +75,9 @@ export class ProfileComponent implements OnInit {
         if (localStorage.getItem('currentUser')) {
           const user: User = JSON.parse(localStorage.getItem('currentUser'));
           const newUser = {
-            username: user.username,
-            displayname: user.displayname,
+            firstname: user.firstname,
+            lastname: user.lastname,
             email: user.email,
-            phone: user.phone,
-            birthday: user.birthday,
-            zipcode: user.zipcode,
             password: user.password,
             loggedin: true,
             status: user.status,
@@ -153,11 +148,8 @@ export class ProfileComponent implements OnInit {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         const newUser = {
-          username: user.username,
-          displayname: this.displayname,
+          displayname: user.firstname + ' ' + user.lastname,
           email: this.email,
-          phone: this.phone,
-          birthday: user.birthday,
           zipcode: this.zipcode,
           password: this.password,
           loggedin: true,

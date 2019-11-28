@@ -81,7 +81,7 @@ export class MainService {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        username = user.username;
+        username = user.email;
       }
     } catch (e) {
       console.log('This browser does not support local storage.');
@@ -212,12 +212,9 @@ export class MainService {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         const newUser = {
-          username: user.username,
-          displayname: user.displayname,
+          lastname: user.lastname,
+          firstname: user.firstname,
           email: user.email,
-          phone: user.phone,
-          birthday: user.birthday,
-          zipcode: user.zipcode,
           password: user.password,
           loggedin: user.loggedin,
           avatar: user.avatar,

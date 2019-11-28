@@ -78,7 +78,7 @@ export class MainComponent implements OnInit, OnDestroy {
     this.addMyself = false;
     this.addAlreadyFollowing = false;
     this.adding = true;
-    if (this.addText === this.currentUser.username) {
+    if (this.addText === this.currentUser.email) {
       this.addMyself = true;
       return;
     } else if (this.service.followInfo.following.indexOf(this.addText) >= 0) {
@@ -100,7 +100,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   loadUsers() {
-    this.service.loadUsers(this.currentUser.username).then(
+    this.service.loadUsers(this.currentUser.email).then(
       data => {
         this.service.getFolloweeInfo(data.following).then(
           infos => {
@@ -120,7 +120,7 @@ export class MainComponent implements OnInit, OnDestroy {
         this.nextID = 0;
         for (let i = 0; i < data.length; i++) {
           // only clear former posts on entry
-          if (data[i].author === this.currentUser.username) {
+          if (data[i].author === this.currentUser.email) {
             this.nextID++;
           }
           if (data[i].image && data[i].image !== '') {
