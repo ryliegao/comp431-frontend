@@ -60,11 +60,11 @@ export class MainComponent implements OnInit, OnDestroy {
     const text = '@Copyright: Rylie Gao<br/>' + new Date(Number(Date.now()));
     this.footer = this.sanitizer.bypassSecurityTrustHtml(text);
 
-    this.serviceSubscription = this.service.onRemove.subscribe({
-      next: (event: any) => {
-        this.loadPosts();
-      }
-    });
+    // this.serviceSubscription = this.service.onRemove.subscribe({
+    //   next: (event: any) => {
+    //     this.loadPosts();
+    //   }
+    // });
   }
 
   ngOnInit() {
@@ -86,51 +86,51 @@ export class MainComponent implements OnInit, OnDestroy {
       return;
     }
     this.lastFollowed = this.addText;
-    this.service.addFollowee(this.addText).then(
-      newFollowee => {
-        if (newFollowee) {
-          this.addSuccess = true;
-          this.addUser(newFollowee.username, newFollowee.displayname, newFollowee.avatar, newFollowee.status, false, 0);
-          this.loadPosts();
-        } else {
-          this.addFailure = true;
-        }
-      }
-    );
+    // this.service.addFollowee(this.addText).then(
+    //   newFollowee => {
+    //     if (newFollowee) {
+    //       this.addSuccess = true;
+    //       this.addUser(newFollowee.username, newFollowee.displayname, newFollowee.avatar, newFollowee.status, false, 0);
+    //       this.loadPosts();
+    //     } else {
+    //       this.addFailure = true;
+    //     }
+    //   }
+    // );
   }
 
   loadUsers() {
-    this.service.loadUsers(this.currentUser.email).then(
-      data => {
-        this.service.getFolloweeInfo(data.following).then(
-          infos => {
-            for (let i = 0; i < infos.length; i++) {
-              this.addUser(infos[i].username, infos[i].displayname, infos[i].avatar, infos[i].status, i === 0);
-            }
-          }
-        );
-      }
-    );
+    // this.service.loadUsers(this.currentUser.email).then(
+    //   data => {
+    //     this.service.getFolloweeInfo(data.following).then(
+    //       infos => {
+    //         for (let i = 0; i < infos.length; i++) {
+    //           this.addUser(infos[i].username, infos[i].displayname, infos[i].avatar, infos[i].status, i === 0);
+    //         }
+    //       }
+    //     );
+    //   }
+    // );
   }
 
   loadPosts() {
-    this.service.loadPosts().then(
-      data => {
-        this.posts = data;
-        this.nextID = 0;
-        for (let i = 0; i < data.length; i++) {
-          // only clear former posts on entry
-          if (data[i].author === this.currentUser.email) {
-            this.nextID++;
-          }
-          if (data[i].image && data[i].image !== '') {
-            this.createImagePost(data[i].id, data[i].author, data[i].content, data[i].image, i === 0);
-          } else {
-            this.createTextPost(data[i].id, data[i].author, data[i].content, i === 0);
-          }
-        }
-      }
-    );
+    // this.service.loadPosts().then(
+    //   data => {
+    //     this.posts = data;
+    //     this.nextID = 0;
+    //     for (let i = 0; i < data.length; i++) {
+    //       // only clear former posts on entry
+    //       if (data[i].author === this.currentUser.email) {
+    //         this.nextID++;
+    //       }
+    //       if (data[i].image && data[i].image !== '') {
+    //         this.createImagePost(data[i].id, data[i].author, data[i].content, data[i].image, i === 0);
+    //       } else {
+    //         this.createTextPost(data[i].id, data[i].author, data[i].content, i === 0);
+    //       }
+    //     }
+    //   }
+    // );
   }
 
   search() {
@@ -162,14 +162,14 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   makePost() {
-    return this.service.uploadPost(this.postText, this.uploadedImage).then((res) => {
-      if (res.articles.length > 0) {
-        this.postText = '';
-        this.uploadedImage = '';
-        this.nextID++;
-        return this.loadPosts();
-      }
-    });
+    // return this.service.uploadPost(this.postText, this.uploadedImage).then((res) => {
+    //   if (res.articles.length > 0) {
+    //     this.postText = '';
+    //     this.uploadedImage = '';
+    //     this.nextID++;
+    //     return this.loadPosts();
+    //   }
+    // });
   }
 
   createTextPost(
@@ -230,7 +230,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   changeStatus(status: string) {
-    this.service.changeStatus(status);
+    // this.service.changeStatus(status);
   }
 
   expandTextarea() {
@@ -255,17 +255,17 @@ export class MainComponent implements OnInit, OnDestroy {
     const file: File = imageInput.files[0];
     const reader = new FileReader();
 
-    reader.addEventListener('load', (event: any) => {
-      const selectedFile = { src: event.target.result, file };
-      this.service.uploadImage(selectedFile.file).subscribe(
-        (res) => {
-          console.log('SUCCESS: successfully uploaded a file');
-          this.uploadedImage = res.url;
-        },
-        (err) => {
-          console.log('ERROR: cannot upload file');
-        });
-    });
+    // reader.addEventListener('load', (event: any) => {
+    //   const selectedFile = { src: event.target.result, file };
+    //   this.service.uploadImage(selectedFile.file).subscribe(
+    //     (res) => {
+    //       console.log('SUCCESS: successfully uploaded a file');
+    //       this.uploadedImage = res.url;
+    //     },
+    //     (err) => {
+    //       console.log('ERROR: cannot upload file');
+    //     });
+    // });
     reader.readAsDataURL(file);
   }
 
