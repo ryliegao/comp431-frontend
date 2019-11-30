@@ -133,13 +133,13 @@ export class AuthService {
 
   registerUser(user: User) {
     const body = {
-      lastname: user.lastname,
-      firstname: user.firstname,
+      last_name: user.lastname,
+      first_name: user.firstname,
       email: user.email,
       password: user.password
     };
     const request = this.httpService.post<LoginResponse>(
-      this.globalService.serverURL + '/api/registration',
+      this.globalService.serverURL + '/api/user/registration',
       body,
       this.globalService.options
     );
