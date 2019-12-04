@@ -1,8 +1,6 @@
 {
-    "netid": "yg38",
-    "frontend": "https://ryliesfrontend.surge.sh",
-    "backend": "https://ryliesbackend.herokuapp.com/",
+    "frontend": "https://e6156.surge.sh",
+    "backend": "https://e6156yeah.us-east-2.elasticbeanstalk.com",
     "test username": "ml82",
-    "test password": "Mark123",
-    "note": "The login cookie will expire in 1 hour."
+    "test password": "Mark123"
 }
