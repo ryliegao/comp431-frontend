@@ -19,6 +19,7 @@ interface UserResponse {
   email: string;
   status: string;
   password: string;
+  avatar: string;
 }
 
 interface EmailResponse {
@@ -125,6 +126,7 @@ export class AuthService {
         user.firstname = userRsp.first_name;
         user.password = userRsp.password;
         user.status = userRsp.status; // TODO: this is not the status we want
+        user.avatar = userRsp.avatar;
         this.makeNewUser(user);
         return loggedIn;
       });
