@@ -114,23 +114,23 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   loadPosts() {
-    // this.service.loadPosts().then(
-    //   data => {
-    //     this.posts = data;
-    //     this.nextID = 0;
-    //     for (let i = 0; i < data.length; i++) {
-    //       // only clear former posts on entry
-    //       if (data[i].author === this.currentUser.email) {
-    //         this.nextID++;
-    //       }
-    //       if (data[i].image && data[i].image !== '') {
-    //         this.createImagePost(data[i].id, data[i].author, data[i].content, data[i].image, i === 0);
-    //       } else {
-    //         this.createTextPost(data[i].id, data[i].author, data[i].content, i === 0);
-    //       }
-    //     }
-    //   }
-    // );
+    this.service.loadPosts().then(
+      data => {
+        this.posts = data;
+        this.nextID = 0;
+        for (let i = 0; i < data.length; i++) {
+          // only clear former posts on entry
+          if (data[i].author === this.currentUser.email) {
+            this.nextID++;
+          }
+          if (data[i].image && data[i].image !== '') {
+            this.createImagePost(data[i].id, data[i].author, data[i].content, data[i].image, i === 0);
+          } else {
+            this.createTextPost(data[i].id, data[i].author, data[i].content, i === 0);
+          }
+        }
+      }
+    );
   }
 
   search() {

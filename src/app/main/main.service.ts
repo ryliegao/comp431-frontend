@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -18,6 +18,10 @@ export interface FolloweeInfo {
   avatar: string;
 }
 
+interface ArticleResponse {
+  articles: Array<Post>;
+}
+
 export interface Post {
   author: string;
   id: number;
@@ -30,10 +34,6 @@ export interface Post {
 export interface Comment {
   commenter: string;
   content: string;
-}
-
-interface ArticleResponse {
-  articles: Array<Post>;
 }
 
 interface NameResponse {
@@ -143,15 +143,19 @@ export class MainService {
   }
 
   loadPosts(): Promise<Array<Post>> {
-    const request = this.httpService.get<ArticleResponse>(
+    const request = this.httpService.get<Array<Post>>(
       this.globalService.serverURL + '/articles',
-      this.globalService.options
+      {
+        headers: new HttpHeaders()
+          .set('Token', this.authService.retrieveToken())
+      }
     );
     return request.toPromise().then(res => {
-        return this.sortPosts(res.articles);
+        return this.sortPosts(res);
       }
     ).catch(error => {
       return this.router.navigate(['/auth/login']).then(() => {
+        console.log(error);
         return [];
       });
     });

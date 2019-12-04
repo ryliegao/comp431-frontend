@@ -2,6 +2,7 @@
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
+import {AuthService} from "../auth/auth.service";
 
 declare let FB: any;
 
@@ -10,8 +11,9 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private service: StorageService,
-    private ngZone: NgZone
+    private storageService: StorageService,
+    private ngZone: NgZone,
+    private authService: AuthService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
@@ -105,7 +107,7 @@ export class AuthGuard implements CanActivate {
         }
       } else {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.service.setItem('currentUser');
+        this.storageService.setItem('currentUser');
         if (!user.loggedin) {
           // if user has registered but not logged in, redirect to login page
           this.router.navigate(['/auth/login']);
@@ -124,11 +126,27 @@ export class AuthGuard implements CanActivate {
       console.log('submitLogin', response);
       if (response.authResponse) {
         localStorage.setItem('FBLoggedIn', 'true');
+        FB.api('/me', response =>
+        {
+          const user = {
+            lastname: response.last_name,
+            firstname: response.first_name,
+            email: response.email,
+            password: null,
+            loggedin: true,
+            status: null,
+            avatar: response.picture
+          };
+          this.authService.makeNewUser(user);
+        });
+
         this.ngZone.run(() => this.router.navigate(['/main'])).then();
       } else {
         console.log('user login failed');
       }
-    });
+    },
+      // {scope: 'email, user_location'}
+      );
   }
 
   submitLogout() {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { StorageService, GlobalService } from 'src/app/_services';
 
@@ -93,6 +93,14 @@ export class AuthService {
     }
   }
 
+  storeToken(token: string) {
+    sessionStorage.setItem('session_id', token);
+  }
+
+  retrieveToken(): string {
+    return sessionStorage.getItem('session_id') || '';
+  }
+
   checkLogin(username: string, password: string) {
     const body = { username, password };
     const user = { lastname: null, firstname: null, email: username, password: null,
@@ -100,14 +108,19 @@ export class AuthService {
     const request = this.httpService.post<LoginResponse>(
       this.globalService.serverURL + '/api/user/login',
       body,
-      this.globalService.options
+      { observe: "response" }
     );
 
     return request.toPromise().then(login => {
-      return login.result;
+      this.storeToken(login.headers.get('Token'));
+      return login.body.result;
     }).then((loggedIn) => {
       return this.httpService.get<UserResponse>(
-        this.globalService.serverURL + '/api/user/' + username).toPromise().then(userRsp => {
+        this.globalService.serverURL + '/api/user/' + username,
+        {
+          headers: new HttpHeaders()
+            .set('Token', this.retrieveToken())
+        }).toPromise().then(userRsp => {
         user.lastname = userRsp.last_name;
         user.firstname = userRsp.first_name;
         user.password = userRsp.password;
