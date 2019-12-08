@@ -32,8 +32,11 @@ export interface Post {
 }
 
 export interface Comment {
-  commenter: string;
+  author: string;
   content: string;
+  date: number;
+  id: number;
+  to_post: number;
 }
 
 interface NameResponse {
@@ -244,14 +247,24 @@ export class MainService {
   }
 
   loadComments(id: number): Promise<Array<Comment>> {
-    const request = this.httpService.get<ArticleResponse>(
-      this.globalService.serverURL + '/articles/:id?id=' + id,
-      this.globalService.options
+    const request = this.httpService.get<Array<Comment>>(
+      this.globalService.serverURL + '/articles/' + id,
+      {
+        headers: new HttpHeaders()
+          .set('Token', this.authService.retrieveToken())
+      }
     );
     return request.toPromise().then(res => {
       const comments = [];
-      if (res.articles && res.articles.length > 0) {
-        for (const comment of res.articles[0].comments) {
+
+      //  author: string;
+      //   content: string;
+      //   date: number;
+      //   id: number;
+      //   to_post: number;
+
+      if (res && res.length > 0) {
+        for (const comment of res) {
           comments.push({ commenter: comment.author, content: comment.content });
         }
       }
@@ -302,11 +315,17 @@ export class MainService {
 
   commentPost(id: number, text: string) {
     return this.loadComments(id).then(comments => {
-      const commentId = comments.length;
-      const request = this.httpService.put<ArticleResponse>(
-        this.globalService.serverURL + '/articles/:id?id=' + id,
-        { id, text, commentId },
-        this.globalService.options
+      const request = this.httpService.post<ArticleResponse>(
+        this.globalService.serverURL + '/articles/' + id,
+        {
+          to_post:id,
+          content:text,
+          date: Date.now()
+        },
+        {
+          headers: new HttpHeaders()
+            .set('Token', this.authService.retrieveToken())
+        }
       );
       return request.toPromise().then(res => {
       }).catch(error => {
@@ -314,5 +333,4 @@ export class MainService {
       });
     });
   }
-
 }
