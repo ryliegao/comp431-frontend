@@ -244,11 +244,13 @@ export class MainService {
   }
 
   loadComments(id: number): Promise<Array<Comment>> {
+    console.log(id);
     const request = this.httpService.get<ArticleResponse>(
-      this.globalService.serverURL + '/articles/:id?id=' + id,
+      this.globalService.serverURL + '/articles/'+ id,
       this.globalService.options
     );
     return request.toPromise().then(res => {
+      console.log(res)
       const comments = [];
       if (res.articles && res.articles.length > 0) {
         for (const comment of res.articles[0].comments) {
@@ -257,6 +259,7 @@ export class MainService {
       }
       return comments;
     }).catch(error => {
+      console.log(error)
       return this.router.navigate(['/auth/login']).then(() => {
         return [];
       });
@@ -301,11 +304,15 @@ export class MainService {
   }
 
   commentPost(id: number, text: string) {
+    const context = {
+      to_post:id,
+      content:text,
+      date: Date.now()
+    }
     return this.loadComments(id).then(comments => {
-      const commentId = comments.length;
-      const request = this.httpService.put<ArticleResponse>(
-        this.globalService.serverURL + '/articles/:id?id=' + id,
-        { id, text, commentId },
+      const request = this.httpService.post<ArticleResponse>(
+        this.globalService.serverURL + '/articles/' + id,
+        context,
         this.globalService.options
       );
       return request.toPromise().then(res => {

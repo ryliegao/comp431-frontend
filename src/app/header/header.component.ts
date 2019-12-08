@@ -115,6 +115,7 @@ export class HeaderComponent implements OnInit {
     }
     try {
       localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('session_id');
     } catch (e) {
       console.log('This browser does not support local storage. [Header]');
     }
@@ -125,8 +126,9 @@ export class HeaderComponent implements OnInit {
       {},
       this.globalService.options);
 
-    return request.toPromise().then(res => {
-      return res.body && res.body === 'success';
+    return request.toPromise().then((res) => {
+      console.log(res.body)
+      return true;
     }).catch((err: HttpErrorResponse) => {
       console.log (err.message);
     });

@@ -100,18 +100,22 @@ export class AuthService {
 
   retrieveToken(): string {
     return sessionStorage.getItem('session_id') || '';
-  }
+  } 
 
+  // /api/user/login
   checkLogin(username: string, password: string) {
     const body = { username, password };
     const user = { lastname: null, firstname: null, email: username, password: null,
       loggedin: true, status: null, avatar: null };
+    // console.log(this.globalService.serverURL + '/login');
     const request = this.httpService.post<LoginResponse>(
       this.globalService.serverURL + '/api/user/login',
+      // "http://E6156Yeah.us-east-2.elasticbeanstalk.com/api/user/login",
       body,
-      { observe: "response" }
+      { 
+        observe: "response" }
     );
-
+    console.log(request);
     return request.toPromise().then(login => {
       this.storeToken(login.headers.get('Token'));
       return login.body.result;
@@ -146,6 +150,7 @@ export class AuthService {
     // });
   }
 
+  // /api/user/registration
   registerUser(user: User) {
     const body = {
       last_name: user.lastname,
