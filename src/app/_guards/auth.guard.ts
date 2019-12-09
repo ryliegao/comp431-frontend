@@ -120,46 +120,49 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  submitLogin() {
-    console.log('submit login to facebook');
-    return FB.login(response => {
-      console.log('submitLogin', response);
-      if (response.authResponse) {
-        localStorage.setItem('FBLoggedIn', 'true');
-        FB.api('/me', response =>
-        {
-          const user = {
-            lastname: response.last_name,
-            firstname: response.first_name,
-            email: response.email,
-            password: null,
-            loggedin: true,
-            status: null,
-            avatar: response.picture
-          };
-          this.authService.makeNewUser(user);
-        });
+  retrieveUserInfo(response: {status: string, authResponse: {accessToken: string}}) {
+    localStorage.setItem('FBLoggedIn', 'true');
+    FB.api('/me?access_token=' + response.authResponse.accessToken, {
+      fields: 'last_name,first_name,email'
+    }, response => {
+      const user = {
+        lastname: response.last_name,
+        firstname: response.first_name,
+        email: response.email,
+        password: null,
+        loggedin: true,
+        status: null,
+        avatar: response.profile_pic
+      };
+      this.authService.makeNewUser(user);
 
-        this.ngZone.run(() => this.router.navigate(['/main'])).then();
+      this.authService.storeToken(response.email + ',000000');
+      this.ngZone.run(() => this.router.navigate(['/main'])).then();
+    });
+  }
+
+  submitLogin() {
+    return FB.getLoginStatus(response => {
+      console.log('submitLogin', response.authResponse.accessToken);
+      if (response.status !== 'connected') {
+        FB.login(response => {
+          this.retrieveUserInfo(response);
+        });
       } else {
-        console.log('user login failed');
+        this.retrieveUserInfo(response);
       }
     },
-      // {scope: 'email, user_location'}
+      {scope: 'email,public_profile,manage_pages,pages_show_list'}
       );
   }
 
   submitLogout() {
-    return FB.getLoginStatus(response => {
-      if (response.status === 'connected') {
-        return FB.logout(res => {
-          console.log('submitLogout', res);
-          if (res.authResponse) {
-            localStorage.setItem('FBLoggedIn', 'false');
-          } else {
-            console.log('user logout failed');
-          }
-        });
+    return FB.logout(res => {
+      console.log('submitLogout', res);
+      if (res.authResponse) {
+        localStorage.setItem('FBLoggedIn', 'false');
+      } else {
+        console.log('user logout failed');
       }
     });
   }
