@@ -292,7 +292,7 @@ export class MainService {
       'image': image,
       'date': Date.now()
     }
-    const request = this.httpService.post<ArticleResponse>(
+    const request = this.httpService.post<Array<Post>>(
       this.globalService.serverURL + '/articles',
       content,
       this.globalService.options
