@@ -10,7 +10,8 @@ export class GlobalService {
 
   public options: object = {
     headers: new HttpHeaders()
-      .set('Content-Type', 'application/json'),
+      .set('Content-Type', 'application/json')
+      .set('Token', sessionStorage.getItem('session_id') || '')
     // withCredentials: true
   };
 }

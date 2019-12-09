@@ -145,6 +145,7 @@ export class MainService {
     });
   }
 
+
   loadPosts(): Promise<Array<Post>> {
     const request = this.httpService.get<Array<Post>>(
       this.globalService.serverURL + '/articles',
@@ -286,14 +287,20 @@ export class MainService {
   }
 
   uploadPost(text, image) {
+    const content = {
+      'text': text,
+      'image': image,
+      'date': Date.now()
+    }
     const request = this.httpService.post<ArticleResponse>(
-      this.globalService.serverURL + '/article',
-      { text, image },
+      this.globalService.serverURL + '/articles',
+      content,
       this.globalService.options
     );
     return request.toPromise().then(res => {
-      return { articles: res.articles };
+      return { articles: res };
     }).catch(error => {
+      console.log(error)
       return this.router.navigate(['/auth/login']).then(() => {
         return { articles: [] };
       });
@@ -314,18 +321,16 @@ export class MainService {
   }
 
   commentPost(id: number, text: string) {
+    const context = {
+      to_post:id,
+      content:text,
+      date: Date.now()
+    }
     return this.loadComments(id).then(comments => {
       const request = this.httpService.post<ArticleResponse>(
         this.globalService.serverURL + '/articles/' + id,
-        {
-          to_post:id,
-          content:text,
-          date: Date.now()
-        },
-        {
-          headers: new HttpHeaders()
-            .set('Token', this.authService.retrieveToken())
-        }
+        context,
+        this.globalService.options
       );
       return request.toPromise().then(res => {
       }).catch(error => {
@@ -333,4 +338,5 @@ export class MainService {
       });
     });
   }
+
 }

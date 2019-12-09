@@ -162,14 +162,14 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   makePost() {
-    // return this.service.uploadPost(this.postText, this.uploadedImage).then((res) => {
-    //   if (res.articles.length > 0) {
-    //     this.postText = '';
-    //     this.uploadedImage = '';
-    //     this.nextID++;
-    //     return this.loadPosts();
-    //   }
-    // });
+    return this.service.uploadPost(this.postText, this.uploadedImage).then((res) => {
+      if (res.articles.length > 0) {
+        this.postText = '';
+        this.uploadedImage = '';
+        this.nextID++;
+        return this.loadPosts();
+      }
+    });
   }
 
   createTextPost(
