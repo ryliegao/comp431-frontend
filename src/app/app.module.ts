@@ -17,7 +17,8 @@ import { HeaderComponent } from 'src/app/header/header.component';
 import { UserComponent } from 'src/app/main/user/user.component';
 import { ImagepostComponent } from 'src/app/main/imagepost/imagepost.component';
 import { TextpostComponent } from 'src/app/main/textpost/textpost.component';
-import { MainDirective } from './main/main.directive';
+import { MainDirective } from 'src/app/main/main.directive';
+import { ProfileDirective } from "src/app/profile/profile.directive";
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { MainDirective } from './main/main.directive';
     LoginComponent,
     RegisterComponent,
     HeaderComponent,
-    MainDirective
+    MainDirective,
+    ProfileDirective
   ],
   providers: [
     AuthGuard,

@@ -64,6 +64,10 @@ interface ImageResponse {
   url: string;
 }
 
+interface SmartyStreetResponse {
+  suggestions: Array<{text: string}>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -71,6 +75,8 @@ export class MainService {
   username: string;
   followInfo: FollowInfo;
   onRemove: EventEmitter<any> = new EventEmitter<any>();
+  smartyStreet: string = 'https://us-autocomplete.api.smartystreets.com/suggest?' +
+    'auth-id=14634588597451517&prefix=';
 
   constructor(
     private httpService: HttpClient,
@@ -291,7 +297,7 @@ export class MainService {
       'text': text,
       'image': image,
       'date': Date.now()
-    }
+    };
     const request = this.httpService.post<Array<Post>>(
       this.globalService.serverURL + '/articles',
       content,
@@ -300,7 +306,7 @@ export class MainService {
     return request.toPromise().then(res => {
       return { articles: res };
     }).catch(error => {
-      console.log(error)
+      console.log(error);
       return this.router.navigate(['/auth/login']).then(() => {
         return { articles: [] };
       });
@@ -339,4 +345,18 @@ export class MainService {
     });
   }
 
+  suggestAddress(prefix: string): Promise<string[]> {
+    const request = this.httpService.get<SmartyStreetResponse>(
+      this.smartyStreet + prefix
+    );
+    return request.toPromise().then(res => {
+      if (!res || !res.suggestions) {
+        return [];
+      }
+      return res.suggestions.map(suggestion => suggestion.text);
+    }).catch(error => {
+      console.log('SmartyStreet: ' + error);
+      return [];
+    });
+  }
 }

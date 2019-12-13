@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit {
   pw1: string;
   pw2: string;
   uploadedImage: string;
+  address: string;
+  suggestions: string[];
 
   constructor(private authService: AuthService, private service: MainService) { }
 
@@ -88,6 +90,12 @@ export class ProfileComponent implements OnInit {
       } catch (e) {
         console.log('This browser does not support local storage.');
       }
+    });
+  }
+
+  fillSuggestions() {
+    this.service.suggestAddress(this.address).then(res => {
+      this.suggestions = res.slice(5);
     });
   }
 
