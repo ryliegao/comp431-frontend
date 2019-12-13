@@ -2,7 +2,7 @@
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
-import {AuthService} from "../auth/auth.service";
+import { AuthService } from "src/app/auth/auth.service";
 
 declare let FB: any;
 
@@ -143,7 +143,6 @@ export class AuthGuard implements CanActivate {
 
   submitLogin() {
     return FB.getLoginStatus(response => {
-      console.log('submitLogin', response.authResponse.accessToken);
       if (response.status !== 'connected') {
         FB.login(response => {
           this.retrieveUserInfo(response);
