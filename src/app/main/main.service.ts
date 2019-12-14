@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -18,6 +18,10 @@ export interface FolloweeInfo {
   avatar: string;
 }
 
+interface ArticleResponse {
+  articles: Array<Post>;
+}
+
 export interface Post {
   author: string;
   id: number;
@@ -28,12 +32,11 @@ export interface Post {
 }
 
 export interface Comment {
-  commenter: string;
+  author: string;
   content: string;
-}
-
-interface ArticleResponse {
-  articles: Array<Post>;
+  date: number;
+  id: number;
+  to_post: number;
 }
 
 interface NameResponse {
@@ -61,6 +64,10 @@ interface ImageResponse {
   url: string;
 }
 
+interface SmartyStreetResponse {
+  suggestions: Array<{text: string}>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -68,6 +75,8 @@ export class MainService {
   username: string;
   followInfo: FollowInfo;
   onRemove: EventEmitter<any> = new EventEmitter<any>();
+  smartyStreet: string = 'https://us-autocomplete.api.smartystreets.com/suggest?' +
+    'auth-id=14634588597451517&prefix=';
 
   constructor(
     private httpService: HttpClient,
@@ -81,7 +90,7 @@ export class MainService {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        username = user.username;
+        username = user.email;
       }
     } catch (e) {
       console.log('This browser does not support local storage.');
@@ -142,16 +151,21 @@ export class MainService {
     });
   }
 
+
   loadPosts(): Promise<Array<Post>> {
-    const request = this.httpService.get<ArticleResponse>(
+    const request = this.httpService.get<Array<Post>>(
       this.globalService.serverURL + '/articles',
-      this.globalService.options
+      {
+        headers: new HttpHeaders()
+          .set('Token', this.authService.retrieveToken())
+      }
     );
     return request.toPromise().then(res => {
-        return this.sortPosts(res.articles);
+        return this.sortPosts(res);
       }
     ).catch(error => {
       return this.router.navigate(['/auth/login']).then(() => {
+        console.log(error);
         return [];
       });
     });
@@ -212,12 +226,9 @@ export class MainService {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         const newUser = {
-          username: user.username,
-          displayname: user.displayname,
+          lastname: user.lastname,
+          firstname: user.firstname,
           email: user.email,
-          phone: user.phone,
-          birthday: user.birthday,
-          zipcode: user.zipcode,
           password: user.password,
           loggedin: user.loggedin,
           avatar: user.avatar,
@@ -243,14 +254,24 @@ export class MainService {
   }
 
   loadComments(id: number): Promise<Array<Comment>> {
-    const request = this.httpService.get<ArticleResponse>(
-      this.globalService.serverURL + '/articles/:id?id=' + id,
-      this.globalService.options
+    const request = this.httpService.get<Array<Comment>>(
+      this.globalService.serverURL + '/articles/' + id,
+      {
+        headers: new HttpHeaders()
+          .set('Token', this.authService.retrieveToken())
+      }
     );
     return request.toPromise().then(res => {
       const comments = [];
-      if (res.articles && res.articles.length > 0) {
-        for (const comment of res.articles[0].comments) {
+
+      //  author: string;
+      //   content: string;
+      //   date: number;
+      //   id: number;
+      //   to_post: number;
+
+      if (res && res.length > 0) {
+        for (const comment of res) {
           comments.push({ commenter: comment.author, content: comment.content });
         }
       }
@@ -272,14 +293,20 @@ export class MainService {
   }
 
   uploadPost(text, image) {
-    const request = this.httpService.post<ArticleResponse>(
-      this.globalService.serverURL + '/article',
-      { text, image },
+    const content = {
+      'text': text,
+      'image': image,
+      'date': Date.now()
+    };
+    const request = this.httpService.post<Array<Post>>(
+      this.globalService.serverURL + '/articles',
+      content,
       this.globalService.options
     );
     return request.toPromise().then(res => {
-      return { articles: res.articles };
+      return { articles: res };
     }).catch(error => {
+      console.log(error);
       return this.router.navigate(['/auth/login']).then(() => {
         return { articles: [] };
       });
@@ -300,11 +327,15 @@ export class MainService {
   }
 
   commentPost(id: number, text: string) {
+    const context = {
+      to_post:id,
+      content:text,
+      date: Date.now()
+    }
     return this.loadComments(id).then(comments => {
-      const commentId = comments.length;
-      const request = this.httpService.put<ArticleResponse>(
-        this.globalService.serverURL + '/articles/:id?id=' + id,
-        { id, text, commentId },
+      const request = this.httpService.post<ArticleResponse>(
+        this.globalService.serverURL + '/articles/' + id,
+        context,
         this.globalService.options
       );
       return request.toPromise().then(res => {
@@ -314,4 +345,18 @@ export class MainService {
     });
   }
 
+  suggestAddress(prefix: string): Promise<string[]> {
+    const request = this.httpService.get<SmartyStreetResponse>(
+      this.smartyStreet + prefix
+    );
+    return request.toPromise().then(res => {
+      if (!res || !res.suggestions) {
+        return [];
+      }
+      return res.suggestions.map(suggestion => suggestion.text);
+    }).catch(error => {
+      console.log('SmartyStreet: ' + error);
+      return [];
+    });
+  }
 }

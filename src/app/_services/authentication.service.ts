@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
-    login(username: string, password: string) {
+  login(username: (response) => void, password: { scope: string }) {
         return this.http.post<any>(`${config.apiUrl}/users/authenticate`, { username: username, password: password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
@@ -22,5 +22,6 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('session_id');
     }
 }

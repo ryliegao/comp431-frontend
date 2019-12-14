@@ -13,6 +13,7 @@
     <div class="form-grp">
       <label>Display Name</label>
       <input class="profile-input"
+             autocomplete="off"
              placeholder="Current display name: {{ displayname }}"
              [(ngModel)]="dn"
              type="text"/>
@@ -20,6 +21,7 @@
     <div class="form-grp">
       <label>Email Address</label>
       <input class="profile-input"
+             autocomplete="off"
              placeholder="Current email address: {{ email }}"
              [(ngModel)]="ea"
              type="text"/>
@@ -27,6 +29,7 @@
     <div class="form-grp">
       <label>Phone Number</label>
       <input class="profile-input"
+             autocomplete="off"
              placeholder="Current phone number: {{ phone }}"
              [(ngModel)]="ph"
              type="text"/>
@@ -34,19 +37,39 @@
     <div class="form-grp">
       <label>Zip Code</label>
       <input class="profile-input"
+             autocomplete="off"
              placeholder="Current zip code: {{ zipcode }}"
              [(ngModel)]="zc"
              type="text"/>
     </div>
     <div class="form-grp">
+      <label>SmartyStreet Address</label>
+      <input class="profile-input" autocomplete="off"
+             [(ngModel)]="address" type="text"
+             (change)="fillSuggestions()" (keyup)="fillSuggestions()"
+             (paste)="fillSuggestions()" (click)="fillSuggestions()"
+             (profileClickOutside)="this.suggestions = []"/>
+    </div>
+      <div class="form-grp">
+      <div class="autocomplete">
+        <div class="autocomplete-items" *ngFor="let suggestion of suggestions"
+        (click) = "this.address = suggestion">
+          {{ suggestion }}
+        </div>
+      </div>
+    </div>
+    <div class="form-grp">
       <label>Password</label>
-      <input class="profile-input" [(ngModel)]="pw1" type="password"/>
+      <input class="profile-input" autocomplete="off"
+             [(ngModel)]="pw1" type="password"/>
     </div>
     <div class="form-grp">
       <label>Confirm Password</label>
-      <input class="profile-input" [(ngModel)]="pw2" type="password"/>
+      <input class="profile-input" autocomplete="off"
+             [(ngModel)]="pw2" type="password"/>
     </div>
-    <button id="submit-change" class="buttons submit submit-button" (click)="onSubmit()">Submit Changes</button>
+    <button id="submit-change" class="buttons submit submit-button"
+            (click)="onSubmit()">Submit Changes</button>
   </div>
 
   <div class="right-pane">

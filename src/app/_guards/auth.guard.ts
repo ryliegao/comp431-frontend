@@ -2,6 +2,7 @@
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { StorageService } from 'src/app/_services';
+import { AuthService } from "src/app/auth/auth.service";
 
 declare let FB: any;
 
@@ -10,8 +11,9 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private service: StorageService,
-    private ngZone: NgZone
+    private storageService: StorageService,
+    private ngZone: NgZone,
+    private authService: AuthService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
@@ -105,7 +107,7 @@ export class AuthGuard implements CanActivate {
         }
       } else {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.service.setItem('currentUser');
+        this.storageService.setItem('currentUser');
         if (!user.loggedin) {
           // if user has registered but not logged in, redirect to login page
           this.router.navigate(['/auth/login']);
@@ -118,30 +120,48 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  submitLogin() {
-    console.log('submit login to facebook');
-    return FB.login(response => {
-      console.log('submitLogin', response);
-      if (response.authResponse) {
-        localStorage.setItem('FBLoggedIn', 'true');
-        this.ngZone.run(() => this.router.navigate(['/main'])).then();
-      } else {
-        console.log('user login failed');
-      }
+  retrieveUserInfo(response: {status: string, authResponse: {accessToken: string}}) {
+    localStorage.setItem('FBLoggedIn', 'true');
+    FB.api('/me?access_token=' + response.authResponse.accessToken, {
+      fields: 'last_name,first_name,email'
+    }, response => {
+      const user = {
+        lastname: response.last_name,
+        firstname: response.first_name,
+        email: response.email,
+        password: null,
+        loggedin: true,
+        status: null,
+        avatar: response.profile_pic
+      };
+      this.authService.makeNewUser(user);
+
+      this.authService.storeToken(response.email + ',000000');
+      this.ngZone.run(() => this.router.navigate(['/main'])).then();
     });
   }
 
-  submitLogout() {
+  submitLogin() {
     return FB.getLoginStatus(response => {
-      if (response.status === 'connected') {
-        return FB.logout(res => {
-          console.log('submitLogout', res);
-          if (res.authResponse) {
-            localStorage.setItem('FBLoggedIn', 'false');
-          } else {
-            console.log('user logout failed');
-          }
+      if (response.status !== 'connected') {
+        FB.login(response => {
+          this.retrieveUserInfo(response);
         });
+      } else {
+        this.retrieveUserInfo(response);
+      }
+    },
+      {scope: 'email,public_profile,manage_pages,pages_show_list'}
+      );
+  }
+
+  submitLogout() {
+    return FB.logout(res => {
+      console.log('submitLogout', res);
+      if (res.authResponse) {
+        localStorage.setItem('FBLoggedIn', 'false');
+      } else {
+        console.log('user logout failed');
       }
     });
   }

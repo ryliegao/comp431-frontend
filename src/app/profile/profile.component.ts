@@ -31,6 +31,8 @@ export class ProfileComponent implements OnInit {
   pw1: string;
   pw2: string;
   uploadedImage: string;
+  address: string;
+  suggestions: string[];
 
   constructor(private authService: AuthService, private service: MainService) { }
 
@@ -38,10 +40,8 @@ export class ProfileComponent implements OnInit {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.displayname = user.displayname;
+        this.displayname = user.firstname + ' ' + user.lastname;
         this.email = user.email;
-        this.phone = user.phone;
-        this.zipcode = user.zipcode;
         this.password = user.password;
       }
     } catch (e) {
@@ -77,12 +77,9 @@ export class ProfileComponent implements OnInit {
         if (localStorage.getItem('currentUser')) {
           const user: User = JSON.parse(localStorage.getItem('currentUser'));
           const newUser = {
-            username: user.username,
-            displayname: user.displayname,
+            firstname: user.firstname,
+            lastname: user.lastname,
             email: user.email,
-            phone: user.phone,
-            birthday: user.birthday,
-            zipcode: user.zipcode,
             password: user.password,
             loggedin: true,
             status: user.status,
@@ -93,6 +90,12 @@ export class ProfileComponent implements OnInit {
       } catch (e) {
         console.log('This browser does not support local storage.');
       }
+    });
+  }
+
+  fillSuggestions() {
+    this.service.suggestAddress(this.address).then(res => {
+      this.suggestions = res.slice(5);
     });
   }
 
@@ -153,11 +156,8 @@ export class ProfileComponent implements OnInit {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         const newUser = {
-          username: user.username,
-          displayname: this.displayname,
+          displayname: user.firstname + ' ' + user.lastname,
           email: this.email,
-          phone: this.phone,
-          birthday: user.birthday,
           zipcode: this.zipcode,
           password: this.password,
           loggedin: true,

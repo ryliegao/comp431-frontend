@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
     if (window.FB) {
@@ -60,8 +60,11 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    // check if the username and password match
-    this.authService.checkLogin(this.loginForm.get('username').value, this.loginForm.get('password').value).then(match => {
+    // check if the email and password match
+    this.authService.checkLogin(
+      this.loginForm.get('email').value,
+      this.loginForm.get('password').value
+    ).then(match => {
       if (match) {
         this.storageService.waitForUserLogin().then(() => {
           this.router.navigate(['/main']);
