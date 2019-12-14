@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { StorageService, GlobalService } from 'src/app/_services';
+import {log} from "util";
 
 interface LoginResponse {
   username: string;
-  result: string;
+  result: boolean;
 }
 
 interface NameResponse {
@@ -102,7 +103,7 @@ export class AuthService {
     return sessionStorage.getItem('session_id') || '';
   }
 
-  checkLogin(username: string, password: string) {
+  checkLogin(username: string, password: string): Promise<boolean | number> {
     const body = { username, password };
     const user = { lastname: null, firstname: null, email: username, password: null,
       loggedin: true, status: null, avatar: null };
@@ -114,8 +115,6 @@ export class AuthService {
 
     return request.toPromise().then(login => {
       this.storeToken(login.headers.get('Token'));
-      return login.body.result;
-    }).then((loggedIn) => {
       return this.httpService.get<UserResponse>(
         this.globalService.serverURL + '/api/user/' + username,
         {
@@ -128,22 +127,13 @@ export class AuthService {
         user.status = userRsp.status; // TODO: this is not the status we want
         user.avatar = userRsp.avatar;
         this.makeNewUser(user);
-        return loggedIn;
+        return login.body.result;
       });
+    }).then(res => {
+      return res;
     }).catch((err: HttpErrorResponse) => {
-      console.log (err.message);
+      return err.status;
     });
-
-    // return request.toPromise().then(login => {
-    //   return login.result && login.result === 'success';
-    // }).then(loggedin => {
-    //   return this.httpService.get<UserResponse>(
-    //     this.globalService.serverURL + '/api/user/' + username,
-    //     this.globalService.options).toPromise().then(userRsp => {
-    //       this.makeNewUser(user);
-    // }).catch((err: HttpErrorResponse) => {
-    //   console.log (err.message);
-    // });
   }
 
   registerUser(user: User) {

@@ -9,7 +9,7 @@
       Please enter both of your email address and your password!
     </span>
     <span class="error-message" *ngIf="submitted && notMatch">
-      E-mail address and password do not match!
+      {{ errorMsg }}
     </span>
 
     <div class="buttons">

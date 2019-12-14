@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   invalid = false;
   notMatch = false;
   FB: any;
+  errorMsg: string;
   @Output() loginEmitter = new EventEmitter();
 
   constructor(
@@ -65,11 +66,16 @@ export class LoginComponent implements OnInit {
       this.loginForm.get('email').value,
       this.loginForm.get('password').value
     ).then(match => {
-      if (match) {
+      if (match === true) {
         this.storageService.waitForUserLogin().then(() => {
           this.router.navigate(['/main']);
         });
       } else {
+        if (match === 403) {
+          this.errorMsg = "Please activate your account first!";
+        } else {
+          this.errorMsg = "E-mail address and password do not match!";
+        }
         this.notMatch = true;
       }
     });
