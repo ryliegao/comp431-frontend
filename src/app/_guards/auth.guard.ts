@@ -43,19 +43,11 @@ export class AuthGuard implements CanActivate {
           // to see the tokens about the users session
           localStorage.setItem('FBLoggedIn', 'true');
           this.router.navigate(['/main']);
+        } else {
+          localStorage.setItem('FBLoggedIn', 'false');
+          this.router.navigate(['/auth/login']);
         }
       }));
-
-      // FB.login(response => {
-      //   if (response.authResponse) {
-      //     console.log('Welcome!  Fetching your information.... ');
-      //     FB.api('/me', res => {
-      //       console.log('Good to see you, ' + res.name + '.');
-      //     });
-      //   } else {
-      //     console.log('User cancelled login or did not fully authorize.');
-      //   }
-      // });
     };
 
     ((d, s, id) => {
@@ -69,29 +61,6 @@ export class AuthGuard implements CanActivate {
       js.src = 'https://connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
     }) (document, 'script', 'facebook-jssdk');
-  }
-
-  private getCookie(name) {
-    const dc = document.cookie;
-    const prefix = name + '=';
-    let begin = dc.indexOf('; ' + prefix);
-    let end;
-    if (begin === -1) {
-      begin = dc.indexOf(prefix);
-      if (begin !== 0) {
-        return null;
-      }
-    }
-    else {
-      begin += 2;
-      end = document.cookie.indexOf(';', begin);
-      if (end === -1) {
-        end = dc.length;
-      }
-    }
-    // because unescape has been deprecated, replaced with decodeURI
-    // return unescape(dc.substring(begin + prefix.length, end));
-    return decodeURI(dc.substring(begin + prefix.length, end));
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -144,9 +113,9 @@ export class AuthGuard implements CanActivate {
   submitLogin() {
     return FB.getLoginStatus(response => {
       if (response.status !== 'connected') {
-        FB.login(response => {
-          this.retrieveUserInfo(response);
-        });
+        // FB.login(response => {
+        //   this.retrieveUserInfo(response);
+        // });
       } else {
         this.retrieveUserInfo(response);
       }
@@ -156,12 +125,17 @@ export class AuthGuard implements CanActivate {
   }
 
   submitLogout() {
-    return FB.logout(res => {
-      console.log('submitLogout', res);
-      if (res.authResponse) {
-        localStorage.setItem('FBLoggedIn', 'false');
-      } else {
-        console.log('user logout failed');
+    return FB.getLoginStatus(response => {
+      if (response.status === 'connected') {
+        return FB.logout(res => {
+          FB.Auth.setAuthResponse(null, 'unknown');
+          FB.api('/me/permissions', 'DELETE');
+          if (res.authResponse) {
+            localStorage.setItem('FBLoggedIn', 'false');
+          } else {
+            console.log('user logout failed');
+          }
+        });
       }
     });
   }
