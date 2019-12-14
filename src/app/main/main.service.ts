@@ -328,10 +328,11 @@ export class MainService {
 
   commentPost(id: number, text: string) {
     const context = {
-      to_post:id,
-      content:text,
+      to_post: id,
+      content: text,
       date: Date.now()
-    }
+    };
+
     return this.loadComments(id).then(comments => {
       const request = this.httpService.post<ArticleResponse>(
         this.globalService.serverURL + '/articles/' + id,
