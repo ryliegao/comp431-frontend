@@ -113,9 +113,9 @@ export class AuthGuard implements CanActivate {
   submitLogin() {
     return FB.getLoginStatus(response => {
       if (response.status !== 'connected') {
-        // FB.login(response => {
-        //   this.retrieveUserInfo(response);
-        // });
+        FB.login(response => {
+          this.retrieveUserInfo(response);
+        });
       } else {
         this.retrieveUserInfo(response);
       }
