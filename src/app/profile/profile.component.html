@@ -19,29 +19,22 @@
              type="text"/>
     </div>
     <div class="form-grp">
-      <label>Email Address</label>
+      <label>Home Phone Number</label>
+      <!-- change  Work phone number : {{phone}}-->
       <input class="profile-input"
-             autocomplete="off"
-             placeholder="Current email address: {{ email }}"
-             [(ngModel)]="ea"
-             type="text"/>
+             placeholder="Home phone number"
+             [(ngModel)]="hph"
+             type="text" />
     </div>
     <div class="form-grp">
-      <label>Phone Number</label>
+      <label>Mobile phone Number</label>
+      <!-- change  Work phone number : {{phone}}-->
       <input class="profile-input"
-             autocomplete="off"
-             placeholder="Current phone number: {{ phone }}"
-             [(ngModel)]="ph"
-             type="text"/>
+             placeholder="Mobile phone number" 
+             [(ngModel)]="mph"
+             type="text" />
     </div>
-    <div class="form-grp">
-      <label>Zip Code</label>
-      <input class="profile-input"
-             autocomplete="off"
-             placeholder="Current zip code: {{ zipcode }}"
-             [(ngModel)]="zc"
-             type="text"/>
-    </div>
+
     <div class="form-grp">
       <label>SmartyStreet Address</label>
       <input class="profile-input" autocomplete="off"
@@ -59,36 +52,20 @@
       </div>
     </div>
     <div class="form-grp">
-      <label>Password</label>
-      <input class="profile-input" autocomplete="off"
-             [(ngModel)]="pw1" type="password"/>
+      <label>Address line 2</label>
+      <input class="profile-input"
+            placeholder="Address line2"
+            [(ngModel)]="addr2"
+              type="text"/>
     </div>
-    <div class="form-grp">
-      <label>Confirm Password</label>
-      <input class="profile-input" autocomplete="off"
-             [(ngModel)]="pw2" type="password"/>
-    </div>
+
     <button id="submit-change" class="buttons submit submit-button"
             (click)="onSubmit()">Submit Changes</button>
   </div>
 
   <div class="right-pane">
-    <div class="profile-msg" *ngIf="pwError">
-      > ERROR: The passwords you entered do not match.
-    </div>
-    <div class="profile-msg" *ngIf="pwSuccess">
-      > You have successfully updated your password.
-    </div>
-    <br>
     <div class="profile-msg" *ngIf="dnSuccess">
       > You have successfully updated your display name.
-    </div>
-    <br>
-    <div class="profile-msg" *ngIf="eaError">
-      > Please enter a valid email address.
-    </div>
-    <div class="profile-msg" *ngIf="eaSuccess">
-      > You have successfully updated your email address.
     </div>
     <br>
     <div class="profile-msg" *ngIf="phError">
@@ -98,16 +75,10 @@
       > You have successfully updated your phone number.
     </div>
     <br>
-    <div class="profile-msg" *ngIf="zcError">
-      > Please enter a valid five-digit zip code.
-    </div>
-    <div class="profile-msg" *ngIf="zcSuccess">
-      > You have successfully updated your zip code.
-    </div>
-    <br>
     <div class="profile-msg" *ngIf="submitted && !(pwError || pwSuccess || dnSuccess || eaError || eaSuccess ||
     phError || phSuccess || zcError || zcSuccess)">
       > Nothing have changed. Please try again.
     </div>
   </div>
 </div>
+
