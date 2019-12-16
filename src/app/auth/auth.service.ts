@@ -3,11 +3,18 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { StorageService, GlobalService } from 'src/app/_services';
 import {log} from "util";
+import { stringify } from 'querystring';
 
 interface LoginResponse {
   username: string;
   result: boolean;
 }
+
+interface profileResponse {
+  username: string;
+  result: boolean;
+}
+
 
 interface NameResponse {
   username: string;
@@ -231,4 +238,78 @@ export class AuthService {
       return '';
     });
   }
+  /////////////////////////////////////
+
+  checkprofile(email: string) {
+    const request = this.httpService.get<profileResponse>(
+      this.globalService.serverURL + '/api/profile/' + email,
+      { headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('Token', sessionStorage.getItem('session_id') || ''),
+        observe: "response" }
+      );
+
+    return request.toPromise().then(profile => {
+      sessionStorage.setItem('Etag',(profile.headers.get('ETag')));
+      return true;
+    }).catch((err: HttpErrorResponse) => {
+      return false;
+    });
+  }
+
+  async getProfile(email: string) {
+    const request = this.httpService.get<profileResponse>(
+      this.globalService.serverURL + '/api/profile/' + email,
+      { headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('Token', sessionStorage.getItem('session_id') || ''),
+        observe: "response" }
+      );
+    return request.toPromise().then(profile => {
+      console.log(profile.body)
+      return profile.body;
+    }).catch((err: HttpErrorResponse) => {
+      return false;
+    });
+  }
+
+
+  updateprofile1(dn:string,hpn:string, mpn:string, adrs1:string,adrs2:string,email:string){
+    const body = {"display_name":dn,"address_line_1":adrs1,
+    "address_line_2":adrs2,"home_phone":hpn,"work_phone":mpn}
+    const request = this.httpService.put(
+      this.globalService.serverURL + '/api/profile/' + email,
+      body,
+      { headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('Token', sessionStorage.getItem('session_id') || '')
+        .set('If-Match', sessionStorage.getItem('Etag') || ''),
+        observe: "response" }
+      );
+      return request.toPromise().then(profile => {
+        console.log(profile.headers)
+      }).catch((err: HttpErrorResponse) => {
+        console.log(err.message);
+      });
+  }
+
+  updateprofile2(dn:string,hpn:string, mpn:string, adrs1:string,adrs2:string,email:string){
+    const body = {"display_name":dn,"address_line_1":adrs1,
+    "address_line_2":adrs2,"home_phone":hpn,"work_phone":mpn,"email":email}
+    const request = this.httpService.post(
+      this.globalService.serverURL + '/api/profile',
+      body,
+      { headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('Token', sessionStorage.getItem('session_id') || '')
+        .set('Etag', sessionStorage.getItem('Etag') || ''),
+        observe: "response" }
+      );
+      return request.toPromise().then(profile => {
+        console.log(profile)
+      }).catch((err: HttpErrorResponse) => {
+        console.log(err.message);
+      });
+  }
+
 }
