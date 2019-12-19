@@ -16,15 +16,15 @@
 
     <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
       <div *ngIf="f.first_name.errors.required">First name required</div>
-      <div *ngIf="f.first_name.errors.pattern">First name does not match</div>
+      <div *ngIf="f.first_name.errors.pattern">First name has invalid form</div>
     </div>
     <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
       <div *ngIf="f.last_name.errors.required">Last name required</div>
-      <div *ngIf="f.last_name.errors.pattern">Last name does not match</div>
+      <div *ngIf="f.last_name.errors.pattern">Last name has invalid formh</div>
     </div>
     <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
       <div *ngIf="f.email.errors.required">Email required</div>
-      <div *ngIf="f.email.errors.pattern">Email does not match</div>
+      <div *ngIf="f.email.errors.pattern">Email has invalid form</div>
     </div>
     <div *ngIf="submitted && f.password1.errors" class="invalid-feedback">
       <div *ngIf="f.password1.errors.required">Password required</div>

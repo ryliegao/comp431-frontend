@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { StorageService, GlobalService } from 'src/app/_services';
-import {log} from "util";
 
 interface LoginResponse {
   username: string;
@@ -33,24 +32,13 @@ interface PhoneResponse {
   phone: string;
 }
 
-interface DobResponse {
-  username: string;
-  dob: string;
-}
-
 interface ZipCodeResponse {
   username: string;
   zipcode: string;
 }
 
-interface StatusResponse {
-  username: string;
-  headlines: Array<{username: string, headline: string}>;
-}
-
 interface AvatarResponse {
-  username: string;
-  avatars: Array<{username: string, avatar: string}>;
+  avatar: string;
 }
 
 @Injectable({
@@ -63,19 +51,6 @@ export class AuthService {
     private storageService: StorageService,
     private globalService: GlobalService
   ) { }
-
-  static checkUnderage(birthday: Date) {
-    const today = new Date(Date.now());
-    const year = today.getFullYear() - birthday.getFullYear();
-    const month = today.getMonth() - birthday.getMonth();
-    const day = today.getDate() - birthday.getDate() - 1; // Do not use getDay()
-    if (year < 18 || (year === 18 && month < 0) || (year === 18 && month === 0 && day < 0)) {
-      alert('Sorry, you are underage!\n\nOnly individuals 18 years of age ' +
-        'or older on the day of registration are allowed to register');
-      return false;
-    }
-    return true;
-  }
 
   static checkPasswordEquality(pswd1, pswd2) {
     if (pswd1 !== pswd2) {
@@ -129,8 +104,6 @@ export class AuthService {
         this.makeNewUser(user);
         return login.body.result;
       });
-    }).then(res => {
-      return res;
     }).catch((err: HttpErrorResponse) => {
       return err.status;
     });
@@ -146,14 +119,13 @@ export class AuthService {
     const request = this.httpService.post<LoginResponse>(
       this.globalService.serverURL + '/api/user/registration',
       body,
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
 
-    return request.toPromise().then(res => {
-      // return res.result && res.result === 'success';
-      return true;
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err.message);
+    return request.toPromise().then(
+      () => true // this means the response status is 200
+    ).catch((err: HttpErrorResponse) => {
+      console.log("auth.service/registerUser: " + err.message);
     });
   }
 
@@ -161,7 +133,7 @@ export class AuthService {
     const request = this.httpService.put<NameResponse>(
       this.globalService.serverURL + '/displayname',
       { displayname },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
 
     return request.toPromise().then(res => {
@@ -176,7 +148,7 @@ export class AuthService {
     const request = this.httpService.put<EmailResponse>(
       this.globalService.serverURL + '/email',
       { email },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
 
     return request.toPromise().then(res => {
@@ -191,7 +163,7 @@ export class AuthService {
     const request = this.httpService.put<PhoneResponse>(
       this.globalService.serverURL + '/phone',
       { phone },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
 
     return request.toPromise().then(res => {
@@ -206,7 +178,7 @@ export class AuthService {
     const request = this.httpService.put<ZipCodeResponse>(
       this.globalService.serverURL + '/zipcode',
       { zipcode },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
 
     return request.toPromise().then(res => {
@@ -218,10 +190,10 @@ export class AuthService {
   }
 
   updateAvatar(avatar: string) {
-    const request = this.httpService.put<{avatar: string}>(
+    const request = this.httpService.put<AvatarResponse>(
       this.globalService.serverURL + '/avatar',
       { avatar },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
 
     return request.toPromise().then(res => {
@@ -229,6 +201,19 @@ export class AuthService {
     }).catch((err: HttpErrorResponse) => {
       console.log(err.message);
       return '';
+    });
+  }
+
+  logOut() {
+    const request = this.httpService.put<Response>(
+      this.globalService.serverURL + '/logout',
+      {},
+      { headers: this.globalService.getHeaders() }
+    );
+
+    return request.toPromise()
+      .catch((err: HttpErrorResponse) => {
+      console.log(err.message);
     });
   }
 }
