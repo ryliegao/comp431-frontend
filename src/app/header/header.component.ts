@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
 import { GlobalService, StorageService } from 'src/app/_services';
 import { AuthGuard } from 'src/app/_guards';
+import { AuthService } from "src/app/auth/auth.service";
 
 interface Response {
   body: string;
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
     private globalService: GlobalService,
     private httpService: HttpClient,
     private authGuard: AuthGuard,
+    private authServie: AuthService,
     private router: Router
   ) {
     this.storageService.watchStorage().subscribe((data: string) => {
@@ -112,6 +114,7 @@ export class HeaderComponent implements OnInit {
     if (localStorage.getItem('FBLoggedIn') === 'true') {
       this.authGuard.submitLogout();
     }
+
     try {
       localStorage.removeItem('currentUser');
       sessionStorage.removeItem('session_id');
@@ -120,11 +123,6 @@ export class HeaderComponent implements OnInit {
     }
     this.storageService.setItem('User removed!');
 
-    const request = this.httpService.put<Response>(
-      this.globalService.serverURL + '/logout',
-      {},
-      this.globalService.options);
-
-    return new Promise(() => true);
+    return this.authServie.logOut();
   }
 }

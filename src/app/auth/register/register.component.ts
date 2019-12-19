@@ -49,10 +49,10 @@ export class RegisterComponent implements OnInit {
         password: this.registerForm.value.password1,
         loggedin: true
       };
-      this.authService.makeNewUser(user);
       this.authService.registerUser(new User(user)).then(result => {
         if (result) {
           alert(this.registerForm.value.firstname + ', you have successfully registered!');
+          this.authService.makeNewUser(user);
           this.router.navigate(['/auth/login']);
           this.storageService.setItem(
             this.registerForm.value.firstname + ' ' + this.registerForm.value.lastname

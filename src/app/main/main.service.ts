@@ -102,7 +102,7 @@ export class MainService {
     this.username = username;
     const request = this.httpService.get<FollowInfo>(
       this.globalService.serverURL + '/following/:user?user=' + username,
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
     return request.toPromise().then(res => {
       return { following: res.following };
@@ -121,15 +121,18 @@ export class MainService {
 
     return this.httpService.get<NameResponse>(
       this.globalService.serverURL + '/displaynames/:users?users=' + str,
-      this.globalService.options).toPromise().then(res1 => {
+      { headers: this.globalService.getHeaders() }
+    ).toPromise().then(res1 => {
         displaynames = res1.displaynames;
         return this.httpService.get<HeadlinesResponse>(
           this.globalService.serverURL + '/headlines/:users?users=' + str,
-          this.globalService.options).toPromise().then(res2 => {
+          { headers: this.globalService.getHeaders() }
+        ).toPromise().then(res2 => {
           headlines = res2.headlines;
           return this.httpService.get<AvatarResponse>(
             this.globalService.serverURL + '/avatars/:users?users=' + str,
-            this.globalService.options).toPromise().then(res3 => {
+            { headers: this.globalService.getHeaders() }
+          ).toPromise().then(res3 => {
             avatars = res3.avatars;
           }).then(() => {
             const infos = [];
@@ -211,7 +214,7 @@ export class MainService {
     // remove this user from followee's followers' list
     const request = this.httpService.delete<FollowInfo>(
       this.globalService.serverURL + '/following/:user?user=' + username,
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
     return request.toPromise().then(res => {
       this.onRemove.emit();
@@ -242,7 +245,7 @@ export class MainService {
     const request = this.httpService.put<HeadlineResponse>(
       this.globalService.serverURL + '/headline',
       { headline: status },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
     return request.toPromise().then(res => {
       return res.headline;
@@ -301,7 +304,7 @@ export class MainService {
     const request = this.httpService.post<Array<Post>>(
       this.globalService.serverURL + '/articles',
       content,
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
     return request.toPromise().then(res => {
       return { articles: res };
@@ -317,7 +320,7 @@ export class MainService {
     const request = this.httpService.put<ArticleResponse>(
       this.globalService.serverURL + '/articles/:id?id=' + id,
       { id, text },
-      this.globalService.options
+      { headers: this.globalService.getHeaders() }
     );
     return request.toPromise().then(res => {
       return true;
@@ -337,7 +340,7 @@ export class MainService {
       const request = this.httpService.post<ArticleResponse>(
         this.globalService.serverURL + '/articles/' + id,
         context,
-        this.globalService.options
+        { headers: this.globalService.getHeaders() }
       );
       return request.toPromise().then(res => {
       }).catch(error => {
