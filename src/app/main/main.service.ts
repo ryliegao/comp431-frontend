@@ -299,7 +299,7 @@ export class MainService {
     const content = {
       'text': text,
       'image': image,
-      'date': Date.now()
+      'date': new Date().toISOString().slice(0, 19).replace('T', ' ')
     };
     const request = this.httpService.post<Array<Post>>(
       this.globalService.serverURL + '/articles',

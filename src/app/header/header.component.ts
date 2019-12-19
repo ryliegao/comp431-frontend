@@ -115,14 +115,14 @@ export class HeaderComponent implements OnInit {
       this.authGuard.submitLogout();
     }
 
-    try {
-      localStorage.removeItem('currentUser');
-      sessionStorage.removeItem('session_id');
-    } catch (e) {
-      console.log('This browser does not support local storage. [Header]');
-    }
-    this.storageService.setItem('User removed!');
-
-    return this.authServie.logOut();
+    return this.authServie.logOut().then(() => {
+      try {
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('session_id');
+      } catch (e) {
+        console.log('This browser does not support local storage. [Header]');
+      }
+      this.storageService.setItem('User removed!');
+    });
   }
 }

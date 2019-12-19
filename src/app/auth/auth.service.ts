@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { User } from 'src/app/_models/user';
 import { StorageService, GlobalService } from 'src/app/_services';
-import { stringify } from 'querystring';
 
 interface LoginResponse {
   username: string;
@@ -210,7 +209,7 @@ export class AuthService {
       return '';
     });
   }
-  
+
     logOut() {
     const request = this.httpService.put<Response>(
       this.globalService.serverURL + '/logout',
@@ -223,7 +222,7 @@ export class AuthService {
       console.log(err.message);
     });
   }
-  
+
   /////////////////////////////////////
 
   checkprofile(email: string) {
@@ -243,7 +242,7 @@ export class AuthService {
     });
   }
 
-  async getProfile(email: string) {
+  getProfile(email: string) {
     const request = this.httpService.get<profileResponse>(
       this.globalService.serverURL + '/api/profile/' + email,
       { headers: new HttpHeaders()
@@ -252,17 +251,21 @@ export class AuthService {
         observe: "response" }
       );
     return request.toPromise().then(profile => {
-      console.log(profile.body)
+      // console.log(profile.body);
       return profile.body;
     }).catch((err: HttpErrorResponse) => {
       return false;
     });
   }
 
-
-  updateprofile1(dn:string,hpn:string, mpn:string, adrs1:string,adrs2:string,email:string){
-    const body = {"display_name":dn,"address_line_1":adrs1,
-    "address_line_2":adrs2,"home_phone":hpn,"work_phone":mpn}
+  update_profile_1(dn:string, hpn:string, mpn:string, adrs1:string, adrs2:string, email:string){
+    const body = {
+      "display_name":dn,
+      "address_line_1":adrs1,
+      "address_line_2":adrs2,
+      "home_phone":hpn,
+      "work_phone":mpn
+    };
     const request = this.httpService.put(
       this.globalService.serverURL + '/api/profile/' + email,
       body,
@@ -273,15 +276,21 @@ export class AuthService {
         observe: "response" }
       );
       return request.toPromise().then(profile => {
-        console.log(profile.headers)
+        // console.log(profile.headers)
       }).catch((err: HttpErrorResponse) => {
         console.log(err.message);
       });
   }
 
-  updateprofile2(dn:string,hpn:string, mpn:string, adrs1:string,adrs2:string,email:string){
-    const body = {"display_name":dn,"address_line_1":adrs1,
-    "address_line_2":adrs2,"home_phone":hpn,"work_phone":mpn,"email":email}
+  update_profile_2(dn:string, hpn:string, mpn:string, adrs1:string, adrs2:string, email:string){
+    const body = {
+      "display_name":dn,
+      "address_line_1":adrs1,
+      "address_line_2":adrs2,
+      "home_phone":hpn,
+      "work_phone":mpn,
+      "email":email
+    };
     const request = this.httpService.post(
       this.globalService.serverURL + '/api/profile',
       body,
@@ -292,7 +301,7 @@ export class AuthService {
         observe: "response" }
       );
       return request.toPromise().then(profile => {
-        console.log(profile)
+        // console.log(profile)
       }).catch((err: HttpErrorResponse) => {
         console.log(err.message);
       });

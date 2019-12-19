@@ -31,38 +31,39 @@ export class ProfileComponent implements OnInit {
 
   //ok, this is for different pathes of profile
   path:boolean;
-  street1:string = ''
-  city:string= ''
-  state:string=''
+  street1:string = '';
+  city:string= '';
+  state:string='';
 
   constructor(private authService: AuthService, private service: MainService) { }
 
-  async ngOnInit() {
-    if(this.authService.checkprofile(JSON.parse(localStorage.getItem('currentUser')).email)){
-      const profile_info = await this.authService.getProfile(JSON.parse(localStorage.getItem('currentUser')).email);
-      console.log("ok")
-      console.log(profile_info)
-      this.dn = profile_info['display_name'];
-      this.hph = profile_info['home_phone'];
-      this.mph = profile_info['work_phone'];
-      this.address = profile_info['address_line_1']+ " " + profile_info['city'] + " " + profile_info['state'];
-      this.addr2 = profile_info['address_line_2'];
-      this.path = true;
-      console.log(this.path);
-  }else{
-    this.path = false;
-    console.log(this.path);
-  }
-    try {
-      if (localStorage.getItem('currentUser')) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.displayname = user.firstname + ' ' + user.lastname;
-        this.email = user.email;
-        this.password = user.password;
+  ngOnInit() {
+    this.authService.checkprofile(JSON.parse(localStorage.getItem('currentUser')).email).then(res => {
+      if (res) {
+        this.authService.getProfile(
+          JSON.parse(localStorage.getItem('currentUser')).email
+        ).then(profile_info => {
+          this.dn = profile_info['display_name'];
+          this.hph = profile_info['home_phone'];
+          this.mph = profile_info['work_phone'];
+          this.address = profile_info['address_line_1'] + ' ' + profile_info['city'] + ' ' + profile_info['state'];
+          this.addr2 = profile_info['address_line_2'];
+          this.path = true;
+        });
+      } else {
+        this.path = false;
       }
-    } catch (e) {
-      console.log('This browser does not support local storage.');
-    }
+      try {
+        if (localStorage.getItem('currentUser')) {
+          const user: User = JSON.parse(localStorage.getItem('currentUser'));
+          this.displayname = user.firstname + ' ' + user.lastname;
+          this.email = user.email;
+          this.password = user.password;
+        }
+      } catch (e) {
+        console.log('This browser does not support local storage.');
+      }
+    });
   }
 
   processFile(imageInput) {
@@ -120,14 +121,11 @@ export class ProfileComponent implements OnInit {
     this.dnSuccess = false;
     this.mphError = false;
     this.mphSuccess = false;
- 
-
 
     if (this.dn && this.dn !== this.displayname) {
       this.displayname = this.dn;
       this.dnSuccess = true;
     }
-
 
     if (this.mph && this.mph !== this.phone) {
       if (/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.mph)) {
@@ -137,7 +135,6 @@ export class ProfileComponent implements OnInit {
         this.mphError = true;
       }
     }
-
 
     // try {
     //   if (localStorage.getItem('currentUser')) {
@@ -169,11 +166,11 @@ export class ProfileComponent implements OnInit {
       this.mph = '';
     }
     console.log(this.path);
-    if(this.path == false){
-      this.authService.updateprofile2(this.dn,this.hph,this.mph,
+    if (this.path == false) {
+      this.authService.update_profile_2(this.dn,this.hph,this.mph,
         this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);
-    }else if(this.path == true){
-      this.authService.updateprofile1(this.dn,this.hph,this.mph,
+    } else if (this.path == true){
+      this.authService.update_profile_1(this.dn,this.hph,this.mph,
         this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);
     }
 
