@@ -15,28 +15,44 @@ export class ProfileComponent implements OnInit {
   zipcode = '';
   password = '';
   submitted = false;
-  pwError = false;
-  pwSuccess = false;
+
   dnSuccess = false;
-  eaError = false;
-  eaSuccess = false;
-  phError = false;
-  phSuccess = false;
-  zcError = false;
-  zcSuccess = false;
+  mphError = false;
+  mphSuccess = false;
   dn: string;
-  ea: string;
-  ph: string;
-  zc: string;
-  pw1: string;
-  pw2: string;
+
   uploadedImage: string;
   address: string;
   suggestions: string[];
 
+  hph:string;
+  mph:string;
+  addr2:string;
+
+  //ok, this is for different pathes of profile
+  path:boolean;
+  street1:string = ''
+  city:string= ''
+  state:string=''
+
   constructor(private authService: AuthService, private service: MainService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if(this.authService.checkprofile(JSON.parse(localStorage.getItem('currentUser')).email)){
+      const profile_info = await this.authService.getProfile(JSON.parse(localStorage.getItem('currentUser')).email);
+      console.log("ok")
+      console.log(profile_info)
+      this.dn = profile_info['display_name'];
+      this.hph = profile_info['home_phone'];
+      this.mph = profile_info['work_phone'];
+      this.address = profile_info['address_line_1']+ " " + profile_info['city'] + " " + profile_info['state'];
+      this.addr2 = profile_info['address_line_2'];
+      this.path = true;
+      console.log(this.path);
+  }else{
+    this.path = false;
+    console.log(this.path);
+  }
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
@@ -101,89 +117,64 @@ export class ProfileComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.pwError = false;
-    this.pwSuccess = false;
     this.dnSuccess = false;
-    this.eaError = false;
-    this.eaSuccess = false;
-    this.phError = false;
-    this.phSuccess = false;
-    this.zcError = false;
-    this.zcSuccess = false;
+    this.mphError = false;
+    this.mphSuccess = false;
+ 
 
-    if (this.pw1 !== this.pw2) {
-      this.pwError = true;
-    } else if (this.pw1) {
-      if (this.password !== this.pw1) {
-        this.password = this.pw1;
-        this.pwSuccess = true;
-      }
-    }
 
     if (this.dn && this.dn !== this.displayname) {
       this.displayname = this.dn;
       this.dnSuccess = true;
     }
 
-    if (this.ea && this.ea !== this.email) {
-      if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(this.ea)) {
-        this.email = this.ea;
-        this.eaSuccess = true;
+
+    if (this.mph && this.mph !== this.phone) {
+      if (/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.mph)) {
+        this.phone = this.mph;
+        this.mphSuccess = true;
       } else {
-        this.eaError = true;
+        this.mphError = true;
       }
     }
 
-    if (this.ph && this.ph !== this.phone) {
-      if (/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.ph)) {
-        this.phone = this.ph;
-        this.phSuccess = true;
-      } else {
-        this.phError = true;
-      }
-    }
 
-    if (this.zc && this.zc !== this.zipcode) {
-      if (/^\d{5}$/.test(this.zc)) {
-        this.zipcode = this.zc;
-        this.zcSuccess = true;
-      } else {
-        this.zcError = true;
-      }
-    }
+    // try {
+    //   if (localStorage.getItem('currentUser')) {
+    //     const user: User = JSON.parse(localStorage.getItem('currentUser'));
+    //     const newUser = {
+    //       displayname: user.firstname + ' ' + user.lastname,
+    //       email: this.email,
+    //       zipcode: this.zipcode,
+    //       password: this.password,
+    //       loggedin: true,
+    //       status: user.status,
+    //       avatar: user.avatar
+    //     };
+    //     this.authService.makeNewUser(newUser);
+    //     this.authService.updateDisplayName(this.displayname).then(() => {
+    //       return this.authService.updateEmail(this.email).then(() => {
+    //         return this.authService.updatePhone(this.phone).then(() => {
+    //           return this.authService.updateZipCode(this.zipcode);
+    //         });
+    //       });
+    //     });
+    //   }
+    // } catch (e) {
+    //   console.log('This browser does not support local storage.');
+    // }
 
-    try {
-      if (localStorage.getItem('currentUser')) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const newUser = {
-          displayname: user.firstname + ' ' + user.lastname,
-          email: this.email,
-          zipcode: this.zipcode,
-          password: this.password,
-          loggedin: true,
-          status: user.status,
-          avatar: user.avatar
-        };
-        this.authService.makeNewUser(newUser);
-        this.authService.updateDisplayName(this.displayname).then(() => {
-          return this.authService.updateEmail(this.email).then(() => {
-            return this.authService.updatePhone(this.phone).then(() => {
-              return this.authService.updateZipCode(this.zipcode);
-            });
-          });
-        });
-      }
-    } catch (e) {
-      console.log('This browser does not support local storage.');
-    }
-
-    if (!(this.pwError || this.eaError || this.phError || this.zcError)) {
-      this.pw1 = '';
-      this.pw2 = '';
+    if (!(this.mphError)) {
       this.dn = '';
-      this.ea = '';
-      this.ph = '';
-      this.zc = '';
+      this.mph = '';
+    }
+    console.log(this.path);
+    if(this.path == false){
+      this.authService.updateprofile2(this.dn,this.hph,this.mph,
+        this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);
+    }else if(this.path == true){
+      this.authService.updateprofile1(this.dn,this.hph,this.mph,
+        this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);
     }
 
     this.submitted = false;
