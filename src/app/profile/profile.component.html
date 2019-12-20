@@ -11,74 +11,67 @@
       <button class="upload-image-input input-button" (click)="updateAvatar()">Upload</button>
     </div>
     <div class="form-grp">
-      <label>Display Name</label>
+      <label>Email:</label>
       <input class="profile-input"
              autocomplete="off"
-             placeholder="Current display name: {{ displayname }}"
-             [(ngModel)]="dn"
+             [(ngModel)]="email"
              type="text"/>
     </div>
     <div class="form-grp">
-      <label>Home Phone Number</label>
-      <!-- change  Work phone number : {{phone}}-->
-      <input class="profile-input"
-             placeholder="Home phone number"
-             [(ngModel)]="hph"
+      <label>Phone Number:</label>
+      <input class="profile-input" style="width: 340px;"
+             [(ngModel)]="phone"
+             (change)="updatePhoneNumber()" (keyup)="updatePhoneNumber()" (paste)="updatePhoneNumber()"
              type="text" />
-    </div>
-    <div class="form-grp">
-      <label>Mobile phone Number</label>
-      <!-- change  Work phone number : {{phone}}-->
-      <input class="profile-input"
-             placeholder="Mobile phone number" 
-             [(ngModel)]="mph"
-             type="text" />
+      <select class="custom-select" [(ngModel)]="selectedPhone" (change)="changePhoneType()">
+        <option value="home">Home</option>
+        <option value="work">Work</option>
+        <option value="mobile">Mobile</option>
+        <option value="other">Other</option>
+      </select>
     </div>
 
     <div class="form-grp">
-      <label>SmartyStreet Address</label>
+      <label>Address:</label>
       <input class="profile-input" autocomplete="off"
-             [(ngModel)]="address" type="text"
+             [(ngModel)]="address_line_1" type="text"
              (change)="fillSuggestions()" (keyup)="fillSuggestions()"
              (paste)="fillSuggestions()" (click)="fillSuggestions()"
              (profileClickOutside)="this.suggestions = []"/>
     </div>
-      <div class="form-grp">
+    <div class="form-grp">
       <div class="autocomplete">
         <div class="autocomplete-items" *ngFor="let suggestion of suggestions"
-        (click) = "this.address = suggestion">
-          {{ suggestion }}
+        (click) = "fillAddress(suggestion)">
+          {{ suggestion.text }}
         </div>
       </div>
     </div>
+
     <div class="form-grp">
-      <label>Address line 2</label>
+      <label>Address: (Optional)</label>
       <input class="profile-input"
-            placeholder="Address line2"
-            [(ngModel)]="addr2"
-              type="text"/>
+             [(ngModel)]="address_line_2"
+             type="text"/>
+    </div>
+
+    <div style="height: 50px;">
+      <div class="form-grp-addr" style="float: left">
+        <label>City:</label>
+        <input class="profile-input"
+               [(ngModel)]="city"
+               type="text"/>
+      </div>
+      <div class="form-grp-addr" style="float: right">
+        <label>State:</label>
+        <input class="profile-input"
+               [(ngModel)]="state"
+               type="text"/>
+      </div>
     </div>
 
     <button id="submit-change" class="buttons submit submit-button"
             (click)="onSubmit()">Submit Changes</button>
-  </div>
-
-  <div class="right-pane">
-    <div class="profile-msg" *ngIf="dnSuccess">
-      > You have successfully updated your display name.
-    </div>
-    <br>
-    <div class="profile-msg" *ngIf="phError">
-      > Please enter a valid phone number matching the format: 000-000-0000
-    </div>
-    <div class="profile-msg" *ngIf="phSuccess">
-      > You have successfully updated your phone number.
-    </div>
-    <br>
-    <div class="profile-msg" *ngIf="submitted && !(pwError || pwSuccess || dnSuccess || eaError || eaSuccess ||
-    phError || phSuccess || zcError || zcSuccess)">
-      > Nothing have changed. Please try again.
-    </div>
   </div>
 </div>
 

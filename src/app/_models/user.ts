@@ -6,6 +6,14 @@
   loggedin: boolean;
   avatar: string;
   status: string;
+  home_phone: string = '';
+  work_phone: string = '';
+  mobile_phone: string = '';
+  other_phone: string = '';
+  address_line_1: string = '';
+  address_line_2: string = '';
+  city: string = '';
+  state: string = '';
 
   constructor(obj) {
     this.lastname = obj.lastname;

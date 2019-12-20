@@ -55,6 +55,9 @@ export class LoginComponent implements OnInit {
     this.notMatch = false;
     this.submitted = true;
 
+    const email = this.loginForm.get('email').value;
+    const password = this.loginForm.get('password').value;
+
     // check if the input fields are filled
     if (this.loginForm.invalid) {
       this.invalid = true;
@@ -65,12 +68,13 @@ export class LoginComponent implements OnInit {
 
     // check if the email and password match
     this.authService.checkLogin(
-      this.loginForm.get('email').value,
-      this.loginForm.get('password').value
+      email, password
     ).then(match => {
       if (match === true) {
         this.storageService.waitForUserLogin().then(() => {
-          this.router.navigate(['/main']);
+          this.router.navigate(['/main']).then(() => {
+            return this.authService.getProfile(email);
+          });
         });
       } else {
         if (match === 403) {
