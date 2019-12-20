@@ -68,8 +68,9 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loadUsers();
-    this.loadPosts();
+    this.loadPosts().then(() => {
+      this.loadUsers();
+    });
   }
 
   addFollowee() {
@@ -100,21 +101,21 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   loadUsers() {
-    // this.service.loadUsers(this.currentUser.email).then(
-    //   data => {
-    //     this.service.getFolloweeInfo(data.following).then(
-    //       infos => {
-    //         for (let i = 0; i < infos.length; i++) {
-    //           this.addUser(infos[i].username, infos[i].displayname, infos[i].avatar, infos[i].status, i === 0);
-    //         }
-    //       }
-    //     );
-    //   }
-    // );
+    this.service.loadUsers(this.currentUser.email).then(
+      data => {
+        for (let i = 0; i < data.length; i++) {
+          this.addUser(data[i].email,
+            data[i].first_name + " " + data[i].last_name,
+            data[i].avatar,
+            data[i].status,
+            i === 0);
+        }
+      }
+    );
   }
 
   loadPosts() {
-    this.service.loadPosts().then(
+    return this.service.loadPosts().then(
       data => {
         this.posts = data;
         this.nextID = 0;

@@ -12,7 +12,6 @@ export class ProfileComponent implements OnInit {
   displayname = '';
   email = '';
   phone = '';
-  zipcode = '';
   password = '';
   submitted = false;
 
@@ -165,7 +164,6 @@ export class ProfileComponent implements OnInit {
       this.dn = '';
       this.mph = '';
     }
-    console.log(this.path);
     if (this.path == false) {
       this.authService.update_profile_2(this.dn,this.hph,this.mph,
         this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);

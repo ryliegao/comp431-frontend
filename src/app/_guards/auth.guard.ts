@@ -105,7 +105,7 @@ export class AuthGuard implements CanActivate {
       };
       this.authService.makeNewUser(user);
 
-      this.authService.storeToken(response.email + ',000000');
+      this.authService.storeToken(response.email);
       this.ngZone.run(() => this.router.navigate(['/main'])).then();
     });
   }

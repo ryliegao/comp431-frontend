@@ -88,10 +88,14 @@ export class AuthService {
     const body = { username, password };
     const user = { lastname: null, firstname: null, email: username, password: null,
       loggedin: true, status: null, avatar: null };
+
     const request = this.httpService.post<LoginResponse>(
       this.globalService.serverURL + '/api/user/login',
       body,
-      { observe: "response" }
+      {
+        headers: this.globalService.getHeaders(),
+        observe: "response"
+      }
     );
 
     return request.toPromise().then(login => {

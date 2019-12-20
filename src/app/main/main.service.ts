@@ -6,6 +6,14 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { GlobalService } from 'src/app/_services';
 import { Observable } from 'rxjs';
 
+export interface FollowingUser {
+  last_name: string;
+  first_name: string;
+  email: string;
+  status: string;
+  avatar: string;
+}
+
 export interface FollowInfo {
   // followers: Array<string>;
   following: Array<string>;
@@ -74,6 +82,7 @@ interface SmartyStreetResponse {
 export class MainService {
   username: string;
   followInfo: FollowInfo;
+  getDate: () => string = () => new Date().toISOString().slice(0, 19).replace('T', ' ');
   onRemove: EventEmitter<any> = new EventEmitter<any>();
   smartyStreet: string = 'https://us-autocomplete.api.smartystreets.com/suggest?' +
     'auth-id=14634588597451517&prefix=';
@@ -98,17 +107,16 @@ export class MainService {
     return username;
   }
 
-  loadUsers(username: string): Promise<FollowInfo> {
+  loadUsers(username: string): Promise<Array<FollowingUser>> {
     this.username = username;
-    const request = this.httpService.get<FollowInfo>(
-      this.globalService.serverURL + '/following/:user?user=' + username,
+
+    const request = this.httpService.get<Array<FollowingUser>>(
+      this.globalService.serverURL + '/following',
       { headers: this.globalService.getHeaders() }
     );
-    return request.toPromise().then(res => {
-      return { following: res.following };
-    }).catch(error => {
+    return request.toPromise().catch(error => {
       return this.router.navigate(['/auth/login']).then(() => {
-        return { following: [] };
+        return [];
       });
     });
   }
@@ -154,13 +162,11 @@ export class MainService {
     });
   }
 
-
   loadPosts(): Promise<Array<Post>> {
     const request = this.httpService.get<Array<Post>>(
       this.globalService.serverURL + '/articles',
       {
-        headers: new HttpHeaders()
-          .set('Token', this.authService.retrieveToken())
+        headers: this.globalService.getHeaders()
       }
     );
     return request.toPromise().then(res => {
@@ -267,12 +273,6 @@ export class MainService {
     return request.toPromise().then(res => {
       const comments = [];
 
-      //  author: string;
-      //   content: string;
-      //   date: number;
-      //   id: number;
-      //   to_post: number;
-
       if (res && res.length > 0) {
         for (const comment of res) {
           comments.push({ commenter: comment.author, content: comment.content });
@@ -299,7 +299,7 @@ export class MainService {
     const content = {
       'text': text,
       'image': image,
-      'date': new Date().toISOString().slice(0, 19).replace('T', ' ')
+      'date': this.getDate()
     };
     const request = this.httpService.post<Array<Post>>(
       this.globalService.serverURL + '/articles',
@@ -333,7 +333,7 @@ export class MainService {
     const context = {
       to_post: id,
       content: text,
-      date: Date.now()
+      date: this.getDate()
     };
 
     return this.loadComments(id).then(comments => {
