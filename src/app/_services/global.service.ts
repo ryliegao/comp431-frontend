@@ -12,6 +12,6 @@ export class GlobalService {
     new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Token', sessionStorage.getItem('session_id') || '')
-      .set('Authorization', localStorage.getItem('FBLoggedIn') || 'false')
+      .set('X-Api-Key', localStorage.getItem('FBLoggedIn') || 'false')
   ;
 }
