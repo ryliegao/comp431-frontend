@@ -61,6 +61,8 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    localStorage.removeItem('FBLoggedIn');
+
     // check if the email and password match
     this.authService.checkLogin(
       this.loginForm.get('email').value,

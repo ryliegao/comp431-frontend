@@ -130,11 +130,7 @@ export class AuthGuard implements CanActivate {
         return FB.logout(res => {
           FB.Auth.setAuthResponse(null, 'unknown');
           FB.api('/me/permissions', 'DELETE');
-          if (res.authResponse) {
-            localStorage.setItem('FBLoggedIn', 'false');
-          } else {
-            console.log('user logout failed');
-          }
+          localStorage.removeItem('FBLoggedIn');
         });
       }
     });
