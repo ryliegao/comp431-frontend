@@ -213,6 +213,10 @@ export class AuthService {
         this.makeNewUser(user, profile);
       });
     }).catch((err: HttpErrorResponse) => {
+      sessionStorage.removeItem('profile_id');
+      sessionStorage.removeItem('user_id');
+      sessionStorage.removeItem('ETag');
+
       console.log('' + err.message);
     });
   }
@@ -220,8 +224,9 @@ export class AuthService {
   updateProfile(email: string, hpn: string, wpn: string, mpn: string, opn: string,
                 address_line_1: string, address_line_2: string, city:string, state: string) {
     const profile_id = sessionStorage.getItem('profile_id');
-    const user_id = sessionStorage.getItem('user_id');
     const addr_body = {address_line_1, address_line_2, city, state};
+    const user: User = JSON.parse(localStorage.getItem('currentUser'));
+    const user_id = sessionStorage.getItem('user_id') || user.email;
 
     const addr_request = this.httpService.post<string>(
       this.globalService.config.resource_maps.profile.address,
@@ -251,13 +256,26 @@ export class AuthService {
         profile_body.profile_entries.push({type: 'telephone', subtype: 'other', value: opn});
       }
 
-      const profile_request = this.httpService.put<string>(
-        this.globalService.config.resource_maps.profile.profile_id.replace("{}", profile_id),
-        profile_body,
-        {
-          headers: this.globalService.getHeaders()
-            .set('If-Match', sessionStorage.getItem('ETag') || '')
-        });
+      let profile_request;
+
+      if (profile_id) {
+        profile_request = this.httpService.put<string>(
+          this.globalService.config.resource_maps.profile.profile_id.replace("{}", profile_id),
+          profile_body,
+          {
+            headers: this.globalService.getHeaders()
+              .set('If-Match', sessionStorage.getItem('ETag') || '')
+          });
+      } else {
+        profile_request = this.httpService.post<string>(
+          this.globalService.config.resource_maps.profile.create,
+          profile_body,
+          {
+            headers: this.globalService.getHeaders()
+          });
+      }
+      // https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test
+
 
       return profile_request.toPromise().then(() => {
         alert("Profile successfully updated!");

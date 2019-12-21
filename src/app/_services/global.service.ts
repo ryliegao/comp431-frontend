@@ -13,6 +13,7 @@ interface Config {
       user_id: string;
       address: string;
       profile_id: string;
+      create: string;
     },
     users: {
       user_id: string;

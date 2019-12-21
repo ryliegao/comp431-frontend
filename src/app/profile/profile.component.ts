@@ -160,7 +160,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/.test(this.email)) {
+    if (this.email !== '' && !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/.test(this.email)) {
       alert("Please provide a valid email!");
       return;
     }

@@ -14,7 +14,8 @@
     "profile": {
       "user_id": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/user/{}/profile",
       "address": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/addresses",
-      "profile_id": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/profile/{}"
+      "profile_id": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/profile/{}",
+      "create": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/profile"
     },
     "users": {
       "user_id": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/user/{}",
