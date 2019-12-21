@@ -2,6 +2,7 @@
   lastname: string;
   firstname: string;
   email: string;
+  new_email: string = '';
   password: string;
   loggedin: boolean;
   avatar: string;
