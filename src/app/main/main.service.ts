@@ -198,7 +198,7 @@ export class MainService {
 
   loadComments(id: number): Promise<Array<Comment>> {
     const request = this.httpService.get<Array<Comment>>(
-      this.globalService.serverURL + '/articles/' + id,
+      this.globalService.config.resource_maps.main.comments.replace("{}", id.toString()),
       {
         headers: new HttpHeaders()
           .set('Token', this.authService.retrieveToken())
@@ -236,7 +236,7 @@ export class MainService {
       'date': this.getDate()
     };
     const request = this.httpService.post<Array<Post>>(
-      this.globalService.serverURL + '/articles',
+      this.globalService.config.resource_maps.main.articles,
       content,
       { headers: this.globalService.getHeaders() }
     );
@@ -272,7 +272,7 @@ export class MainService {
 
     return this.loadComments(id).then(comments => {
       const request = this.httpService.post<ArticleResponse>(
-        this.globalService.serverURL + '/articles/' + id,
+        this.globalService.config.resource_maps.main.comments.replace("{}", id.toString()),
         context,
         { headers: this.globalService.getHeaders() }
       );

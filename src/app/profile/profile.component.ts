@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
         return this.authService.getProfile(user.email).then(() => {
           const user: User = JSON.parse(localStorage.getItem('currentUser'));
-          this.email = user.email;
+          this.email = user.new_email;
           this.home_phone = user.home_phone;
           this.work_phone = user.work_phone;
           this.mobile_phone = user.mobile_phone;

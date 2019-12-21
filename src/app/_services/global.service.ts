@@ -7,12 +7,18 @@ interface Config {
     main: {
       following: string;
       articles: string;
+      comments: string;
     },
     profile: {
       user_id: string;
+      address: string;
+      profile_id: string;
     },
     users: {
-      id: string;
+      user_id: string;
+      login: string;
+      registration: string;
+      logout: string;
     },
   }
 }

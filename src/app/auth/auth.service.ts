@@ -63,7 +63,7 @@ export class AuthService {
     try {
       const user = new User(obj);
       if (profile) {
-        user.email = profile.email || user.email;
+        user.new_email = profile.email || user.new_email;
         user.home_phone = profile.home_phone || user.home_phone;
         user.work_phone = profile.work_phone || user.work_phone;
         user.mobile_phone = profile.mobile_phone || user.mobile_phone;
@@ -94,7 +94,7 @@ export class AuthService {
       loggedin: true, status: null, avatar: null };
 
     const request = this.httpService.post<LoginResponse>(
-      this.globalService.serverURL + '/api/user/login',
+      this.globalService.config.resource_maps.users.login,
       body,
       {
         headers: this.globalService.getHeaders(),
@@ -105,7 +105,7 @@ export class AuthService {
     return request.toPromise().then(login => {
       this.storeToken(login.headers.get('Token'));
       return this.httpService.get<UserResponse>(
-        this.globalService.serverURL + '/api/user/' + username,
+        this.globalService.config.resource_maps.users.user_id.replace("{}", username),
         {
           headers: new HttpHeaders()
             .set('Token', this.retrieveToken())
@@ -131,7 +131,7 @@ export class AuthService {
       password: user.password
     };
     const request = this.httpService.post<LoginResponse>(
-      this.globalService.serverURL + '/api/user/registration',
+      this.globalService.config.resource_maps.users.registration,
       body,
       { headers: this.globalService.getHeaders() }
     );
@@ -160,7 +160,7 @@ export class AuthService {
 
     logOut() {
     const request = this.httpService.put<Response>(
-      this.globalService.serverURL + '/logout',
+      this.globalService.config.resource_maps.users.logout,
       {},
       { headers: this.globalService.getHeaders() }
     );
@@ -173,7 +173,7 @@ export class AuthService {
 
   getProfile(userID: string) {
     const profile_request = this.httpService.get<ProfileResponse>(
-      this.globalService.serverURL + `/api/user/${userID}/profile`,
+      this.globalService.config.resource_maps.profile.user_id.replace("{}", userID),
       {
         headers: this.globalService.getHeaders(),
         observe: "response"
@@ -224,7 +224,7 @@ export class AuthService {
     const addr_body = {address_line_1, address_line_2, city, state};
 
     const addr_request = this.httpService.post<string>(
-      this.globalService.serverURL + '/addresses',
+      this.globalService.config.resource_maps.profile.address,
       addr_body,
       {
         headers: this.globalService.getHeaders()
@@ -252,7 +252,7 @@ export class AuthService {
       }
 
       const profile_request = this.httpService.put<string>(
-        this.globalService.serverURL + '/api/profile/' + profile_id,
+        this.globalService.config.resource_maps.profile.profile_id.replace("{}", profile_id),
         profile_body,
         {
           headers: this.globalService.getHeaders()
