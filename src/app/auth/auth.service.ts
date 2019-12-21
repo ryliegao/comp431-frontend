@@ -173,18 +173,20 @@ export class AuthService {
 
   getProfile(userID: string) {
     const profile_request = this.httpService.get<ProfileResponse>(
-      this.globalService.serverURL + '/api/profile/' + userID,
+      this.globalService.serverURL + `/api/user/${userID}/profile`,
       {
-        headers: this.globalService.getHeaders()
+        headers: this.globalService.getHeaders(),
+        observe: "response"
       });
 
     return profile_request.toPromise().then(res => {
-      sessionStorage.setItem('profile_id', res.profile_id);
-      sessionStorage.setItem('user_id', res.user_id);
+      sessionStorage.setItem('profile_id', res.body.profile_id);
+      sessionStorage.setItem('user_id', res.body.user_id);
+      sessionStorage.setItem('ETag', res.headers.get('ETag'));
 
       const user: User = JSON.parse(localStorage.getItem('currentUser'));
       let profile = {}, address_link;
-      for (let entry of res.profile_entries) {
+      for (let entry of res.body.profile_entries) {
         switch (entry.type.toLowerCase()) {
           case 'email':
             profile['email'] = entry.value;
@@ -233,8 +235,8 @@ export class AuthService {
         profile_id,
         user_id,
         profile_entries: [
-          {type: 'email', value: email},
-          {type: 'address', subtype: null, value: '/addresses/' + res}]
+          {type: 'email', subtype: '', value: email},
+          {type: 'address', subtype: '', value: '/addresses/' + res}]
       };
       if (hpn !== '') {
         profile_body.profile_entries.push({type: 'telephone', subtype: 'home', value: hpn});
@@ -250,16 +252,22 @@ export class AuthService {
       }
 
       const profile_request = this.httpService.put<string>(
-        this.globalService.serverURL + '/profile/' + profile_id,
+        this.globalService.serverURL + '/api/profile/' + profile_id,
         profile_body,
         {
           headers: this.globalService.getHeaders()
-            .set('If-Match', sessionStorage.getItem('Etag') || '')
+            .set('If-Match', sessionStorage.getItem('ETag') || '')
         });
 
-      return profile_request.toPromise().catch((err: HttpErrorResponse) => {
+      return profile_request.toPromise().then(() => {
+        alert("Profile successfully updated!");
+        return true;
+      }).catch((err: HttpErrorResponse) => {
         console.log(err.message);
+        return false;
       });
+    }).catch((err: HttpErrorResponse) => {
+      alert("The address you entered is not valid!");
     });
   }
 }

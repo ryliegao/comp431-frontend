@@ -31,32 +31,37 @@ export class ProfileComponent implements OnInit {
     try {
       if (localStorage.getItem('currentUser')) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        this.email = user.email;
-        this.home_phone = user.home_phone;
-        this.work_phone = user.work_phone;
-        this.mobile_phone = user.mobile_phone;
-        this.other_phone = user.other_phone;
-        this.address_line_1 = user.address_line_1;
-        this.address_line_2 = user.address_line_2;
-        this.city = user.city;
-        this.state = user.state;
+        return this.authService.getProfile(user.email).then(() => {
+          const user: User = JSON.parse(localStorage.getItem('currentUser'));
+          this.email = user.email;
+          this.home_phone = user.home_phone;
+          this.work_phone = user.work_phone;
+          this.mobile_phone = user.mobile_phone;
+          this.other_phone = user.other_phone;
+          this.address_line_1 = user.address_line_1;
+          this.address_line_2 = user.address_line_2;
+          this.city = user.city;
+          this.state = user.state;
 
-        if (this.home_phone === '') {
-          if (this.work_phone === '') {
-            if (this.mobile_phone === '') {
-              if (this.other_phone !== '') {
-                this.selectedPhone = 'other';
-                this.phone = this.other_phone;
+          if (this.home_phone === '') {
+            if (this.work_phone === '') {
+              if (this.mobile_phone === '') {
+                if (this.other_phone !== '') {
+                  this.selectedPhone = 'other';
+                  this.phone = this.other_phone;
+                }
+              } else {
+                this.selectedPhone = 'mobile';
+                this.phone = this.mobile_phone;
               }
             } else {
-              this.selectedPhone = 'mobile';
-              this.phone = this.mobile_phone;
+              this.selectedPhone = 'work';
+              this.phone = this.work_phone;
             }
           } else {
-            this.selectedPhone = 'work';
-            this.phone = this.work_phone;
+            this.phone = this.home_phone;
           }
-        }
+        });
       }
     } catch (e) {
       console.log('This browser does not support local storage.');
@@ -135,7 +140,6 @@ export class ProfileComponent implements OnInit {
         break;
       case 'mobile':
         this.phone = this.mobile_phone;
-        console.log("hey!");
         break;
       case 'other':
         this.phone = this.other_phone;
@@ -160,45 +164,25 @@ export class ProfileComponent implements OnInit {
       alert("Please provide a valid email!");
       return;
     }
-    if (this.home_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.home_phone)) {
-      alert("Please enter a valid home phone number!");
+    if (this.home_phone !== '' && !/^\d{10}$/.test(this.home_phone)) {
+      alert("Please enter a valid 10-digit home phone number!");
       return;
     }
-    if (this.work_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.work_phone)) {
-      alert("Please enter a valid work phone number!");
+    if (this.work_phone !== '' && !/^\d{10}$/.test(this.work_phone)) {
+      alert("Please enter a valid 10-digit work phone number!");
       return;
     }
-    if (this.mobile_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.mobile_phone)) {
-      alert("Please enter a valid mobile phone number!");
+    if (this.mobile_phone !== '' && !/^\d{10}$/.test(this.mobile_phone)) {
+      alert("Please enter a valid 10-digit mobile phone number!");
       return;
     }
-    if (this.other_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.other_phone)) {
-      alert("Please enter a valid other phone number!");
+    if (this.other_phone !== '' && !/^\d{10}$/.test(this.other_phone)) {
+      alert("Please enter a valid 10-digit other phone number!");
       return;
     }
     if (this.address_line_1 === '' || this.city === '' || this.state === '') {
       alert("Please enter your address!");
       return;
-    }
-
-    try {
-      if (localStorage.getItem('currentUser')) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const profile = {
-          email: this.email,
-          home_phone: this.home_phone,
-          work_phone: this.work_phone,
-          mobile_phone: this.mobile_phone,
-          other_phone: this.other_phone,
-          address_line_1: this.address_line_1,
-          address_line_2: this.address_line_2,
-          city: this.city,
-          state: this.state
-        };
-        this.authService.makeNewUser(user, profile);
-      }
-    } catch (e) {
-      console.log('This browser does not support local storage.');
     }
 
     return this.authService.updateProfile(this.email, this.home_phone, this.work_phone, this.mobile_phone,
