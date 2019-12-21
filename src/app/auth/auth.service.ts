@@ -221,7 +221,7 @@ export class AuthService {
     const user_id = sessionStorage.getItem('user_id');
     const addr_body = {address_line_1, address_line_2, city, state};
 
-    const addr_request = this.httpService.put<string>(
+    const addr_request = this.httpService.post<string>(
       this.globalService.serverURL + '/addresses',
       addr_body,
       {
