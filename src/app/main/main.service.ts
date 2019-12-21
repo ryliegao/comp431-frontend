@@ -92,7 +92,7 @@ export class MainService {
   getDate: () => string = () => new Date().toISOString().slice(0, 19).replace('T', ' ');
   onRemove: EventEmitter<any> = new EventEmitter<any>();
   smartyStreet: string = 'https://us-autocomplete.api.smartystreets.com/suggest?' +
-    'auth-id=14634589391790974&prefix=';
+    'auth-id=14634587472168504&prefix=';
 
   constructor(
     private httpService: HttpClient,
