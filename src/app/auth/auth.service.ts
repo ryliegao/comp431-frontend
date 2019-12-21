@@ -266,6 +266,8 @@ export class AuthService {
         console.log(err.message);
         return false;
       });
+    }).catch((err: HttpErrorResponse) => {
+      alert("The address you entered is not valid!");
     });
   }
 }

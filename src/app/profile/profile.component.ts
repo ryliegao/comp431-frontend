@@ -140,7 +140,6 @@ export class ProfileComponent implements OnInit {
         break;
       case 'mobile':
         this.phone = this.mobile_phone;
-        console.log("hey!");
         break;
       case 'other':
         this.phone = this.other_phone;
@@ -161,8 +160,6 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.home_phone);
-
     if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/.test(this.email)) {
       alert("Please provide a valid email!");
       return;
