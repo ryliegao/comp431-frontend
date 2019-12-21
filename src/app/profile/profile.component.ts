@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { AuthService } from 'src/app/auth/auth.service';
-import { MainService } from 'src/app/main/main.service';
+import { MainService, SmartyStreet } from 'src/app/main/main.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,60 +9,58 @@ import { MainService } from 'src/app/main/main.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  displayname = '';
-  email = '';
-  phone = '';
-  password = '';
-  submitted = false;
-
-  dnSuccess = false;
-  mphError = false;
-  mphSuccess = false;
-  dn: string;
+  email: string = '';
+  home_phone: string = '';
+  work_phone: string = '';
+  mobile_phone: string = '';
+  other_phone: string = '';
+  password: string = '';
+  address_line_1: string = '';
+  address_line_2: string = '';
+  city: string = '';
+  state: string =  '';
+  selectedPhone: string = 'home';
+  phone: string = '';
 
   uploadedImage: string;
-  address: string;
-  suggestions: string[];
-
-  hph:string;
-  mph:string;
-  addr2:string;
-
-  //ok, this is for different pathes of profile
-  path:boolean;
-  street1:string = '';
-  city:string= '';
-  state:string='';
+  suggestions: SmartyStreet[];
 
   constructor(private authService: AuthService, private service: MainService) { }
 
   ngOnInit() {
-    this.authService.checkprofile(JSON.parse(localStorage.getItem('currentUser')).email).then(res => {
-      if (res) {
-        this.authService.getProfile(
-          JSON.parse(localStorage.getItem('currentUser')).email
-        ).then(profile_info => {
-          this.dn = profile_info['display_name'];
-          this.hph = profile_info['home_phone'];
-          this.mph = profile_info['work_phone'];
-          this.address = profile_info['address_line_1'] + ' ' + profile_info['city'] + ' ' + profile_info['state'];
-          this.addr2 = profile_info['address_line_2'];
-          this.path = true;
-        });
-      } else {
-        this.path = false;
-      }
-      try {
-        if (localStorage.getItem('currentUser')) {
-          const user: User = JSON.parse(localStorage.getItem('currentUser'));
-          this.displayname = user.firstname + ' ' + user.lastname;
-          this.email = user.email;
-          this.password = user.password;
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        this.email = user.email;
+        this.home_phone = user.home_phone;
+        this.work_phone = user.work_phone;
+        this.mobile_phone = user.mobile_phone;
+        this.other_phone = user.other_phone;
+        this.address_line_1 = user.address_line_1;
+        this.address_line_2 = user.address_line_2;
+        this.city = user.city;
+        this.state = user.state;
+
+        if (this.home_phone === '') {
+          if (this.work_phone === '') {
+            if (this.mobile_phone === '') {
+              if (this.other_phone !== '') {
+                this.selectedPhone = 'other';
+                this.phone = this.other_phone;
+              }
+            } else {
+              this.selectedPhone = 'mobile';
+              this.phone = this.mobile_phone;
+            }
+          } else {
+            this.selectedPhone = 'work';
+            this.phone = this.work_phone;
+          }
         }
-      } catch (e) {
-        console.log('This browser does not support local storage.');
       }
-    });
+    } catch (e) {
+      console.log('This browser does not support local storage.');
+    }
   }
 
   processFile(imageInput) {
@@ -109,69 +107,101 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  updatePhoneNumber() {
+    switch (this.selectedPhone) {
+      case 'home':
+        this.home_phone = this.phone;
+        break;
+      case 'work':
+        this.work_phone = this.phone;
+        break;
+      case 'mobile':
+        this.mobile_phone = this.phone;
+        console.log("yo!");
+        break;
+      case 'other':
+        this.other_phone = this.phone;
+        break;
+    }
+  }
+
+  changePhoneType() {
+    switch (this.selectedPhone) {
+      case 'home':
+        this.phone = this.home_phone;
+        break;
+      case 'work':
+        this.phone = this.work_phone;
+        break;
+      case 'mobile':
+        this.phone = this.mobile_phone;
+        console.log("hey!");
+        break;
+      case 'other':
+        this.phone = this.other_phone;
+        break;
+    }
+  }
+
   fillSuggestions() {
-    this.service.suggestAddress(this.address).then(res => {
+    this.service.suggestAddress(this.address_line_1).then(res => {
       this.suggestions = res.slice(5);
     });
   }
 
+  fillAddress(suggestion: SmartyStreet) {
+    this.address_line_1 = suggestion.street_line;
+    this.city = suggestion.city;
+    this.state = suggestion.state;
+  }
+
   onSubmit() {
-    this.submitted = true;
-    this.dnSuccess = false;
-    this.mphError = false;
-    this.mphSuccess = false;
-
-    if (this.dn && this.dn !== this.displayname) {
-      this.displayname = this.dn;
-      this.dnSuccess = true;
+    if (!/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/.test(this.email)) {
+      alert("Please provide a valid email!");
+      return;
+    }
+    if (this.home_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.home_phone)) {
+      alert("Please enter a valid home phone number!");
+      return;
+    }
+    if (this.work_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.work_phone)) {
+      alert("Please enter a valid work phone number!");
+      return;
+    }
+    if (this.mobile_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.mobile_phone)) {
+      alert("Please enter a valid mobile phone number!");
+      return;
+    }
+    if (this.other_phone !== '' && !/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.other_phone)) {
+      alert("Please enter a valid other phone number!");
+      return;
+    }
+    if (this.address_line_1 === '' || this.city === '' || this.state === '') {
+      alert("Please enter your address!");
+      return;
     }
 
-    if (this.mph && this.mph !== this.phone) {
-      if (/^[1-9]\d{2}-\d{3}-\d{4}$/.test(this.mph)) {
-        this.phone = this.mph;
-        this.mphSuccess = true;
-      } else {
-        this.mphError = true;
+    try {
+      if (localStorage.getItem('currentUser')) {
+        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        const profile = {
+          email: this.email,
+          home_phone: this.home_phone,
+          work_phone: this.work_phone,
+          mobile_phone: this.mobile_phone,
+          other_phone: this.other_phone,
+          address_line_1: this.address_line_1,
+          address_line_2: this.address_line_2,
+          city: this.city,
+          state: this.state
+        };
+        this.authService.makeNewUser(user, profile);
       }
+    } catch (e) {
+      console.log('This browser does not support local storage.');
     }
 
-    // try {
-    //   if (localStorage.getItem('currentUser')) {
-    //     const user: User = JSON.parse(localStorage.getItem('currentUser'));
-    //     const newUser = {
-    //       displayname: user.firstname + ' ' + user.lastname,
-    //       email: this.email,
-    //       zipcode: this.zipcode,
-    //       password: this.password,
-    //       loggedin: true,
-    //       status: user.status,
-    //       avatar: user.avatar
-    //     };
-    //     this.authService.makeNewUser(newUser);
-    //     this.authService.updateDisplayName(this.displayname).then(() => {
-    //       return this.authService.updateEmail(this.email).then(() => {
-    //         return this.authService.updatePhone(this.phone).then(() => {
-    //           return this.authService.updateZipCode(this.zipcode);
-    //         });
-    //       });
-    //     });
-    //   }
-    // } catch (e) {
-    //   console.log('This browser does not support local storage.');
-    // }
-
-    if (!(this.mphError)) {
-      this.dn = '';
-      this.mph = '';
-    }
-    if (this.path == false) {
-      this.authService.update_profile_2(this.dn,this.hph,this.mph,
-        this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);
-    } else if (this.path == true){
-      this.authService.update_profile_1(this.dn,this.hph,this.mph,
-        this.address,this.addr2,JSON.parse(localStorage.getItem('currentUser')).email);
-    }
-
-    this.submitted = false;
+    return this.authService.updateProfile(this.email, this.home_phone, this.work_phone, this.mobile_phone,
+      this.mobile_phone, this.address_line_1, this.address_line_2, this.city, this.state);
   }
 }

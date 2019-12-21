@@ -8,15 +8,23 @@ interface LoginResponse {
   result: boolean;
 }
 
-interface profileResponse {
-  username: string;
-  result: boolean;
+interface ProfileResponse {
+  profile_id: string;
+  user_id: string;
+  profile_entries: Array<ProfileEntry>;
 }
 
+interface ProfileEntry {
+  type: string;
+  subtype:string;
+  value:string;
+}
 
-interface NameResponse {
-  username: string;
-  displaynames: Array<{username: string, displayname: string}>;
+interface AddressResponse {
+  address_line_1: string;
+  address_line_2: string;
+  city: string;
+  state: string;
 }
 
 interface UserResponse {
@@ -26,21 +34,6 @@ interface UserResponse {
   status: string;
   password: string;
   avatar: string;
-}
-
-interface EmailResponse {
-  username: string;
-  email: string;
-}
-
-interface PhoneResponse {
-  username: string;
-  phone: string;
-}
-
-interface ZipCodeResponse {
-  username: string;
-  zipcode: string;
 }
 
 interface AvatarResponse {
@@ -66,9 +59,20 @@ export class AuthService {
     return true;
   }
 
-  makeNewUser(obj) {
+  makeNewUser(obj, profile = null) {
     try {
       const user = new User(obj);
+      if (profile) {
+        user.email = profile.email || user.email;
+        user.home_phone = profile.home_phone || user.home_phone;
+        user.work_phone = profile.work_phone || user.work_phone;
+        user.mobile_phone = profile.mobile_phone || user.mobile_phone;
+        user.other_phone = profile.other_phone || user.other_phone;
+        user.address_line_1 = profile.address_line_1 || user.address_line_1;
+        user.address_line_2 = profile.address_line_2 || user.address_line_2;
+        user.city = profile.city || user.city;
+        user.state = profile.state || user.state;
+      }
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.storageService.setItem('New user stored!');
     } catch (e) {
@@ -139,66 +143,6 @@ export class AuthService {
     });
   }
 
-  updateDisplayName(displayname: string) {
-    const request = this.httpService.put<NameResponse>(
-      this.globalService.serverURL + '/displayname',
-      { displayname },
-      { headers: this.globalService.getHeaders() }
-    );
-
-    return request.toPromise().then(res => {
-      return res.displaynames;
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err.message);
-      return '';
-    });
-  }
-
-  updateEmail(email: string) {
-    const request = this.httpService.put<EmailResponse>(
-      this.globalService.serverURL + '/email',
-      { email },
-      { headers: this.globalService.getHeaders() }
-    );
-
-    return request.toPromise().then(res => {
-      return res.email;
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err.message);
-      return '';
-    });
-  }
-
-  updatePhone(phone: string) {
-    const request = this.httpService.put<PhoneResponse>(
-      this.globalService.serverURL + '/phone',
-      { phone },
-      { headers: this.globalService.getHeaders() }
-    );
-
-    return request.toPromise().then(res => {
-      return res.phone;
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err.message);
-      return '';
-    });
-  }
-
-  updateZipCode(zipcode: string) {
-    const request = this.httpService.put<ZipCodeResponse>(
-      this.globalService.serverURL + '/zipcode',
-      { zipcode },
-      { headers: this.globalService.getHeaders() }
-    );
-
-    return request.toPromise().then(res => {
-      return res.zipcode;
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err.message);
-      return '';
-    });
-  }
-
   updateAvatar(avatar: string) {
     const request = this.httpService.put<AvatarResponse>(
       this.globalService.serverURL + '/avatar',
@@ -227,87 +171,95 @@ export class AuthService {
     });
   }
 
-  /////////////////////////////////////
+  getProfile(userID: string) {
+    const profile_request = this.httpService.get<ProfileResponse>(
+      this.globalService.serverURL + '/api/profile/' + userID,
+      {
+        headers: this.globalService.getHeaders()
+      });
 
-  checkprofile(email: string) {
-    const request = this.httpService.get<profileResponse>(
-      this.globalService.serverURL + '/api/profile/' + email,
-      { headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Token', sessionStorage.getItem('session_id') || ''),
-        observe: "response" }
-      );
+    return profile_request.toPromise().then(res => {
+      sessionStorage.setItem('profile_id', res.profile_id);
+      sessionStorage.setItem('user_id', res.user_id);
 
-    return request.toPromise().then(profile => {
-      sessionStorage.setItem('Etag',(profile.headers.get('ETag')));
-      return true;
+      const user: User = JSON.parse(localStorage.getItem('currentUser'));
+      let profile = {}, address_link;
+      for (let entry of res.profile_entries) {
+        switch (entry.type.toLowerCase()) {
+          case 'email':
+            profile['email'] = entry.value;
+            break;
+          case 'address':
+            address_link = entry.value;
+            break;
+          case 'telephone':
+            profile[entry.subtype.toLowerCase() + '_phone'] = entry.value;
+            break;
+        }
+      }
+
+      const address_request = this.httpService.get<AddressResponse>(
+        this.globalService.serverURL + address_link,
+        {
+          headers: this.globalService.getHeaders()
+        });
+      return address_request.toPromise().then(res => {
+        profile["address_line_1"] = res.address_line_1;
+        profile["address_line_2"] = res.address_line_2;
+        profile["city"] = res.city;
+        profile["state"] = res.state;
+        this.makeNewUser(user, profile);
+      });
     }).catch((err: HttpErrorResponse) => {
-      return false;
+      console.log('' + err.message);
     });
   }
 
-  getProfile(email: string) {
-    const request = this.httpService.get<profileResponse>(
-      this.globalService.serverURL + '/api/profile/' + email,
-      { headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Token', sessionStorage.getItem('session_id') || ''),
-        observe: "response" }
-      );
-    return request.toPromise().then(profile => {
-      // console.log(profile.body);
-      return profile.body;
-    }).catch((err: HttpErrorResponse) => {
-      return false;
+  updateProfile(email: string, hpn: string, wpn: string, mpn: string, opn: string,
+                address_line_1: string, address_line_2: string, city:string, state: string) {
+    const profile_id = sessionStorage.getItem('profile_id');
+    const user_id = sessionStorage.getItem('user_id');
+    const addr_body = {address_line_1, address_line_2, city, state};
+
+    const addr_request = this.httpService.post<string>(
+      this.globalService.serverURL + '/addresses',
+      addr_body,
+      {
+        headers: this.globalService.getHeaders()
+      });
+
+    return addr_request.toPromise().then(res => {
+      const profile_body = {
+        profile_id,
+        user_id,
+        profile_entries: [
+          {type: 'email', value: email},
+          {type: 'address', subtype: null, value: '/addresses/' + res}]
+      };
+      if (hpn !== '') {
+        profile_body.profile_entries.push({type: 'telephone', subtype: 'home', value: hpn});
+      }
+      if (wpn !== '') {
+        profile_body.profile_entries.push({type: 'telephone', subtype: 'work', value: wpn});
+      }
+      if (mpn !== '') {
+        profile_body.profile_entries.push({type: 'telephone', subtype: 'mobile', value: mpn});
+      }
+      if (opn !== '') {
+        profile_body.profile_entries.push({type: 'telephone', subtype: 'other', value: opn});
+      }
+
+      const profile_request = this.httpService.put<string>(
+        this.globalService.serverURL + '/profile/' + profile_id,
+        profile_body,
+        {
+          headers: this.globalService.getHeaders()
+            .set('If-Match', sessionStorage.getItem('Etag') || '')
+        });
+
+      return profile_request.toPromise().catch((err: HttpErrorResponse) => {
+        console.log(err.message);
+      });
     });
-  }
-
-  update_profile_1(dn:string, hpn:string, mpn:string, adrs1:string, adrs2:string, email:string){
-    const body = {
-      "display_name":dn,
-      "address_line_1":adrs1,
-      "address_line_2":adrs2,
-      "home_phone":hpn,
-      "work_phone":mpn
-    };
-    const request = this.httpService.put(
-      this.globalService.serverURL + '/api/profile/' + email,
-      body,
-      { headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Token', sessionStorage.getItem('session_id') || '')
-        .set('If-Match', sessionStorage.getItem('Etag') || ''),
-        observe: "response" }
-      );
-      return request.toPromise().then(profile => {
-        // console.log(profile.headers)
-      }).catch((err: HttpErrorResponse) => {
-        console.log(err.message);
-      });
-  }
-
-  update_profile_2(dn:string, hpn:string, mpn:string, adrs1:string, adrs2:string, email:string){
-    const body = {
-      "display_name":dn,
-      "address_line_1":adrs1,
-      "address_line_2":adrs2,
-      "home_phone":hpn,
-      "work_phone":mpn,
-      "email":email
-    };
-    const request = this.httpService.post(
-      this.globalService.serverURL + '/api/profile',
-      body,
-      { headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Token', sessionStorage.getItem('session_id') || '')
-        .set('Etag', sessionStorage.getItem('Etag') || ''),
-        observe: "response" }
-      );
-      return request.toPromise().then(profile => {
-        // console.log(profile)
-      }).catch((err: HttpErrorResponse) => {
-        console.log(err.message);
-      });
   }
 }

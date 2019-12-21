@@ -73,7 +73,14 @@ interface ImageResponse {
 }
 
 interface SmartyStreetResponse {
-  suggestions: Array<{text: string}>;
+  suggestions: Array<SmartyStreet>;
+}
+
+export interface SmartyStreet {
+  text: string;
+  street_line: string;
+  city: string;
+  state: string;
 }
 
 @Injectable({
@@ -349,7 +356,7 @@ export class MainService {
     });
   }
 
-  suggestAddress(prefix: string): Promise<string[]> {
+  suggestAddress(prefix: string): Promise<SmartyStreet[]> {
     const request = this.httpService.get<SmartyStreetResponse>(
       this.smartyStreet + prefix
     );
@@ -357,9 +364,9 @@ export class MainService {
       if (!res || !res.suggestions) {
         return [];
       }
-      return res.suggestions.map(suggestion => suggestion.text);
+      return res.suggestions;
     }).catch(error => {
-      console.log('SmartyStreet: ' + error);
+      console.log('SmartyStreet Error: ' + error);
       return [];
     });
   }
