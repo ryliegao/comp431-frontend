@@ -118,7 +118,7 @@ export class MainService {
     this.username = username;
 
     const request = this.httpService.get<Array<FollowingUser>>(
-      this.globalService.serverURL + '/following',
+      this.globalService.config.resource_maps.main.following,
       { headers: this.globalService.getHeaders() }
     );
     return request.toPromise().catch(error => {
@@ -128,50 +128,9 @@ export class MainService {
     });
   }
 
-  getFolloweeInfo(followee: Array<string>): Promise<Array<FolloweeInfo>> {
-    const str = followee.join(',');
-    let displaynames;
-    let headlines;
-    let avatars;
-
-    return this.httpService.get<NameResponse>(
-      this.globalService.serverURL + '/displaynames/:users?users=' + str,
-      { headers: this.globalService.getHeaders() }
-    ).toPromise().then(res1 => {
-        displaynames = res1.displaynames;
-        return this.httpService.get<HeadlinesResponse>(
-          this.globalService.serverURL + '/headlines/:users?users=' + str,
-          { headers: this.globalService.getHeaders() }
-        ).toPromise().then(res2 => {
-          headlines = res2.headlines;
-          return this.httpService.get<AvatarResponse>(
-            this.globalService.serverURL + '/avatars/:users?users=' + str,
-            { headers: this.globalService.getHeaders() }
-          ).toPromise().then(res3 => {
-            avatars = res3.avatars;
-          }).then(() => {
-            const infos = [];
-            for (let i = 0; i < followee.length; i++) {
-              infos.push({
-                username: followee[i],
-                displayname: displaynames[i].displayname,
-                status: headlines[i].headline,
-                avatar: avatars[i].avatar
-              });
-            }
-            return infos;
-          });
-        });
-      }).catch(error => {
-      return this.router.navigate(['/auth/login']).then(() => {
-        return [];
-      });
-    });
-  }
-
   loadPosts(): Promise<Array<Post>> {
     const request = this.httpService.get<Array<Post>>(
-      this.globalService.serverURL + '/articles',
+      this.globalService.config.resource_maps.main.articles,
       {
         headers: this.globalService.getHeaders()
       }
@@ -234,38 +193,6 @@ export class MainService {
       this.followInfo = res;
     }).catch(error => {
       return this.router.navigate(['/auth/login']);
-    });
-  }
-
-  changeStatus(status: string) {
-    try {
-      if (localStorage.getItem('currentUser')) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        const newUser = {
-          lastname: user.lastname,
-          firstname: user.firstname,
-          email: user.email,
-          password: user.password,
-          loggedin: user.loggedin,
-          avatar: user.avatar,
-          status
-        };
-        this.authService.makeNewUser(newUser);
-      }
-    } catch (e) {
-      console.log('This browser does not support local storage.');
-    }
-    const request = this.httpService.put<HeadlineResponse>(
-      this.globalService.serverURL + '/headline',
-      { headline: status },
-      { headers: this.globalService.getHeaders() }
-    );
-    return request.toPromise().then(res => {
-      return res.headline;
-    }).catch(error => {
-      return this.router.navigate(['/auth/login']).then(() => {
-        return '';
-      });
     });
   }
 

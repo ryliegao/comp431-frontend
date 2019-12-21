@@ -1,0 +1,21 @@
+{
+  "version_no": 1.0,
+  "site_base": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test",
+  "resources": {
+    "profile": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/profile",
+    "user": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/user"
+  },
+  "resource_maps": {
+    "main": {
+      "following": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/following",
+      "articles": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/articles",
+      "comments": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/articles/{}"
+    },
+    "profile": {
+      "user_id": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/user/{}"
+    },
+    "users": {
+      "id": "https://r79lu1r8di.execute-api.us-east-1.amazonaws.com/test/api/profile/{}"
+    }
+  }
+}
